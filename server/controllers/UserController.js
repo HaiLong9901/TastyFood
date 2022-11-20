@@ -1,0 +1,101 @@
+const express = require('express')
+const argon2 = require('argon2')
+const jwt = require('jsonwebtoken')
+const User = require('../models/User')
+
+const UserControler = {
+  register: async (req, res) => {
+    const { phone, password, name, confirmPass } = req.body
+    if (!phone || !password || !name || !confirmPass)
+      return res.status(400).json({
+        success: false,
+        passage: 'Missing user information',
+      })
+    if (password !== confirmPass)
+      return res.status(400).json({
+        success: false,
+        passage: 'confirmPassword is false',
+      })
+    try {
+      let user = await User.findOne({ phone })
+      if (user)
+        return res.status(400).json({
+          success: false,
+          passage: 'user have already existed',
+        })
+      const hashPassword = await argon2.hash(password)
+      let newUser = new User({
+        name,
+        phone,
+        password: hashPassword,
+        ...req,
+      })
+
+      await newUser.save()
+
+      //return AccessToken
+
+      const accessToken = jwt.sign(
+        {
+          userId: newUser._id,
+        },
+        process.env.ACCESS_TOKEN_SECRET,
+        {
+          expiresIn: '60s',
+        },
+      )
+      return res.json({
+        success: true,
+        passage: 'register successfully',
+        accessToken,
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  },
+
+  login: async (req, res) => {
+    const { phone, password } = req.body
+    console.log(phone, password)
+    if (!phone || !password)
+      return res.status(400).json({
+        success: false,
+        passage: 'Missing user information',
+      })
+    try {
+      let user = await User.findOne({ phone })
+      if (!user)
+        return res.status(400).json({
+          success: false,
+          passage: 'Incorect phone number',
+        })
+
+      const validPassword = await argon2.verify(user.password, password)
+      console.log(validPassword)
+      if (!validPassword)
+        return res.status(400).json({
+          success: true,
+          passage: 'Incorect password',
+        })
+
+      const accessToken = jwt.sign(
+        {
+          userId: user._id,
+        },
+        process.env.ACCESS_TOKEN_SECRET,
+        {
+          expiresIn: '15s',
+        },
+      )
+      return res.json({
+        success: true,
+        passage: 'login successfully',
+        accessToken,
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  },
+}
+
+module.exports = UserControler
