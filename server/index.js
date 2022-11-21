@@ -19,37 +19,6 @@ const connectDb = async () => {
     await mongoose.connect(
       'mongodb+srv://longdh9901:longdh9901@cluster0.uhqd5sb.mongodb.net/?retryWrites=true&w=majority',
     )
-    // let TastyFood = new User({
-    //   name: 'Do Hai Long',
-    //   email: 'long@gmail.com',
-    //   phone: '0123456',
-    //   password: 'acascgsdg',
-    //   role: 'admin',
-    //   credit: '0123456',
-    //   address: 'Ha Noi',
-    // })
-    // TastyFood.save()
-    // let test = new Order({
-    //   userId: mongoose.mongo.ObjectId('636d325240a6429ca42e21e0'),
-    //   products: [
-    //     {
-    //       productId: mongoose.mongo.ObjectId('636d331bed6077b50f9d7590'),
-    //       quantity: 5,
-    //     },
-    //   ],
-    //   voucher: mongoose.mongo.ObjectId('636d3ba79f59a02639fe5a11'),
-    //   address: {
-    //     num: 125,
-    //     village: 'Duyên Thái',
-    //     district: 'Thường Tín',
-    //   },
-    //   amount: 150000,
-    // })
-    // let test = new Voucher({
-    //   code: 'FREE50',
-    //   value: 50,
-    // })
-    // await test.save()
     console.log('mongodb connected')
   } catch (error) {
     console.log(error)

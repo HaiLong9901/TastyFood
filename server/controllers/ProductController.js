@@ -38,6 +38,42 @@ const ProductController = {
       console.log(error)
     }
   },
+
+  getAllProducts: async (req, res) => {
+    try {
+      const resutls = await Product.find()
+      console.log(resutls)
+      res.json({
+        success: true,
+        passage: 'Find all successfully',
+        resutls,
+      })
+    } catch (error) {
+      console.log(error)
+      return res.status(400).json({
+        success: false,
+        passage: 'No products be found',
+      })
+    }
+  },
+
+  getProductById: async (req, res) => {
+    try {
+      const result = await Product.findById(req.params.id)
+      console.log(result)
+      return res.json({
+        success: true,
+        passage: 'Successfully',
+        result,
+      })
+    } catch (error) {
+      console.log(error)
+      return res.status(400).json({
+        success: false,
+        passage: 'No result is found',
+      })
+    }
+  },
 }
 
 module.exports = ProductController

@@ -1,22 +1,17 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-  ],
+  content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
       colors: {
-        'redColor': '#AC4425',
-        'greenColor': '#224B0C',
-        'lightGreenColor': '#C1D5A4',
-        'yellowColor': '#F0F2B6',
-        'whiteColor': '#FFFFFF',
-        'secondaryColor': '#F6FBF4',
-        'primaryColor': '#222831'
+        primaryColor: '#1B1A17',
+        secondaryColor: '#A35709',
+        yellowColor: '#F0E3CA',
+        orangeColor: '#FF8303',
       },
       fontFamily: {
-        'logoFont': ['Pacifico', 'cursive']
-      }
+        logoFont: ['Pacifico', 'cursive'],
+      },
     },
   },
   // plugins: [],

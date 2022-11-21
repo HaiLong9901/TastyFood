@@ -3,5 +3,14 @@
 @tailwind utilities;
 
 * {
-    font-size: 10px;
+  font-size: 10px;
+  font-family: 'Roboto', sans-serif;
+}
+body {
+  background: white;
+}
+@media only screen and (max-width: 600px) {
+  * {
+    font-size: 6.25px;
+  }
 }
