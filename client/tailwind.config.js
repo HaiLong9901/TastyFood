@@ -11,6 +11,7 @@ module.exports = {
       },
       fontFamily: {
         logoFont: ['Pacifico', 'cursive'],
+        dancingScript: ['Dancing Script', 'cursive'],
       },
     },
   },
