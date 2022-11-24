@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 function Header() {
   const [openMenu, setOpenMenu] = useState(false)
   return (
-    <div className="w-screen relative">
+    <div className="w-full relative">
       <div className="w-full bg-primaryColor h-[3rem]">
         <Wrapper>
           <div className="w-full h-full flex justify-end gap-[2rem] items-center">
@@ -76,8 +76,8 @@ function Header() {
       <div
         className={
           openMenu
-            ? 'h-[100vh] w-[50vw] absolute top-0 left-0 bg-orangeColor py-[2rem] px-[3rem] flex gap-[2rem] flex-col items-center duration-300 ease-in-out'
-            : 'h-[100vh] w-[50vw] absolute top-0 left-0 bg-orangeColor py-[2rem] px-[3rem] flex gap-[2rem] flex-col items-center translate-x-[-100%] duration-300 ease-in-out'
+            ? 'h-[100vh] w-[50vw] absolute top-0 left-0 bg-orangeColor py-[2rem] px-[3rem] flex gap-[2rem] flex-col items-center duration-300 ease-in-out z-[1000]'
+            : 'h-[100vh] w-[50vw] absolute top-0 left-0 bg-orangeColor py-[2rem] px-[3rem] flex gap-[2rem] flex-col items-center translate-x-[-100%] duration-300 ease-in-out z-[1000]'
         }
       >
         <Link to="/" className="flex items-center">
