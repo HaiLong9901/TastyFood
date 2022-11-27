@@ -5,7 +5,15 @@ import { Lazy, Autoplay, EffectFade } from 'swiper'
 import 'swiper/css'
 import 'swiper/css/lazy'
 import 'swiper/css/effect-fade'
-import { FaRegCopy } from 'react-icons/fa'
+import {
+  FaRegCopy,
+  FaShoppingCart,
+  FaAngleDoubleRight,
+  FaSearch,
+  FaShippingFas,
+  FaWallet,
+  FaShippingFast,
+} from 'react-icons/fa'
 import img from '../assets/Image/spicy-red-soup-beef-noodle-bowl-wooden-table.jpg'
 import img2 from '../assets/Image/delicious-ice-cream.jpg'
 import img3 from '../assets/Image/quail-eggs-stew-with-belly-pork-chinese-food.jpg'
@@ -197,6 +205,48 @@ function Home() {
                     hàng.
                   </article>
                 </div>
+              </div>
+            </div>
+          </div>
+        </Wrapper>
+      </div>
+      <div className="bg-yellowColor py-[5rem] my-[5rem]">
+        <Wrapper>
+          <div className="flex flex-col items-center">
+            <Title title="Cách thức đặt hàng" />
+            <div className="w-full flex mt-[5rem]">
+              <div className="w-[20%] flex flex-col gap-[2rem]">
+                <div className="w-full aspect-square border-secondaryColor border-solid border-[.5rem] rounded-[50%] flex justify-center items-center">
+                  <FaSearch className="text-[10rem] text-secondaryColor" />
+                </div>
+                <h2 className="text-[1.8rem] text-secondaryColor text-center font-bold">Xem và chọn hàng</h2>
+              </div>
+              <div className="w-[calc(20%/3)] flex justify-center items-center">
+                <FaAngleDoubleRight className="text-[5rem] text-secondaryColor" />
+              </div>
+              <div className="w-[20%] flex flex-col gap-[2rem]">
+                <div className="w-full aspect-square border-secondaryColor border-solid border-[.5rem] rounded-[50%] flex justify-center items-center">
+                  <FaShoppingCart className="text-[10rem] text-secondaryColor" />
+                </div>
+                <h2 className="text-[1.8rem] text-secondaryColor text-center font-bold">Đặt hàng</h2>
+              </div>
+              <div className="w-[calc(20%/3)] flex justify-center items-center">
+                <FaAngleDoubleRight className="text-[5rem] text-secondaryColor" />
+              </div>
+              <div className="w-[20%] flex flex-col gap-[2rem]">
+                <div className="w-full aspect-square border-secondaryColor border-solid border-[.5rem] rounded-[50%] flex justify-center items-center">
+                  <FaShippingFast className="text-[10rem] text-secondaryColor" />
+                </div>
+                <h2 className="text-[1.8rem] text-secondaryColor text-center font-bold">Vận chuyển</h2>
+              </div>
+              <div className="w-[calc(20%/3)] flex justify-center items-center">
+                <FaAngleDoubleRight className="text-[5rem] text-secondaryColor" />
+              </div>
+              <div className="w-[20%] flex flex-col gap-[2rem]">
+                <div className="w-full aspect-square border-secondaryColor border-solid border-[.5rem] rounded-[50%] flex justify-center items-center">
+                  <FaWallet className="text-[10rem] text-secondaryColor" />
+                </div>
+                <h2 className="text-[1.8rem] text-secondaryColor text-center font-bold">Thanh toán</h2>
               </div>
             </div>
           </div>
