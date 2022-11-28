@@ -77,63 +77,63 @@ function Home() {
       <div className="py-[5rem] bg-yellowColor">
         <Wrapper>
           <div>
-            <div className="flex justify-between">
-              <div className="w-[19%] aspect-[4/3] border-[.2rem] border-secondaryColor border-solid rounded-[1rem] flex flex-col gap-[1rem] items-center py-[1rem] cursor-pointer relative">
+            <div className="flex flex-wrap gap-[1rem]">
+              <div className="w-[17.6rem] lg:w-[23.2rem] aspect-[4/3] border-[.2rem] border-secondaryColor border-solid rounded-[1rem] flex flex-col gap-[1rem] items-center py-[1rem] cursor-pointer relative">
                 <img src={cream} alt="cream" className="w-[30%]" />
                 <h3 className="text-[1.6rem] text-secondaryColor font-bold absolute bottom-[1rem] ">Voucher siu hot</h3>
               </div>
-              <div className="w-[19%] aspect-[4/3] border-[.2rem] border-secondaryColor border-solid rounded-[1rem] flex flex-col gap-[1rem] items-center py-[1rem] cursor-pointer relative">
+              <div className="w-[17.6rem] lg:w-[23.2rem] aspect-[4/3] border-[.2rem] border-secondaryColor border-solid rounded-[1rem] flex flex-col gap-[1rem] items-center py-[1rem] cursor-pointer relative">
                 <img src={cream} alt="cream" className="w-[30%]" />
                 <h3 className="text-[1.6rem] text-secondaryColor font-bold absolute bottom-[1rem] ">Kem mát lạnh</h3>
               </div>
-              <div className="w-[19%] aspect-[4/3] border-[.2rem] border-secondaryColor border-solid rounded-[1rem] flex flex-col gap-[1rem] items-center py-[1rem] cursor-pointer relative">
+              <div className="w-[17.6rem] lg:w-[23.2rem] aspect-[4/3] border-[.2rem] border-secondaryColor border-solid rounded-[1rem] flex flex-col gap-[1rem] items-center py-[1rem] cursor-pointer relative">
                 <img src={coffee} alt="cream" className="w-[30%]" />
                 <h3 className="text-[1.6rem] text-secondaryColor font-bold absolute bottom-[1rem] ">
                   Giải khát siu ngon
                 </h3>
               </div>
-              <div className="w-[19%] aspect-[4/3] border-[.2rem] border-secondaryColor border-solid rounded-[1rem] flex flex-col gap-[1rem] items-center py-[1rem] cursor-pointer relative">
+              <div className="w-[17.6rem] lg:w-[23.2rem] aspect-[4/3] border-[.2rem] border-secondaryColor border-solid rounded-[1rem] flex flex-col gap-[1rem] items-center py-[1rem] cursor-pointer relative">
                 <img src={cake} alt="cream" className="w-[40%]" />
                 <h3 className="text-[1.6rem] text-secondaryColor font-bold absolute bottom-[1rem] ">
                   Bánh kem cực đỉnh
                 </h3>
               </div>
-              <div className="w-[19%] aspect-[4/3] border-[.2rem] border-secondaryColor border-solid rounded-[1rem] flex flex-col gap-[1rem] items-center py-[1rem] cursor-pointer relative">
+              <div className="w-[17.6rem] lg:w-[23.2rem] aspect-[4/3] border-[.2rem] border-secondaryColor border-solid rounded-[1rem] flex flex-col gap-[1rem] items-center py-[1rem] cursor-pointer relative">
                 <img src={burgar} alt="cream" className="w-[50%]" />
                 <h3 className="text-[1.6rem] text-secondaryColor font-bold absolute bottom-[1rem] ">Ăn vặt cực đã</h3>
               </div>
             </div>
-            <div className="flex justify-between mt-[2rem]">
-              <div className="w-[24%] bg-white aspect-video rounded-[1rem] p-[1.5rem] flex flex-col justify-between">
+            <div className="flex mt-[2rem] flex-wrap gap-[2rem] lg:gap-[2rem]">
+              <div className="w-[48%] lg:w-[28.5rem] bg-white aspect-video rounded-[1rem] p-[1.5rem] flex flex-col justify-between">
                 <div className="flex justify-between items-center">
-                  <h2 className="text-[2.5rem] text-orangeColor font-bold">KHAITRUONG123</h2>
+                  <h2 className="text-[2rem] lg:text-[2.5rem] text-orangeColor font-bold">KHAITRUONG123</h2>
                   <FaRegCopy className="text-[2.5rem] text-orangeColor cursor-pointer" />
                 </div>
                 <p className="text-[1.6rem] text-primaryColor italic">
                   (*) Giảm 10% cho hóa đơn từ 250k. Áp dụng cho các sản phẩm thuộc danh mục Kem, Trà sữa.
                 </p>
               </div>
-              <div className="w-[24%] bg-white aspect-video rounded-[1rem] p-[1.5rem] flex flex-col justify-between">
+              <div className="w-[48%] lg:w-[28.5rem] bg-white aspect-video rounded-[1rem] p-[1.5rem] flex flex-col justify-between">
                 <div className="flex justify-between items-center">
-                  <h2 className="text-[2.5rem] text-orangeColor font-bold">KHAITRUONG123</h2>
+                  <h2 className="text-[2rem] lg:text-[2.5rem] text-orangeColor font-bold">KHAITRUONG123</h2>
                   <FaRegCopy className="text-[2.5rem] text-orangeColor cursor-pointer" />
                 </div>
                 <p className="text-[1.6rem] text-primaryColor italic">
                   (*) Giảm 10% cho hóa đơn từ 250k. Áp dụng cho các sản phẩm thuộc danh mục Kem, Trà sữa.
                 </p>
               </div>
-              <div className="w-[24%] bg-white aspect-video rounded-[1rem] p-[1.5rem] flex flex-col justify-between">
+              <div className="w-[48%] lg:w-[28.5rem] bg-white aspect-video rounded-[1rem] p-[1.5rem] flex flex-col justify-between">
                 <div className="flex justify-between items-center">
-                  <h2 className="text-[2.5rem] text-orangeColor font-bold">KHAITRUONG123</h2>
+                  <h2 className="text-[2rem] lg:text-[2.5rem] text-orangeColor font-bold">KHAITRUONG123</h2>
                   <FaRegCopy className="text-[2.5rem] text-orangeColor cursor-pointer" />
                 </div>
                 <p className="text-[1.6rem] text-primaryColor italic">
                   (*) Giảm 10% cho hóa đơn từ 250k. Áp dụng cho các sản phẩm thuộc danh mục Kem, Trà sữa.
                 </p>
               </div>
-              <div className="w-[24%] bg-white aspect-video rounded-[1rem] p-[1.5rem] flex flex-col justify-between">
+              <div className="w-[48%] lg:w-[28.5rem] bg-white aspect-video rounded-[1rem] p-[1.5rem] flex flex-col justify-between">
                 <div className="flex justify-between items-center">
-                  <h2 className="text-[2.5rem] text-orangeColor font-bold">KHAITRUONG123</h2>
+                  <h2 className="text-[2rem] lg:text-[2.5rem] text-orangeColor font-bold">KHAITRUONG123</h2>
                   <FaRegCopy className="text-[2.5rem] text-orangeColor cursor-pointer" />
                 </div>
                 <p className="text-[1.6rem] text-primaryColor italic">
@@ -147,18 +147,26 @@ function Home() {
       <div>
         <Wrapper>
           <div className="mt-[2rem] relative">
-            <img src={cake2} alt="cake" className="absolute w-[50%] rotate-[-45deg] right-[-15%] top-[30%]" />
-            <img src={cake1} alt="cake" className="absolute w-[30%] rotate-[-20deg] right-0 top-[10%]" />
+            <img
+              src={cake2}
+              alt="cake"
+              className="absolute w-[50%] rotate-[-45deg] right-[-15%] top-[30%] lg:block hidden"
+            />
+            <img
+              src={cake1}
+              alt="cake"
+              className="absolute w-[30%] rotate-[-20deg] right-0 top-[10%] lg:block hidden"
+            />
             <div className="flex justify-center">
               <Title title="Về chúng tôi" />
             </div>
             <div className="flex mt-[5rem] flex-wrap gap-[5rem]">
-              <div className="w-[35%] flex items-start">
+              <div className="w-[45%] lg:w-[35%] flex items-start">
                 <div>
-                  <h2 className="text-[20rem] text-orangeColor leading-none">1</h2>
+                  <h2 className="text-[10rem] md:text-[15rem] lg:text-[20rem] text-orangeColor leading-none">1</h2>
                 </div>
                 <div>
-                  <h3 className="text-[5rem] text-primaryColor font-dancingScript leading-tight">
+                  <h3 className="text-[3rem] lg:text-[5rem] text-primaryColor font-dancingScript leading-tight">
                     Thương hiệu hàng đầu
                   </h3>
                   <article className="text-[1.8rem] text-primaryColor leading-[2]">
@@ -168,24 +176,28 @@ function Home() {
                   </article>
                 </div>
               </div>
-              <div className="w-[35%] flex items-start">
+              <div className="w-[45%] lg:w-[35%] flex items-start">
                 <div>
-                  <h2 className="text-[20rem] text-orangeColor leading-none">2</h2>
+                  <h2 className="text-[10rem] md:text-[15rem] lg:text-[20rem] text-orangeColor leading-none">2</h2>
                 </div>
                 <div>
-                  <h3 className="text-[5rem] text-primaryColor font-dancingScript leading-tight">Hệ thống bậc nhất</h3>
+                  <h3 className="text-[3rem] lg:text-[5rem] text-primaryColor font-dancingScript leading-tight">
+                    Hệ thống bậc nhất
+                  </h3>
                   <article className="text-[1.8rem] text-primaryColor leading-[2]">
                     Với sự phát triển mạnh mẽ, tại Việt Nam Ding Tea đã có tới gần 200 cửa hàng trải khắp các tỉnh
                     thành. Đảm bảo khả năng phục vụ khách hàng ở mọi lứa tuổi ở khắp mọi nơi tại Việt Nam.
                   </article>
                 </div>
               </div>
-              <div className="w-[35%] flex items-start">
+              <div className="w-[45%] lg:w-[35%] flex items-start">
                 <div>
-                  <h2 className="text-[20rem] text-orangeColor leading-none">3</h2>
+                  <h2 className="text-[10rem] md:text-[15rem] lg:text-[20rem] text-orangeColor leading-none">3</h2>
                 </div>
                 <div>
-                  <h3 className="text-[5rem] text-primaryColor font-dancingScript leading-tight">Chuyên nghiệp</h3>
+                  <h3 className="text-[3rem] lg:text-[5rem] text-primaryColor font-dancingScript leading-tight">
+                    Chuyên nghiệp
+                  </h3>
                   <article className="text-[1.8rem] text-primaryColor leading-[2]">
                     Với đội ngũ nhân viên được đào tạo bài bàn, chuyên nghiệp. Am hiểu về các nguyên liệu , thành phần
                     pha chế, chất lượng an toàn thực phẩm đặt lên hàng đầu. Cùng với đó là sự tươi vui & tôn trọng dành
@@ -193,12 +205,14 @@ function Home() {
                   </article>
                 </div>
               </div>
-              <div className="w-[35%] flex items-start">
+              <div className="w-[45%] lg:w-[35%] flex items-start">
                 <div>
-                  <h2 className="text-[20rem] text-orangeColor leading-none">4</h2>
+                  <h2 className="text-[10rem] md:text-[15rem] lg:text-[20rem] text-orangeColor leading-none">4</h2>
                 </div>
                 <div>
-                  <h3 className="text-[5rem] text-primaryColor font-dancingScript leading-tight">Phát triển mạnh mẽ</h3>
+                  <h3 className="text-[3rem] lg:text-[5rem] text-primaryColor font-dancingScript leading-tight">
+                    Phát triển mạnh mẽ
+                  </h3>
                   <article className="text-[1.8rem] text-primaryColor leading-[2]">
                     Không chỉ tạo ra những hương vị trà sữa phù hợp với người Việt để lại chất “đậm” riêng Ding Tea còn
                     tạo nên những hệ thống công nghệ ứng dụng mua, giao hàng mang lại tính trải nghiệm cao cho khách
@@ -217,34 +231,34 @@ function Home() {
             <div className="w-full flex mt-[5rem]">
               <div className="w-[20%] flex flex-col gap-[2rem]">
                 <div className="w-full aspect-square border-secondaryColor border-solid border-[.5rem] rounded-[50%] flex justify-center items-center">
-                  <FaSearch className="text-[10rem] text-secondaryColor" />
+                  <FaSearch className="text-[5rem] lg:text-[10rem] text-secondaryColor" />
                 </div>
                 <h2 className="text-[1.8rem] text-secondaryColor text-center font-bold">Xem và chọn hàng</h2>
               </div>
               <div className="w-[calc(20%/3)] flex justify-center items-center">
-                <FaAngleDoubleRight className="text-[5rem] text-secondaryColor" />
+                <FaAngleDoubleRight className="text-[3rem] translate-y-[-100%] lg:translate-y-[-50%] lg:text-[5rem] text-secondaryColor" />
               </div>
               <div className="w-[20%] flex flex-col gap-[2rem]">
                 <div className="w-full aspect-square border-secondaryColor border-solid border-[.5rem] rounded-[50%] flex justify-center items-center">
-                  <FaShoppingCart className="text-[10rem] text-secondaryColor" />
+                  <FaShoppingCart className="text-[5rem] lg:text-[10rem] text-secondaryColor" />
                 </div>
                 <h2 className="text-[1.8rem] text-secondaryColor text-center font-bold">Đặt hàng</h2>
               </div>
               <div className="w-[calc(20%/3)] flex justify-center items-center">
-                <FaAngleDoubleRight className="text-[5rem] text-secondaryColor" />
+                <FaAngleDoubleRight className="text-[3rem] translate-y-[-100%] lg:translate-y-[-50%] lg:text-[5rem] text-secondaryColor" />
               </div>
               <div className="w-[20%] flex flex-col gap-[2rem]">
                 <div className="w-full aspect-square border-secondaryColor border-solid border-[.5rem] rounded-[50%] flex justify-center items-center">
-                  <FaShippingFast className="text-[10rem] text-secondaryColor" />
+                  <FaShippingFast className="text-[5rem] lg:text-[10rem] text-secondaryColor" />
                 </div>
                 <h2 className="text-[1.8rem] text-secondaryColor text-center font-bold">Vận chuyển</h2>
               </div>
               <div className="w-[calc(20%/3)] flex justify-center items-center">
-                <FaAngleDoubleRight className="text-[5rem] text-secondaryColor" />
+                <FaAngleDoubleRight className="text-[3rem] translate-y-[-100%] lg:translate-y-[-50%] lg:text-[5rem] text-secondaryColor" />
               </div>
               <div className="w-[20%] flex flex-col gap-[2rem]">
                 <div className="w-full aspect-square border-secondaryColor border-solid border-[.5rem] rounded-[50%] flex justify-center items-center">
-                  <FaWallet className="text-[10rem] text-secondaryColor" />
+                  <FaWallet className="text-[5rem] lg:text-[10rem] text-secondaryColor" />
                 </div>
                 <h2 className="text-[1.8rem] text-secondaryColor text-center font-bold">Thanh toán</h2>
               </div>
