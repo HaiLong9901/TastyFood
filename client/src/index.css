@@ -9,6 +9,17 @@
 body {
   background: white;
 }
+.scrollbar::-webkit-scrollbar {
+  width: 1rem;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  background: #fff;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background: #a35709;
+}
 @media only screen and (max-width: 600px) {
   * {
     font-size: 6.25px;
