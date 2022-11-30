@@ -10,8 +10,8 @@ function ProductDetail() {
   const [quantity, setQuantity] = useState(0)
   return (
     <Wrapper>
-      <div>
-        <div className="my-[5rem]  flex flex-col lg:flex-row w-full justify-between">
+      <div className="my-[5rem]">
+        <div className="flex flex-col lg:flex-row w-full justify-between">
           <div className="w-full lg:w-[45%] aspect-video rounded-[.5rem] overflow-hidden">
             <img src={img} alt="banh" className="w-full h-full object-cover" />
           </div>
@@ -64,17 +64,8 @@ function ProductDetail() {
             </div>
           </div>
         </div>
-        <div className="w-[50%]">
-          <h2 className="text-[2.4rem] text-secondaryColor font-bold">Nhận xét sản phẩm</h2>
-          <div className="flex justify-center relative">
-            <div className="w-[8%]">
-              <div className="w-full aspect-square overflow-hidden rounded-[50%]">
-                <img src={USER_DEFAULT_AVATAR} alt="avatar" className="w-full h-full object-cover" />
-              </div>
-            </div>
-            <input type="text" className="w-[88%] text-[1.6rem] outline-none py-[.5rem] rounded-[5rem]" />
-            <FaPaperPlane />
-          </div>
+        <div className="w-full lg:w-[50%]">
+          <h2 className="text-[2.4rem] text-secondaryColor font-bold my-[2rem]">Nhận xét sản phẩm</h2>
           <ReviewBox
             imageURL={USER_DEFAULT_AVATAR}
             rate={3}

@@ -40,7 +40,7 @@ function Header() {
                 </Link>
               </li>
               <li className="leading-[5rem]">
-                <Link to="/menu" className="text-[1.6rem] text-white">
+                <Link to="/product" className="text-[1.6rem] text-white">
                   Thực đơn
                 </Link>
               </li>
