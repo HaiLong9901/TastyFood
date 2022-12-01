@@ -41,12 +41,11 @@ const ProductController = {
 
   getAllProducts: async (req, res) => {
     try {
-      const resutls = await Product.find()
-      console.log(resutls)
+      const results = await Product.find()
       res.json({
         success: true,
         passage: 'Find all successfully',
-        resutls,
+        results,
       })
     } catch (error) {
       console.log(error)

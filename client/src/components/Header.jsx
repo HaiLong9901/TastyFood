@@ -50,7 +50,7 @@ function Header() {
                 </Link>
               </li>
               <li className="leading-[5rem]">
-                <Link to="/" className="text-[1.6rem] text-white">
+                <Link to="/login" className="text-[1.6rem] text-white">
                   Đăng nhập
                 </Link>
               </li>
@@ -103,7 +103,7 @@ function Header() {
             </Link>
           </li>
           <li className="leading-[5rem] border-b-[.1rem] border-b-white border-b-solid text-center">
-            <Link to="/menu" className="text-[1.6rem] text-white">
+            <Link to="/product" className="text-[1.6rem] text-white">
               Thực đơn
             </Link>
           </li>
@@ -113,7 +113,7 @@ function Header() {
             </Link>
           </li>
           <li className="leading-[5rem] border-b-[.1rem] border-b-white border-b-solid text-center">
-            <Link to="/" className="text-[1.6rem] text-white">
+            <Link to="/login" className="text-[1.6rem] text-white">
               Đăng nhập
             </Link>
           </li>

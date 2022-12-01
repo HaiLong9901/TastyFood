@@ -1,30 +1,35 @@
 import React, { useState } from 'react'
 import Wrapper from '../components/common/Wrapper'
+import { useGetAllProductsQuery } from '../features/apis/apiSlice'
 import img from '../assets/Image/spicy-red-soup-beef-noodle-bowl-wooden-table.jpg'
 import ProductCard from '../components/product/ProductCard'
 import { FaAngleRight, FaAngleDown } from 'react-icons/fa'
 
 function ProductsList() {
   const [openFilterBox, setOpenFilterBox] = useState(false)
+  const { data: productsList, isSuccess: isSuccessList, isFetching: isFetchingList } = useGetAllProductsQuery()
+  let ProductsList
+  if (isFetchingList) {
+    ProductsList = (
+      <>
+        {Array.apply(Array(8)).map((product) => (
+          <div className="md:w-[22rem] w-[16rem] aspect-[3/4] animate-pulse bg-yelowColor"></div>
+        ))}
+      </>
+    )
+  } else if (isSuccessList) {
+    ProductsList = (
+      <>
+        {productsList.results?.map((product) => (
+          <ProductCard key={product.key} {...product} />
+        ))}
+      </>
+    )
+  }
   return (
     <Wrapper>
       <div className="flex my-[5rem] justify-between flex-col-reverse lg:flex-row gap-[2rem]">
-        <div className="flex flex-wrap w-full lg:w-[80%] gap-[3rem] md:gap-[4rem] lg:gap-[2rem]">
-          <ProductCard photo={img} name="Bún bò Huế" price="12000" sale="10000" />
-          <ProductCard photo={img} name="Bún bò Huế" price="12000" sale="10000" />
-          <ProductCard photo={img} name="Bún bò Huế" price="12000" sale="10000" />
-          <ProductCard photo={img} name="Bún bò Huế" price="12000" sale="10000" />
-          <ProductCard photo={img} name="Bún bò Huế" price="12000" sale="10000" />
-          <ProductCard photo={img} name="Bún bò Huế" price="12000" sale="10000" />
-          <ProductCard photo={img} name="Bún bò Huế" price="12000" sale="10000" />
-          <ProductCard photo={img} name="Bún bò Huế" price="12000" sale="10000" />
-          <ProductCard photo={img} name="Bún bò Huế" price="12000" sale="10000" />
-          <ProductCard photo={img} name="Bún bò Huế" price="12000" sale="10000" />
-          <ProductCard photo={img} name="Bún bò Huế" price="12000" sale="10000" />
-          <ProductCard photo={img} name="Bún bò Huế" price="12000" sale="10000" />
-          <ProductCard photo={img} name="Bún bò Huế" price="12000" sale="10000" />
-          <ProductCard photo={img} name="Bún bò Huế" price="12000" sale="10000" />
-        </div>
+        <div className="flex flex-wrap w-full lg:w-[80%] gap-[3rem] md:gap-[4rem] lg:gap-[2rem]">{ProductsList}</div>
         <div className="w-full lg:w-[18%]">
           <div className="p-[.5rem] border-orangeColor border-solid border-[.1rem] rounded-[.5rem] bg-yellowColor">
             <div className="flex justify-between items-center">

@@ -4,13 +4,7 @@ const mongoose = require('mongoose')
 const { ObjectId } = require('mongoose')
 const AuthRouter = require('./routes/auth')
 const ProductRouter = require('./routes/product')
-const User = require('./models/User')
-const Product = require('./models/Product')
-const Voucher = require('./models/Voucher')
-const Order = require('./models/Order')
-const Cart = require('./models/Cart')
-const Review = require('./models/Review')
-
+const cors = require('cors')
 const app = express()
 app.use(express.json())
 
@@ -27,6 +21,7 @@ const connectDb = async () => {
 }
 connectDb()
 
+app.use(cors())
 app.use('/api/auth', AuthRouter)
 app.use('/api/product', ProductRouter)
 app.get('/', (req, res) => res.send('Hello world'))

@@ -26,8 +26,20 @@ import cake2 from '../assets/Image/cake.png'
 import Title from '../components/common/Title'
 import Wrapper from '../components/common/Wrapper'
 import ProductCard from '../components/product/ProductCard'
+import { useGetAllProductsQuery } from '../features/apis/apiSlice'
 
 function Home() {
+  const { data, isSuccess } = useGetAllProductsQuery()
+  let test
+  if (isSuccess)
+    test = (
+      <>
+        {data.results?.map((product) => (
+          <ProductCard {...product} />
+        ))}
+      </>
+    )
+  console.log(test)
   return (
     <div>
       <div className="bg-primaryColor lg:h-[calc(100vh-8rem)] h-[calc(50vh-8rem)]">
@@ -60,18 +72,7 @@ function Home() {
           <div className="flex justify-center">
             <Title title="Món nổi bật" />
           </div>
-          <div className="flex flex-wrap lg:gap-[2.5rem] md:gap-[4.5rem] gap-[3.5rem] mt-[5rem]">
-            <ProductCard photo={img} name="Bún bò Huế" price="12000" sale="10000" />
-            <ProductCard photo={img2} name="Kem tươi" price="12000" sale="10000" />
-            <ProductCard photo={img3} name="Canh sườn kho" price="12000" sale="10000" />
-            <ProductCard photo={img} name="Bún bò Huế" price="12000" sale="10000" />
-            <ProductCard photo={img2} name="Kem tươi" price="12000" sale="10000" />
-            <ProductCard photo={img3} name="Canh sườn kho" price="12000" sale="10000" />
-            <ProductCard photo={img} name="bun bo" price="12000" sale="10000" />
-            <ProductCard photo={img2} name="Kem tươi" price="12000" sale="10000" />
-            <ProductCard photo={img3} name="Canh sườn kho" price="12000" sale="10000" />
-            <ProductCard photo={img} name="Bún bò Huế" price="12000" sale="10000" />
-          </div>
+          <div className="flex flex-wrap lg:gap-[2.5rem] md:gap-[4.5rem] gap-[3.5rem] mt-[5rem]">{test}</div>
         </Wrapper>
       </div>
       <div className="py-[5rem] bg-yellowColor">
