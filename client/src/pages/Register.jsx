@@ -4,8 +4,12 @@ import * as Yup from 'yup'
 import Wrapper from '../components/common/Wrapper'
 import { GiTomato } from 'react-icons/gi'
 import { Link, useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { selectCurrentToken } from '../features/auth/authSlice'
 
 function Register() {
+  const currentUser = useSelector(selectCurrentToken)
+  console.log('current: ', currentUser)
   const navigate = useNavigate()
   const phoneRegExp =
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
@@ -118,7 +122,7 @@ function Register() {
                     disabled={formik.isSubmitting}
                     className="w-full text-white text-[1.6rem] py-[1rem] bg-orangeColor rounded-[2rem]"
                   >
-                    Đăng nhập
+                    Đăng ký
                   </button>
                 </form>
                 {/* )} */}

@@ -4,9 +4,14 @@ import * as Yup from 'yup'
 import Wrapper from '../components/common/Wrapper'
 import { GiTomato } from 'react-icons/gi'
 import { Link, useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { setCredentials } from '../features/auth/authSlice'
+import { useLoginMutation } from '../features/apis/authApiSlice'
 
 function Login() {
+  const dispatch = useDispatch()
   const navigate = useNavigate()
+  const [login, { isLoading }] = useLoginMutation()
   const phoneRegExp =
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
   const formik = useFormik({
@@ -19,7 +24,12 @@ function Login() {
       password: Yup.string().required('Bạn chưa nhập mật khẩu').min(8, 'Mật khẩu phải gồm ít nhất 8 kí tự'),
     }),
     onSubmit: async (values) => {
-      navigate('/')
+      console.log(values)
+      const { phone, password } = values
+      try {
+        const userData = await login({ phone, password }).unwrap()
+        dispatch(setCredentials({ ...userData, phone }))
+      } catch (error) {}
     },
   })
   return (

@@ -83,9 +83,9 @@ const UserControler = {
           userId: user._id,
         },
         process.env.ACCESS_TOKEN_SECRET,
-        {
-          expiresIn: '15s',
-        },
+        // {
+        //   expiresIn: '15s',
+        // },
       )
       return res.json({
         success: true,

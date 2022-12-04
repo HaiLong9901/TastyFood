@@ -21,7 +21,13 @@ const connectDb = async () => {
 }
 connectDb()
 
-app.use(cors())
+app.use(
+  cors({
+    credentials: true,
+    origin: '*',
+    optionsSuccessStatus: 200,
+  }),
+)
 app.use('/api/auth', AuthRouter)
 app.use('/api/product', ProductRouter)
 app.get('/', (req, res) => res.send('Hello world'))
