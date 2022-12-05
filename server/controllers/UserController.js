@@ -25,10 +25,10 @@ const UserControler = {
         })
       const hashPassword = await argon2.hash(password)
       let newUser = new User({
+        ...req.body,
         name,
         phone,
         password: hashPassword,
-        ...req,
       })
 
       await newUser.save()
@@ -91,6 +91,8 @@ const UserControler = {
         success: true,
         passage: 'login successfully',
         accessToken,
+        user: user._id,
+        isAdmin: user.isAdmin,
       })
     } catch (error) {
       console.log(error)

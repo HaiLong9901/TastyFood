@@ -3,7 +3,11 @@ import Wrapper from './common/Wrapper'
 import { GiTomato } from 'react-icons/gi'
 import { FaFacebook, FaInstagram, FaTiktok, FaShoppingCart, FaTimes, FaBars, FaSearch } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { selectCurrentUser, selectCurrentToken } from '../features/auth/authSlice'
+import { USER_DEFAULT_AVATAR } from '../shared/Constants'
 function Header() {
+  const user = useSelector(selectCurrentUser)
   const [openMenu, setOpenMenu] = useState(false)
   return (
     <div className="w-full relative">
@@ -49,13 +53,30 @@ function Header() {
                   Giới thiệu
                 </Link>
               </li>
-              <li className="leading-[5rem]">
-                <Link to="/login" className="text-[1.6rem] text-white">
-                  Đăng nhập
-                </Link>
-              </li>
+              {user ? (
+                <li className="group flex justify-center items-center relative">
+                  <div className="w-[3rem] aspect-square rounded-[50%] overflow-hidden">
+                    <img src={USER_DEFAULT_AVATAR} alt="" className="w-full h-full object-cover" />
+                  </div>
+                  <div className="absolute bg-white rounded-[.5rem] hidden bottom-0 flex-col translate-y-[100%] z-[1000] group-hover:flex px-[2rem] after:content-[''] after:border-[2.5rem] after:border-b-white after:border-solid after:border-transparent after:top-[0] after:translate-y-[-70%] after:absolute">
+                    <Link className="text-primaryColor text-[1.6rem] font-bold text-center py-[1rem]" to="/">
+                      Profile
+                    </Link>
+                    <Link className="text-primaryColor text-[1.6rem] font-bold text-center py-[1rem]" to="/">
+                      Logout
+                    </Link>
+                  </div>
+                </li>
+              ) : (
+                <li className="leading-[5rem]">
+                  <Link to="/login" className="text-[1.6rem] text-white">
+                    Đăng nhập
+                  </Link>
+                </li>
+              )}
+
               <li className="leading-[5rem] flex items-center">
-                <Link to="/" className="text-[1.6rem] text-white">
+                <Link to={user ? `/cart/${user}` : '/login'} className="text-[1.6rem] text-white">
                   <FaShoppingCart className="text-[2rem] text-white" />
                 </Link>
               </li>

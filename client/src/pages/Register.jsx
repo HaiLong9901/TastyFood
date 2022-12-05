@@ -5,11 +5,12 @@ import Wrapper from '../components/common/Wrapper'
 import { GiTomato } from 'react-icons/gi'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { selectCurrentToken } from '../features/auth/authSlice'
+import { selectCurrentToken, selectCurrentUser } from '../features/auth/authSlice'
 
 function Register() {
-  const currentUser = useSelector(selectCurrentToken)
-  console.log('current: ', currentUser)
+  const currentToken = useSelector(selectCurrentToken)
+  const currentUser = useSelector(selectCurrentUser)
+  console.log('current: ', currentUser, currentToken)
   const navigate = useNavigate()
   const phoneRegExp =
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/

@@ -29,7 +29,10 @@ function Login() {
       try {
         const userData = await login({ phone, password }).unwrap()
         dispatch(setCredentials({ ...userData, phone }))
-      } catch (error) {}
+        navigate('/')
+      } catch (error) {
+        console.log(error)
+      }
     },
   })
   return (

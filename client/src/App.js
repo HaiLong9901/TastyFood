@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { Provider } from 'react-redux'
+import { Provider, useSelector } from 'react-redux'
+import { selectCurrentRole } from './features/auth/authSlice'
 import store from './store'
 import Footer from './components/Footer'
 import Header from './components/Header'
@@ -9,10 +10,20 @@ import ProductDetail from './pages/ProductDetail'
 import Layout from './components/Layout'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import Cart from './pages/Cart'
+import Admin from './pages/Admin'
 function App() {
+  const isAdmin = useSelector(selectCurrentRole)
+  console.log('isAdmin: ', isAdmin)
   return (
-    <Provider store={store}>
-      <Router>
+    <Router>
+      {isAdmin ? (
+        <div>
+          <Routes>
+            <Route path="/" element={<Admin />} />
+          </Routes>
+        </div>
+      ) : (
         <div className="App overflow-hidden">
           <Routes>
             <Route element={<Layout loginHeaderPath={['/login', '/register']} />}>
@@ -21,12 +32,13 @@ function App() {
               <Route path="/product/:productId" element={<ProductDetail />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/cart/:userId" element={<Cart />} />
             </Route>
           </Routes>
           <Footer />
         </div>
-      </Router>
-    </Provider>
+      )}
+    </Router>
   )
 }
 
