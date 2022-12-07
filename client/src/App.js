@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { Provider, useSelector } from 'react-redux'
-import { selectCurrentRole } from './features/auth/authSlice'
+import { selectCurrentUser } from './features/auth/authSlice'
 import store from './store'
 import Footer from './components/Footer'
 import Header from './components/Header'
@@ -13,11 +13,11 @@ import Register from './pages/Register'
 import Cart from './pages/Cart'
 import Admin from './pages/Admin'
 function App() {
-  const isAdmin = useSelector(selectCurrentRole)
-  console.log('isAdmin: ', isAdmin)
+  const user = useSelector(selectCurrentUser)
+
   return (
     <Router>
-      {isAdmin ? (
+      {user.isAdmin ? (
         <div>
           <Routes>
             <Route path="/" element={<Admin />} />

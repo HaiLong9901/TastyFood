@@ -56,7 +56,6 @@ const UserControler = {
 
   login: async (req, res) => {
     const { phone, password } = req.body
-    console.log(phone, password)
     if (!phone || !password)
       return res.status(400).json({
         success: false,
@@ -74,7 +73,7 @@ const UserControler = {
       console.log(validPassword)
       if (!validPassword)
         return res.status(400).json({
-          success: true,
+          success: false,
           passage: 'Incorect password',
         })
 
@@ -91,8 +90,13 @@ const UserControler = {
         success: true,
         passage: 'login successfully',
         accessToken,
-        user: user._id,
-        isAdmin: user.isAdmin,
+        // user: user._id,
+        // isAdmin: user.isAdmin,
+        user: {
+          id: user._id,
+          isAdmin: user.isAdmin,
+          imageURL: user.imageURL,
+        },
       })
     } catch (error) {
       console.log(error)

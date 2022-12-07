@@ -3,10 +3,12 @@ import Wrapper from './common/Wrapper'
 import { GiTomato } from 'react-icons/gi'
 import { FaFacebook, FaInstagram, FaTiktok, FaShoppingCart, FaTimes, FaBars, FaSearch } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { selectCurrentUser, selectCurrentToken } from '../features/auth/authSlice'
 import { USER_DEFAULT_AVATAR } from '../shared/Constants'
+import { logOut } from '../features/auth/authSlice'
 function Header() {
+  const dispatch = useDispatch()
   const user = useSelector(selectCurrentUser)
   const [openMenu, setOpenMenu] = useState(false)
   return (
@@ -53,18 +55,26 @@ function Header() {
                   Giới thiệu
                 </Link>
               </li>
-              {user ? (
+              {user.id ? (
                 <li className="group flex justify-center items-center relative">
                   <div className="w-[3rem] aspect-square rounded-[50%] overflow-hidden">
-                    <img src={USER_DEFAULT_AVATAR} alt="" className="w-full h-full object-cover" />
+                    <img
+                      src={user.imageURL ? user.imageURL : USER_DEFAULT_AVATAR}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   <div className="absolute bg-white rounded-[.5rem] hidden bottom-0 flex-col translate-y-[100%] z-[1000] group-hover:flex px-[2rem] after:content-[''] after:border-[2.5rem] after:border-b-white after:border-solid after:border-transparent after:top-[0] after:translate-y-[-70%] after:absolute">
                     <Link className="text-primaryColor text-[1.6rem] font-bold text-center py-[1rem]" to="/">
                       Profile
                     </Link>
-                    <Link className="text-primaryColor text-[1.6rem] font-bold text-center py-[1rem]" to="/">
+                    <span
+                      className="text-primaryColor text-[1.6rem] font-bold text-center py-[1rem] cursor-pointer"
+                      to="/"
+                      onClick={() => dispatch(logOut())}
+                    >
                       Logout
-                    </Link>
+                    </span>
                   </div>
                 </li>
               ) : (
@@ -76,7 +86,7 @@ function Header() {
               )}
 
               <li className="leading-[5rem] flex items-center">
-                <Link to={user ? `/cart/${user}` : '/login'} className="text-[1.6rem] text-white">
+                <Link to={user.id ? `/cart/${user.id}` : '/login'} className="text-[1.6rem] text-white">
                   <FaShoppingCart className="text-[2rem] text-white" />
                 </Link>
               </li>

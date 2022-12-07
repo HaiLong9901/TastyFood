@@ -28,7 +28,7 @@ const UserSchema = new Schema(
     },
     imageURL: {
       type: String,
-      default: null,
+      default: 'https://www.focusedu.org/wp-content/uploads/2018/12/circled-user-male-skin-type-1-2.png',
     },
   },
   { timestamps: true },

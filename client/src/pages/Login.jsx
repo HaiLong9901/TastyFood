@@ -7,10 +7,12 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setCredentials } from '../features/auth/authSlice'
 import { useLoginMutation } from '../features/apis/authApiSlice'
+import { useState } from 'react'
 
 function Login() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const [loginError, setLoginError] = useState('')
   const [login, { isLoading }] = useLoginMutation()
   const phoneRegExp =
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
@@ -24,21 +26,21 @@ function Login() {
       password: Yup.string().required('Bạn chưa nhập mật khẩu').min(8, 'Mật khẩu phải gồm ít nhất 8 kí tự'),
     }),
     onSubmit: async (values) => {
-      console.log(values)
       const { phone, password } = values
       try {
         const userData = await login({ phone, password }).unwrap()
+        console.log(userData.data)
         dispatch(setCredentials({ ...userData, phone }))
         navigate('/')
       } catch (error) {
-        console.log(error)
+        setLoginError(error.data.passage)
       }
     },
   })
   return (
     <div className="bg-orangeColor">
       <Wrapper>
-        <div className="flex justify-center lg:justify-between items-center min-h-[80vh]">
+        <div className="flex justify-center lg:justify-between items-center min-h-[90vh]">
           <div className="hidden lg:block w-[50%]">
             <div className="flex items-center">
               <span className="text-[6rem] text-white font-logoFont">TastyF</span>
@@ -88,6 +90,7 @@ function Login() {
                       {formik.touched.password && formik.errors.password ? formik.errors.password : null}
                     </span>
                   </div>
+                  <i className="text-[1.3rem]">{loginError}</i>
                   <h3 className="text-blueColor text-[1.3rem] italic">
                     Bạn chưa có tài khoản? Nhấn{' '}
                     <Link to="/register" className="text-[1.3rem] font-bold underline">
