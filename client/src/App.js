@@ -11,7 +11,7 @@ import Layout from './components/Layout'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Cart from './pages/Cart'
-import Admin from './pages/Admin'
+import Admin from './pages/admin/Admin'
 function App() {
   const user = useSelector(selectCurrentUser)
 

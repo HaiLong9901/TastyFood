@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Formik, useFormik } from 'formik'
 import * as Yup from 'yup'
 import Wrapper from '../components/common/Wrapper'
@@ -6,31 +6,43 @@ import { GiTomato } from 'react-icons/gi'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { selectCurrentToken, selectCurrentUser } from '../features/auth/authSlice'
+import { useRegisterMutation } from '../features/apis/authApiSlice'
 
 function Register() {
-  const currentToken = useSelector(selectCurrentToken)
-  const currentUser = useSelector(selectCurrentUser)
-  console.log('current: ', currentUser, currentToken)
+  const [register, { isLoading }] = useRegisterMutation()
+  const [errorRegister, setErrorRegister] = useState('')
   const navigate = useNavigate()
   const phoneRegExp =
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
   const formik = useFormik({
     initialValues: {
+      name: '',
       phone: '',
       password: '',
-      confirm: '',
-      userName: '',
+      confirmPass: '',
     },
     validationSchema: Yup.object({
-      userName: Yup.string().required('Nhập tên tài khoản'),
+      name: Yup.string().required('Nhập tên tài khoản'),
       phone: Yup.string().required('Bạn chưa nhập số điện thoại').matches(phoneRegExp, 'Số điện thoại không hợp lệ'),
       password: Yup.string().required('Bạn chưa nhập mật khẩu').min(8, 'Mật khẩu phải gồm ít nhất 8 kí tự'),
-      confirm: Yup.string().required('Bạn phải nhập xác nhận mật khẩu'),
+      confirmPass: Yup.string().required('Bạn phải nhập xác nhận mật khẩu'),
     }),
     onSubmit: async (values) => {
-      navigate('/')
+      console.log(values)
+      try {
+        if (values.password !== values.confirmPass) {
+          setErrorRegister('ConfirmPass password is not incorrected')
+          return
+        }
+        await register({ ...values })
+        navigate('/login')
+      } catch (error) {
+        console.log(error.data.passage)
+        setErrorRegister(error.data.passage)
+      }
     },
   })
+  console.log(formik.values)
   return (
     <div className="bg-orangeColor">
       <Wrapper>
@@ -52,20 +64,20 @@ function Register() {
               <div>
                 <form onSubmit={formik.handleSubmit} className="flex flex-col gap-[2rem]">
                   <div className="flex flex-col gap-[1rem] items-start">
-                    <label className="text-whiteColor text-[1.6rem] font-bold text-left" htmlFor="user">
+                    <label className="text-whiteColor text-[1.6rem] font-bold text-left" htmlFor="name">
                       Tên tài khoản
                     </label>
                     <input
                       type="text"
-                      name="user"
+                      name="name"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      value={formik.values.userName}
-                      id="user"
+                      value={formik.values.name}
+                      id="name"
                       className="text-[1.6rem] text-primaryColor w-full outline-none py-[1rem] px-[1rem] bg-white border-orangeColor border-solid border-[.1rem] rounded-[5rem]"
                     />
                     <span className="text-blueColor text-[1.3rem] italic">
-                      {formik.touched.userName && formik.errors.userName ? formik.errors.userName : null}
+                      {formik.touched.name && formik.errors.name ? formik.errors.name : null}
                     </span>
                   </div>
                   <div className="flex flex-col gap-[1rem] items-start">
@@ -102,22 +114,23 @@ function Register() {
                     </span>
                   </div>
                   <div className="flex flex-col gap-[1rem] items-start">
-                    <label className="text-whiteColor text-[1.6rem] font-bold text-left" htmlFor="confirm">
+                    <label className="text-whiteColor text-[1.6rem] font-bold text-left" htmlFor="confirmPass">
                       Xác nhận mật khẩu
                     </label>
                     <input
-                      id="confirm"
+                      id="confirmPass"
                       type="password"
-                      name="confirm"
+                      name="confirmPass"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      value={formik.values.confirm}
+                      value={formik.values.confirmPass}
                       className="text-[1.6rem] text-primaryColor w-full outline-none py-[1rem] px-[1rem] bg-white border-orangeColor border-solid border-[.1rem] rounded-[5rem]"
                     />
                     <span className="text-blueColor text-[1.3rem] italic">
-                      {formik.touched.confirm && formik.errors.confirm ? formik.errors.confirm : null}
+                      {formik.touched.confirmPass && formik.errors.confirmPass ? formik.errors.confirmPass : null}
                     </span>
                   </div>
+                  <span>{errorRegister}</span>
                   <button
                     type="submit"
                     disabled={formik.isSubmitting}

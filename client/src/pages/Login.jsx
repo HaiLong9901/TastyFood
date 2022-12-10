@@ -29,7 +29,6 @@ function Login() {
       const { phone, password } = values
       try {
         const userData = await login({ phone, password }).unwrap()
-        console.log(userData.data)
         dispatch(setCredentials({ ...userData, phone }))
         navigate('/')
       } catch (error) {
