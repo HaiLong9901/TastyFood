@@ -30,7 +30,9 @@ function Login() {
       try {
         const userData = await login({ phone, password }).unwrap()
         dispatch(setCredentials({ ...userData, phone }))
-        navigate('/')
+        // console.log(userData)
+        // navigate('/')
+        navigate(userData.user.isAdmin ? '/admin' : '/')
       } catch (error) {
         setLoginError(error.data.passage)
       }

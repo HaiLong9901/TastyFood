@@ -29,7 +29,9 @@ function ProductsList() {
   return (
     <Wrapper>
       <div className="flex my-[5rem] justify-between flex-col-reverse lg:flex-row gap-[2rem]">
-        <div className="flex flex-wrap w-full lg:w-[80%] gap-[3rem] md:gap-[4rem] lg:gap-[2rem]">{ProductsList}</div>
+        <div className="flex flex-wrap content-start w-full lg:w-[80%] gap-[3rem] md:gap-[4rem] lg:gap-[2rem]">
+          {ProductsList}
+        </div>
         <div className="w-full lg:w-[18%]">
           <div className="p-[.5rem] border-orangeColor border-solid border-[.1rem] rounded-[.5rem] bg-yellowColor">
             <div className="flex justify-between items-center">

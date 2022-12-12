@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { LOCAL_STORAGE_TOKEN_NAME } from '../../shared/Constants'
 
 const authSlice = createSlice({
   name: 'auth',
@@ -13,11 +14,13 @@ const authSlice = createSlice({
       state.user = user
       state.token = accessToken
       state.isAdmin = isAdmin
+      localStorage.setItem(LOCAL_STORAGE_TOKEN_NAME, accessToken)
     },
     logOut: (state, action) => {
       state.user = {}
       state.token = null
       state.isAdmin = false
+      localStorage.clear()
     },
   },
 })

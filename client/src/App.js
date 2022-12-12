@@ -12,16 +12,22 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Cart from './pages/Cart'
 import Admin from './pages/admin/Admin'
+import AdminSidebar from './components/admin/AdminSidebar'
+import ProtectedRoute from './components/ProtectedRoute'
+import AdminRoute from './components/admin/AdminRoute'
 function App() {
   const user = useSelector(selectCurrentUser)
 
   return (
     <Router>
       {user.isAdmin ? (
-        <div>
-          <Routes>
-            <Route path="/" element={<Admin />} />
-          </Routes>
+        <div className="flex h-screen">
+          <AdminSidebar />
+          <div className="w-[80%]">
+            <Routes>
+              <Route path="/admin" element={<Admin />} />
+            </Routes>
+          </div>
         </div>
       ) : (
         <div className="App overflow-hidden">
@@ -32,7 +38,12 @@ function App() {
               <Route path="/product/:productId" element={<ProductDetail />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/cart/:userId" element={<Cart />} />
+              <Route element={<ProtectedRoute />}>
+                <Route path="/cart/:userId" element={<Cart />} />
+              </Route>
+              {/* <Route element={<AdminRoute />}>
+              <Route path="/admin" element={<Admin />} />
+            </Route> */}
             </Route>
           </Routes>
           <Footer />

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 function ProductCard({ imageURL, name, original_price, sale_price, _id }) {
   const navigate = useNavigate()
   return (
-    <div className="md:w-[22rem] w-[16rem] aspect-[3/4] border-solid border-[.1rem] border-orangeColor rounded-[.5rem] overflow-hidden relative">
+    <div className="md:w-[22rem] w-[16rem] aspect-[3/4] box-border border-solid border-[.1rem] border-orangeColor rounded-[.5rem] overflow-hidden relative grow-0">
       <div className="w-full aspect-[4/3]">
         <img src={imageURL} alt={name} className="w-full h-full object-cover" />
       </div>

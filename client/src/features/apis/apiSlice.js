@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { API } from '../../shared/Constants'
+import { API, LOCAL_STORAGE_TOKEN_NAME } from '../../shared/Constants'
 
 export const apiSlice = createApi({
   reducerPath: 'api',
@@ -7,7 +7,8 @@ export const apiSlice = createApi({
     baseUrl: API,
     // credentials: 'include',
     prepareHeaders: (headers, { getState }) => {
-      const token = getState().auth.token
+      // const token = getState().auth.token
+      const token = localStorage[LOCAL_STORAGE_TOKEN_NAME]
       if (token) {
         headers.set('authorization', `Bearer ${token}`)
       }
