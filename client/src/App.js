@@ -15,6 +15,8 @@ import Admin from './pages/admin/Admin'
 import AdminSidebar from './components/admin/AdminSidebar'
 import ProtectedRoute from './components/ProtectedRoute'
 import AdminRoute from './components/admin/AdminRoute'
+import UserProfile from './pages/UserProfile'
+import UserAccount from './pages/UserAccount'
 function App() {
   const user = useSelector(selectCurrentUser)
 
@@ -40,6 +42,9 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route element={<ProtectedRoute />}>
                 <Route path="/cart/:userId" element={<Cart />} />
+                <Route path="/user" element={<UserAccount />}>
+                  <Route path="/user/account/profile" element={<UserProfile />} />
+                </Route>
               </Route>
               {/* <Route element={<AdminRoute />}>
               <Route path="/admin" element={<Admin />} />

@@ -56,7 +56,7 @@ function Header() {
                 </Link>
               </li>
               {user.id ? (
-                <li className="group flex justify-center items-center relative">
+                <li className="group flex justify-center items-center relative cursor-pointer">
                   <div className="w-[3rem] aspect-square rounded-[50%] overflow-hidden">
                     <img
                       src={user.imageURL ? user.imageURL : USER_DEFAULT_AVATAR}
@@ -64,16 +64,22 @@ function Header() {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <div className="absolute bg-white rounded-[.5rem] hidden bottom-0 flex-col translate-y-[100%] z-[1000] group-hover:flex px-[2rem] after:content-[''] after:border-[2.5rem] after:border-b-white after:border-solid after:border-transparent after:top-[0] after:translate-y-[-70%] after:absolute">
-                    <Link className="text-primaryColor text-[1.6rem] font-bold text-center py-[1rem]" to="/">
-                      Profile
+                  <div className="w-[15rem] absolute bg-white rounded-[.5rem] hidden bottom-0 flex-col translate-y-[100%] z-[1000] group-hover:flex px-[1rem] after:content-[''] after:border-[2.5rem] after:border-b-white after:border-solid after:border-transparent after:top-[0] after:right-0 after:translate-x-[-100%] after:translate-y-[-70%] after:absolute shadow-lg">
+                    <Link
+                      className="text-primaryColor text-[1.5rem] font-bold text-center py-[1rem]"
+                      to={`/user/account/profile`}
+                    >
+                      Tài khoản của tôi
+                    </Link>
+                    <Link className="text-primaryColor text-[1.5rem] font-bold text-center py-[1rem]" to="/">
+                      Đơn hàng
                     </Link>
                     <span
-                      className="text-primaryColor text-[1.6rem] font-bold text-center py-[1rem] cursor-pointer"
+                      className="text-primaryColor text-[1.5rem] font-bold text-center py-[1rem] cursor-pointer"
                       to="/"
                       onClick={() => dispatch(logOut())}
                     >
-                      Logout
+                      Đăng xuất
                     </span>
                   </div>
                 </li>
