@@ -102,6 +102,23 @@ const UserControler = {
       console.log(error)
     }
   },
+
+  getUser: async (req, res) => {
+    try {
+      const user = await User.findById(req.params.id)
+      if (!user)
+        return res.status(400).json({
+          success: false,
+          passage: 'User didnt exist',
+        })
+      return res.json({
+        success: true,
+        result: user,
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  },
 }
 
 module.exports = UserControler

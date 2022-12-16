@@ -8,6 +8,7 @@ module.exports = {
         secondaryColor: '#A35709',
         yellowColor: '#F0E3CA',
         orangeColor: '#FF8303',
+        grayColor: '#9ca3af',
       },
       fontFamily: {
         logoFont: ['Pacifico', 'cursive'],

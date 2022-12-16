@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "@reduxjs/toolkit": "^1.9.1"
+    "@reduxjs/toolkit": "^1.9.1",
+    "cloudinary-react": "^1.8.1"
   }
 }
