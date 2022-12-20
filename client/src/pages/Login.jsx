@@ -29,6 +29,7 @@ function Login() {
       const { phone, password } = values
       try {
         const userData = await login({ phone, password }).unwrap()
+        console.log(userData)
         dispatch(setCredentials({ ...userData, phone }))
         navigate(userData.user.isAdmin ? '/admin' : '/')
       } catch (error) {

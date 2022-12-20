@@ -2,6 +2,7 @@ const express = require('express')
 const argon2 = require('argon2')
 const jwt = require('jsonwebtoken')
 const User = require('../models/User')
+const e = require('express')
 
 const UserControler = {
   register: async (req, res) => {
@@ -114,6 +115,29 @@ const UserControler = {
       return res.json({
         success: true,
         result: user,
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  },
+
+  updateInfo: async (req, res) => {
+    try {
+      const { name, imageURL } = req.body
+      let updatedInfo
+      if (!name && imageURL) updatedInfo = { imageURL }
+      else if (name && !imageURL) updatedInfo = { name }
+      else if (name && imageURL) updatedInfo = { name, imageURL }
+      else
+        return res.status(401).json({
+          success: false,
+          passage: 'No update',
+        })
+      // const postUpdateCondition = _id: req.params.id, user: req.userId
+      updatedInfo = await User.findOneAndUpdate({ _id: req.params.id }, updatedInfo)
+      return res.json({
+        success: true,
+        passage: 'updated successfully',
       })
     } catch (error) {
       console.log(error)
