@@ -5,9 +5,11 @@
 * {
   font-size: 10px;
   font-family: 'Roboto', sans-serif;
+  box-sizing: border-box;
 }
 body {
   background: white;
+  overflow: overlay;
 }
 .scrollbar::-webkit-scrollbar {
   width: 1rem;

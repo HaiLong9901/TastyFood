@@ -24,7 +24,7 @@ function App() {
   return (
     <Router>
       {user.isAdmin ? (
-        <div className="flex h-screen">
+        <div className="flex h-screen relative">
           <AdminSidebar />
           <div className="w-[80%]">
             <Routes>

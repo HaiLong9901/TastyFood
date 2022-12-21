@@ -1,20 +1,19 @@
 import React, { useEffect, useRef } from 'react'
 import { USER_DEFAULT_AVATAR } from '../../shared/Constants'
 import { useSelector, useDispatch } from 'react-redux'
-import { selectCurrentUser } from '../../features/auth/authSlice'
+import { selectCurrentUser, updateCredentials, selectCurrentToken } from '../../features/auth/authSlice'
 import { useGetUserQuery } from '../../features/apis/apiSlice'
 import { useUpdateInfoMutation } from '../../features/apis/userApiSlice'
-import { setCredentials } from '../../features/auth/authSlice'
-import UploadWidget from '../../components/common/UploadWidget'
 import { useState } from 'react'
+import SuccessBox from '../../components/common/SuccessBox'
 
 function UserProfile() {
   const dispatch = useDispatch()
   const [updateInfo, { isLoading }] = useUpdateInfoMutation()
-  const [name, setName] = useState('')
   const { id, imageURL } = useSelector(selectCurrentUser)
   const [imageURLCloudinary, setImageURLCloudinary] = useState(imageURL)
   const { data: user, isSuccess: isSuccessUser, isFetching: isFetchingUser } = useGetUserQuery(id)
+  const [name, setName] = useState('')
   const cloudinaryRef = useRef()
   const widgetRef = useRef()
   useEffect(() => {
@@ -57,7 +56,7 @@ function UserProfile() {
                 <input
                   type="text"
                   id="name"
-                  placeholder={user.result.name}
+                  placeholder={name.length ? name : user.result.name}
                   className="w-[30rem] outline-none border-solid border-[.1rem] border-primaryColor rounded-[.5rem] p-[.5rem] text-[1.6rem]"
                   onChange={(e) => setName(e.target.value)}
                 />
@@ -80,14 +79,6 @@ function UserProfile() {
                 <img src={imageURLCloudinary || USER_DEFAULT_AVATAR} alt="avt" className="w-full h-full object-cover" />
               </div>
               <div>
-                {/* <label
-            htmlFor="imageURL"
-            className="text-[1.6rem] cursor-pointer py-[1rem] px-[2rem] border-[.1rem] border-solid border-primaryColor rounded-[1rem]"
-          >
-            Tải ảnh lên
-          </label>
-          <input type="file" id="imageURL" className="hidden" /> */}
-                {/* <UploadWidget /> */}
                 <button
                   className="text-[1.6rem] cursor-pointer py-[1rem] px-[2rem] border-[.1rem] border-solid border-primaryColor rounded-[1rem]"
                   onClick={() => widgetRef.current.open()}
@@ -98,17 +89,10 @@ function UserProfile() {
             </div>
           </div>
           <button
-            // type="submit"
-            // form="userInfo"
             onClick={async () => {
               try {
-                const user = await updateInfo({ id, imageURL: imageURLCloudinary, name })
-                if (user)
-                  dispatch({
-                    user: {
-                      imageURL: imageURLCloudinary,
-                    },
-                  })
+                const updatedUser = await updateInfo({ id, imageURL: imageURLCloudinary, name })
+                if (updatedUser) dispatch(updateCredentials({ imageURL: imageURLCloudinary }))
               } catch (error) {
                 console.log(error)
               }

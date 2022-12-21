@@ -6,28 +6,28 @@ const authSlice = createSlice({
   initialState: {
     user: {},
     token: null,
-    isAdmin: false,
   },
   reducers: {
     setCredentials: (state, action) => {
-      const { user, accessToken, isAdmin } = action.payload
-      console.log(action.payload)
+      const { user, accessToken } = action.payload
       state.user = user
       state.token = accessToken
-      state.isAdmin = isAdmin
       localStorage.setItem(LOCAL_STORAGE_TOKEN_NAME, accessToken)
     },
     logOut: (state, action) => {
       state.user = {}
       state.token = null
-      state.isAdmin = false
       localStorage.clear()
+    },
+    updateCredentials: (state, action) => {
+      const { imageURL } = action.payload
+      state.user.imageURL = imageURL
     },
   },
 })
 
-export const { setCredentials, logOut } = authSlice.actions
+export const { setCredentials, logOut, updateCredentials } = authSlice.actions
 export default authSlice.reducer
 export const selectCurrentUser = (state) => state.auth.user
 export const selectCurrentToken = (state) => state.auth.token
-export const selectCurrentRole = (state) => state.auth.isAdmin
+export const selectCurrentRole = (state) => state.auth.user.isAdmin

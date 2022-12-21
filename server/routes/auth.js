@@ -32,6 +32,6 @@ router.post('/register', UserControler.register)
 
 router.post('/login', UserControler.login)
 router.get('/get_user/:id', verifyToken, UserControler.getUser)
-router.patch('/update/:id', verifyToken, UserControler.updateInfo)
+router.put('/update/:id', verifyToken, UserControler.updateInfo)
 
 module.exports = router

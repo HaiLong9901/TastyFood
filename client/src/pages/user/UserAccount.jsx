@@ -26,19 +26,39 @@ function UserAccount() {
                 style={({ isActive }) =>
                   isActive
                     ? {
-                        color: 'red',
+                        color: '#FF8303',
                       }
                     : undefined
                 }
               >
                 Hồ sơ
               </NavLink>
-              <Link to="/user/account/address" className="ml-[3rem] text-[1.6rem]">
+              <NavLink
+                to="/user/account/address"
+                className="ml-[3rem] text-[1.6rem]"
+                style={({ isActive }) =>
+                  isActive
+                    ? {
+                        color: '#FF8303',
+                      }
+                    : undefined
+                }
+              >
                 Địa chỉ
-              </Link>
-              <Link to="/user/account/password" className="ml-[3rem] text-[1.6rem]">
+              </NavLink>
+              <NavLink
+                to="/user/account/password"
+                className="ml-[3rem] text-[1.6rem]"
+                style={({ isActive }) =>
+                  isActive
+                    ? {
+                        color: '#FF8303',
+                      }
+                    : undefined
+                }
+              >
                 Đổi mật khẩu
-              </Link>
+              </NavLink>
               <div className="flex gap-[1rem] items-center">
                 <FaFileInvoice className="text-[1.6rem] w-[2rem]" />{' '}
                 <span className="text-[1.6rem] font-bold">Đơn hàng</span>

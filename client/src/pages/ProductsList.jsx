@@ -4,6 +4,7 @@ import { useGetAllProductsQuery } from '../features/apis/apiSlice'
 import img from '../assets/Image/spicy-red-soup-beef-noodle-bowl-wooden-table.jpg'
 import ProductCard from '../components/product/ProductCard'
 import { FaAngleRight, FaAngleDown } from 'react-icons/fa'
+import SuccessBox from '../components/common/SuccessBox'
 
 function ProductsList() {
   const [openFilterBox, setOpenFilterBox] = useState(false)
@@ -125,6 +126,7 @@ function ProductsList() {
         </div>
       </div>
     </Wrapper>
+    // <SuccessBox title="Thanh cong" />
   )
 }
 
