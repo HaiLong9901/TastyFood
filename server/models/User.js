@@ -21,7 +21,7 @@ const UserSchema = new Schema(
       default: false,
     },
     address: {
-      type: Object,
+      type: Array,
     },
     credit: {
       type: String,

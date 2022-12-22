@@ -134,11 +134,18 @@ const UserControler = {
           passage: 'No update',
         })
       // const postUpdateCondition = _id: req.params.id, user: req.userId
-      updatedInfo = await User.findOneAndUpdate({ _id: req.params.id }, updatedInfo)
+      updatedInfo = await User.findOneAndUpdate({ _id: req.params.id }, updatedInfo, { new: true })
       return res.json({
         success: true,
         passage: 'updated successfully',
       })
+    } catch (error) {
+      console.log(error)
+    }
+  },
+  updateAddress: async (req, res) => {
+    try {
+      return res.json(req.userId)
     } catch (error) {
       console.log(error)
     }

@@ -15,6 +15,7 @@ export const apiSlice = createApi({
       return headers
     },
   }),
+  tagTypes: ['User', 'Address'],
   endpoints: (builder) => ({
     getAllProducts: builder.query({
       query: () => 'product/get_all_products',
@@ -24,8 +25,30 @@ export const apiSlice = createApi({
     }),
     getUser: builder.query({
       query: (userId) => `auth/get_user/${userId}`,
+      providesTags: ['User'],
+    }),
+    getAllDistrict: builder.query({
+      query: () => 'https://vapi.vnappmob.com/api/province/district/01',
+    }),
+    getAllWard: builder.query({
+      query: (districtId) => `https://vapi.vnappmob.com/api/province/ward/${districtId}`,
+    }),
+    updateInfo: builder.mutation({
+      query: (user) => ({
+        url: `/auth/update/${user.id}`,
+        method: 'PUT',
+        body: user,
+      }),
+      invalidatesTags: ['User'],
     }),
   }),
 })
 
-export const { useGetAllProductsQuery, useGetProductByIdQuery, useGetUserQuery } = apiSlice
+export const {
+  useGetAllProductsQuery,
+  useGetProductByIdQuery,
+  useGetUserQuery,
+  useGetAllDistrictQuery,
+  useGetAllWardQuery,
+  useUpdateInfoMutation,
+} = apiSlice

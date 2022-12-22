@@ -1,14 +1,23 @@
 import React from 'react'
-import { useMemo } from 'react'
 import { useState } from 'react'
 import UserAdressBox from '../../components/user/UserAdressBox'
+import { useGetAllDistrictQuery, useGetAllWardQuery } from '../../features/apis/apiSlice'
 
 function UserAdress() {
   const [addAddressForm, setAddAddressForm] = useState(false)
+  const [district, setDistrict] = useState('')
+  const [ward, setWard] = useState('')
+  const [districtId, setDistrictId] = useState(271)
+  const [location, setLocation] = useState('')
+  const [missingLocation, setMissingLocation] = useState(false)
+  const { data: districts, isSuccess: districtsSuccess } = useGetAllDistrictQuery()
   const handleOpenAddAddressForm = () => {
     console.log(addAddressForm)
     setAddAddressForm(!addAddressForm)
   }
+  let { data: wards, isSuccess: wardsSuccess } = useGetAllWardQuery(districtId)
+
+  console.log('district: ', district)
   return (
     <div className="px-[2rem] py-[1rem] min-h-[70vh]">
       <div className="w-full border-b-solid border-b-[.1rem] border-b-primaryColor pb-[1rem] flex justify-between items-center">
@@ -27,12 +36,12 @@ function UserAdress() {
 
       <div
         className={
-          addAddressForm
+          !addAddressForm
             ? 'bg-primaryColor/70 w-screen h-screen border-box absolute top-0 left-0 flex justify-center items-center translate-y-[-100%] duration-300 ease-in-out'
             : 'bg-primaryColor/70 w-screen h-screen border-box absolute top-0 left-0 flex justify-center items-center translate-y-[0] duration-300 ease-in-out'
         }
       >
-        <div className="w-[50%] h-[60%] bg-white flex flex-wrap gap-[2%] p-[2%]">
+        <div className="w-[50%] h-[60%] bg-white flex flex-wrap gap-[2%] p-[2%] rounded-[.5rem]">
           <div className="w-[47%] h-[10rem]">
             <label htmlFor="city" className="text-[1.6rem] text-primaryColor font-bold">
               Thành phố
@@ -64,11 +73,20 @@ function UserAdress() {
             <select
               name="district"
               id="district"
-              value="Quận/huyện"
-              disabled
+              value={districtId}
+              onChange={(e) => {
+                setDistrictId(e.target.value)
+                setDistrict(districts.results?.filter((dist) => dist.district_id === districtId)[0].district_name)
+              }}
               className="w-full p-[1rem] outline-none border-grayColor border-solid border-[.1rem] text-[1.6rem] rounded-[.5rem]"
             >
-              {/* <option value=""></option> */}
+              {districtsSuccess && districts.results
+                ? districts.results.map((dist) => (
+                    <option key={dist.district_id} value={dist.district_id} className="text-[1.3rem]">
+                      {dist.district_name}
+                    </option>
+                  ))
+                : null}
             </select>
           </div>
           <div className="w-[47%]">
@@ -78,30 +96,38 @@ function UserAdress() {
             <select
               name="ward"
               id="ward"
-              value="Xã/phường"
+              value={ward}
               // disabled
+              onChange={(e) => setWard(e.target.value)}
               className="w-full p-[1rem] outline-none border-grayColor border-solid border-[.1rem] text-[1.6rem] rounded-[.5rem]"
             >
-              <option value="Mot">Mot</option>
-              <option value="Hai">Hai</option>
-              <option value="Hai">Hai</option>
-              <option value="Hai">Hai</option>
-              <option value="Hai">Hai</option>
-              <option value="Hai">Hai</option>
-              <option value="Hai">Hai</option>
-              <option value="Hai">Hai</option>
+              {wardsSuccess && wards.results
+                ? wards.results.map((w) => (
+                    <option key={w.ward_id} value={w.ward_name} className="text-[1.3rem]">
+                      {w.ward_name}
+                    </option>
+                  ))
+                : null}
             </select>
           </div>
           <div className="w-[96%]">
-            <label htmlFor="location" className="text-[1.6rem] text-primaryColor font-bold">
+            <label
+              htmlFor="location"
+              className="text-[1.6rem] text-primaryColor font-bold after:content-['*'] after:text-[1.6rem] after:text-red-500 after:ml-[1rem]"
+            >
               Địa chỉ cụ thể
             </label>
             <input
               type="text"
               id="location"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
               className="w-full p-[1rem] outline-none border-grayColor border-solid border-[.1rem] text-[1.6rem] rounded-[.5rem]"
             />
           </div>
+          <h4 className={missingLocation ? 'text-[1.5rem] text-red-500 italic' : 'hidden'}>
+            Bạn cần điền địa chỉ cụ thể
+          </h4>
           <div className="w-[96%] flex justify-end gap-[1rem]">
             <button
               className="text-[1.6rem] text-white px-[2rem] py-[.25rem] rounded-[.5rem] bg-grayColor"
@@ -109,7 +135,18 @@ function UserAdress() {
             >
               Quay lại
             </button>
-            <button className="text-[1.6rem] text-white px-[2rem] py-[.25rem] rounded-[.5rem] bg-orangeColor">
+            <button
+              className="text-[1.6rem] text-white px-[2rem] py-[.25rem] rounded-[.5rem] bg-orangeColor"
+              onClick={() => {
+                if (location.length) {
+                  setLocation('')
+                  setAddAddressForm(false)
+                  setMissingLocation(false)
+                  return
+                }
+                setMissingLocation(true)
+              }}
+            >
               Thêm
             </button>
           </div>

@@ -33,5 +33,6 @@ router.post('/register', UserControler.register)
 router.post('/login', UserControler.login)
 router.get('/get_user/:id', verifyToken, UserControler.getUser)
 router.put('/update/:id', verifyToken, UserControler.updateInfo)
+router.put('/update_address', verifyToken, UserControler.updateAddress)
 
 module.exports = router

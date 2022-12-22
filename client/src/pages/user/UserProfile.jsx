@@ -3,7 +3,7 @@ import { USER_DEFAULT_AVATAR } from '../../shared/Constants'
 import { useSelector, useDispatch } from 'react-redux'
 import { selectCurrentUser, updateCredentials, selectCurrentToken } from '../../features/auth/authSlice'
 import { useGetUserQuery } from '../../features/apis/apiSlice'
-import { useUpdateInfoMutation } from '../../features/apis/userApiSlice'
+import { useUpdateInfoMutation } from '../../features/apis/apiSlice'
 import { useState } from 'react'
 import SuccessBox from '../../components/common/SuccessBox'
 
@@ -39,7 +39,8 @@ function UserProfile() {
         <h2 className="text-[4rem] font-bold text-orangeColor">...Loading</h2>
       </div>
     )
-  else if (isSuccessUser)
+  else if (isSuccessUser) {
+    console.log(user)
     Profile = (
       <div className="px-[2rem] py-[1rem] min-h-[70vh]">
         <div className="w-full border-b-solid border-b-[.1rem] border-b-primaryColor pb-[1rem]">
@@ -56,6 +57,7 @@ function UserProfile() {
                 <input
                   type="text"
                   id="name"
+                  value={name}
                   placeholder={name.length ? name : user.result.name}
                   className="w-[30rem] outline-none border-solid border-[.1rem] border-primaryColor rounded-[.5rem] p-[.5rem] text-[1.6rem]"
                   onChange={(e) => setName(e.target.value)}
@@ -104,6 +106,7 @@ function UserProfile() {
         </div>
       </div>
     )
+  }
   return <>{Profile}</>
 }
 
