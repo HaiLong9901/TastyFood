@@ -41,6 +41,14 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ['User'],
     }),
+    updateAddress: builder.mutation({
+      query: (address) => ({
+        url: '/auth/update_address',
+        method: 'PUT',
+        body: address,
+      }),
+      invalidatesTags: ['User'],
+    }),
   }),
 })
 
@@ -51,4 +59,5 @@ export const {
   useGetAllDistrictQuery,
   useGetAllWardQuery,
   useUpdateInfoMutation,
+  useUpdateAddressMutation,
 } = apiSlice

@@ -1,9 +1,16 @@
 import React from 'react'
 import { useState } from 'react'
 import UserAdressBox from '../../components/user/UserAdressBox'
-import { useGetAllDistrictQuery, useGetAllWardQuery } from '../../features/apis/apiSlice'
-
+import {
+  useGetAllDistrictQuery,
+  useGetAllWardQuery,
+  useUpdateAddressMutation,
+  useGetUserQuery,
+} from '../../features/apis/apiSlice'
+import { useSelector } from 'react-redux'
+import { selectCurrentUser } from '../../features/auth/authSlice'
 function UserAdress() {
+  const [updateAddress, { isLoading }] = useUpdateAddressMutation()
   const [addAddressForm, setAddAddressForm] = useState(false)
   const [district, setDistrict] = useState('')
   const [ward, setWard] = useState('')
@@ -15,9 +22,33 @@ function UserAdress() {
     console.log(addAddressForm)
     setAddAddressForm(!addAddressForm)
   }
+  const handleSubmitAddress = () => {
+    if (location.length) {
+      setLocation('')
+      setAddAddressForm(false)
+      setMissingLocation(false)
+      const newAddress = location + ', ' + ward + ', ' + district + ', Hà Nội'
+      console.log(newAddress)
+      updateAddress({
+        address: newAddress,
+      })
+      return
+    }
+    setMissingLocation(true)
+  }
   let { data: wards, isSuccess: wardsSuccess } = useGetAllWardQuery(districtId)
-
-  console.log('district: ', district)
+  const { id, imageURL } = useSelector(selectCurrentUser)
+  const { data: user, isSuccess: isSuccessUser, isFetching: isFetchingUser } = useGetUserQuery(id)
+  let AddressList
+  if (isFetchingUser) AddressList = <div>Loading</div>
+  else if (isSuccessUser)
+    AddressList = (
+      <div>
+        {user.result.address?.map((a, index) => (
+          <UserAdressBox name={user.result.name} phone={user.result.phone} address={a} key={index} />
+        ))}
+      </div>
+    )
   return (
     <div className="px-[2rem] py-[1rem] min-h-[70vh]">
       <div className="w-full border-b-solid border-b-[.1rem] border-b-primaryColor pb-[1rem] flex justify-between items-center">
@@ -31,7 +62,8 @@ function UserAdress() {
       </div>
       <div className="py-[2rem] flex flex-col gap-[2rem]">
         <h2 className="text-[1.6rem] text-primaryColor">Địa chỉ</h2>
-        <UserAdressBox name="Do Hai Long" phone="0123456789" address="15151casdcdscjhabd" />
+        <div>{AddressList}</div>
+        {/* <UserAdressBox name="Do Hai Long" phone="0123456789" address="15151casdcdscjhabd" /> */}
       </div>
 
       <div
@@ -137,15 +169,16 @@ function UserAdress() {
             </button>
             <button
               className="text-[1.6rem] text-white px-[2rem] py-[.25rem] rounded-[.5rem] bg-orangeColor"
-              onClick={() => {
-                if (location.length) {
-                  setLocation('')
-                  setAddAddressForm(false)
-                  setMissingLocation(false)
-                  return
-                }
-                setMissingLocation(true)
-              }}
+              // onClick={() => {
+              //   if (location.length) {
+              //     setLocation('')
+              //     setAddAddressForm(false)
+              //     setMissingLocation(false)
+              //     return
+              //   }
+              //   setMissingLocation(true)
+              // }}
+              onClick={handleSubmitAddress}
             >
               Thêm
             </button>

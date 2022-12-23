@@ -145,7 +145,29 @@ const UserControler = {
   },
   updateAddress: async (req, res) => {
     try {
-      return res.json(req.userId)
+      // return res.json(req.userId)
+      const user = await User.findById(req.userId)
+      if (!user)
+        return res.status(400).json({
+          success: false,
+          passage: 'user not found',
+        })
+      const { address } = req.body
+      if (!address)
+        return res.status(400).json({
+          success: false,
+          passage: 'Missing address',
+        })
+      const updateAddress = await User.findByIdAndUpdate(
+        req.userId,
+        { address: [...user.address, address] },
+        { new: true },
+      )
+      if (updateAddress)
+        return res.json({
+          success: true,
+          passage: 'Address is updated',
+        })
     } catch (error) {
       console.log(error)
     }
