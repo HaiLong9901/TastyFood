@@ -5,7 +5,8 @@ import { selectCurrentUser, updateCredentials, selectCurrentToken } from '../../
 import { useGetUserQuery } from '../../features/apis/apiSlice'
 import { useUpdateInfoMutation } from '../../features/apis/apiSlice'
 import { useState } from 'react'
-import SuccessBox from '../../components/common/SuccessBox'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 function UserProfile() {
   const dispatch = useDispatch()
@@ -40,12 +41,23 @@ function UserProfile() {
       </div>
     )
   else if (isSuccessUser) {
-    console.log(user)
     Profile = (
       <div className="px-[2rem] py-[1rem] min-h-[70vh]">
         <div className="w-full border-b-solid border-b-[.1rem] border-b-primaryColor pb-[1rem]">
           <h2 className="text-[1.6rem] font-bold">Hồ sơ của tôi</h2>
           <h4 className="text-[1.6rem]">Quản lý thông tin hồ sơ để bảo mật tài khoản</h4>
+          <ToastContainer
+            position="top-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
         </div>
         <div className="h-[40vh]">
           <div className="h-full w-full flex items-center">
@@ -94,8 +106,30 @@ function UserProfile() {
             onClick={async () => {
               try {
                 const updatedUser = await updateInfo({ id, imageURL: imageURLCloudinary, name })
-                if (updatedUser) dispatch(updateCredentials({ imageURL: imageURLCloudinary }))
+                if (updatedUser) {
+                  dispatch(updateCredentials({ imageURL: imageURLCloudinary }))
+                  toast.success('Cập nhật thông tin thành công', {
+                    position: 'top-center',
+                    autoClose: 1000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'colored',
+                  })
+                }
               } catch (error) {
+                toast.error('Đã có lỗi xảy ra, vui lòng kiểm tra lại!', {
+                  position: 'top-center',
+                  autoClose: 1000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: 'colored',
+                })
                 console.log(error)
               }
             }}
