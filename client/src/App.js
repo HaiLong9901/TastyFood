@@ -18,6 +18,7 @@ import AdminRoute from './components/admin/AdminRoute'
 import UserProfile from './pages/user/UserProfile'
 import UserAccount from './pages/user/UserAccount'
 import UserAdress from './pages/user/UserAdress'
+import UserPassword from './pages/user/UserPassword'
 function App() {
   const user = useSelector(selectCurrentUser)
 
@@ -46,6 +47,7 @@ function App() {
                 <Route path="/user" element={<UserAccount />}>
                   <Route path="/user/account/profile" element={<UserProfile />} />
                   <Route path="/user/account/address" element={<UserAdress />} />
+                  <Route path="/user/account/password" element={<UserPassword />} />
                 </Route>
               </Route>
               {/* <Route element={<AdminRoute />}>

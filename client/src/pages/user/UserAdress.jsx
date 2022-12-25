@@ -29,6 +29,7 @@ function UserAdress() {
       setLocation('')
       setAddAddressForm(false)
       setMissingLocation(false)
+      setDistrictId(271)
       const newAddress = location + ', ' + ward + ', ' + district + ', Hà Nội'
       console.log(newAddress)
       updateAddress({
@@ -36,7 +37,7 @@ function UserAdress() {
       })
       toast.success('Thêm địa chỉ thành công', {
         position: 'top-center',
-        autoClose: 2000,
+        autoClose: 500,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -73,9 +74,9 @@ function UserAdress() {
         </button>
       </div>
       <div className="py-[2rem] flex flex-col gap-[2rem]">
-        <ToastContainer
+        {/* <ToastContainer
           position="top-center"
-          autoClose={5000}
+          autoClose={1000}
           hideProgressBar={false}
           newestOnTop={false}
           closeOnClick
@@ -84,10 +85,10 @@ function UserAdress() {
           draggable
           pauseOnHover
           theme="light"
-        />
+        /> */}
+        <ToastContainer />
         <h2 className="text-[1.6rem] text-primaryColor">Địa chỉ</h2>
         <div>{AddressList}</div>
-        {/* <UserAdressBox name="Do Hai Long" phone="0123456789" address="15151casdcdscjhabd" /> */}
       </div>
 
       <div

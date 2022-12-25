@@ -70,7 +70,7 @@ function Login() {
                       id="phone"
                       className="text-[1.6rem] text-primaryColor w-full outline-none py-[1rem] px-[1rem] bg-white border-orangeColor border-solid border-[.1rem] rounded-[5rem]"
                     />
-                    <span className="text-blueColor text-[1.3rem] italic">
+                    <span className="text-red-500 text-[1.3rem] italic">
                       {formik.touched.phone && formik.errors.phone ? formik.errors.phone : null}
                     </span>
                   </div>
@@ -86,7 +86,7 @@ function Login() {
                       value={formik.values.password}
                       className="text-[1.6rem] text-primaryColor w-full outline-none py-[1rem] px-[1rem] bg-white border-orangeColor border-solid border-[.1rem] rounded-[5rem]"
                     />
-                    <span className="text-blueColor text-[1.3rem] italic">
+                    <span className="text-red-500 text-[1.3rem] italic">
                       {formik.touched.password && formik.errors.password ? formik.errors.password : null}
                     </span>
                   </div>

@@ -71,7 +71,6 @@ const UserControler = {
         })
 
       const validPassword = await argon2.verify(user.password, password)
-      console.log(validPassword)
       if (!validPassword)
         return res.status(400).json({
           success: false,
@@ -167,6 +166,46 @@ const UserControler = {
         return res.json({
           success: true,
           passage: 'Address is updated',
+        })
+    } catch (error) {
+      console.log(error)
+    }
+  },
+
+  changePassword: async (req, res) => {
+    const { password, confirm, oldPass } = req.body
+    if (password !== confirm)
+      return res.status(400).json({
+        success: false,
+        passage: 'Xác nhận mật khẩu sai',
+      })
+    try {
+      const user = await User.findById(req.userId)
+      if (!user)
+        return res.status(400).json({
+          success: false,
+          passage: 'invalid token',
+        })
+      const validPassword = await argon2.verify(user.password, oldPass)
+      if (!validPassword)
+        return res.status(400).json({
+          success: false,
+          passage: 'Nhập sai mật khẩu',
+        })
+      const hashPassword = await argon2.hash(password)
+      const updatedPassword = await User.findByIdAndUpdate(
+        req.userId,
+        {
+          password: hashPassword,
+        },
+        {
+          new: true,
+        },
+      )
+      if (updatedPassword)
+        return res.json({
+          success: true,
+          passage: 'Change password successfully',
         })
     } catch (error) {
       console.log(error)

@@ -49,6 +49,13 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ['User'],
     }),
+    changePassword: builder.mutation({
+      query: (change) => ({
+        url: 'auth/change_password',
+        method: 'PUT',
+        body: change,
+      }),
+    }),
   }),
 })
 
@@ -60,4 +67,5 @@ export const {
   useGetAllWardQuery,
   useUpdateInfoMutation,
   useUpdateAddressMutation,
+  useChangePasswordMutation,
 } = apiSlice
