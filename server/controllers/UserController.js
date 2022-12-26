@@ -172,6 +172,36 @@ const UserControler = {
     }
   },
 
+  deleteAddress: async (req, res) => {
+    try {
+      // return res.json(req.userId)
+      const user = await User.findById(req.userId)
+      if (!user)
+        return res.status(400).json({
+          success: false,
+          passage: 'user not found',
+        })
+      const { index } = req.body
+      if (!index)
+        return res.status(400).json({
+          success: false,
+          passage: 'Missing address',
+        })
+      const updateAddress = await User.findByIdAndUpdate(
+        req.userId,
+        { address: user.address.slice(0, index).concat(user.address.slice(index + 1, user.address.length)) },
+        { new: true },
+      )
+      if (updateAddress)
+        return res.json({
+          success: true,
+          passage: 'Address is updated',
+        })
+    } catch (error) {
+      console.log(error)
+    }
+  },
+
   changePassword: async (req, res) => {
     const { password, confirm, oldPass } = req.body
     if (password !== confirm)

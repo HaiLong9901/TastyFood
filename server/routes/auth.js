@@ -35,5 +35,6 @@ router.get('/get_user/:id', verifyToken, UserControler.getUser)
 router.put('/update/:id', verifyToken, UserControler.updateInfo)
 router.put('/update_address', verifyToken, UserControler.updateAddress)
 router.put('/change_password', verifyToken, UserControler.changePassword)
+router.put('/delete_address', verifyToken, UserControler.deleteAddress)
 
 module.exports = router
