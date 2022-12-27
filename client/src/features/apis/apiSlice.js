@@ -49,6 +49,14 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ['User'],
     }),
+    deleteAddress: builder.mutation({
+      query: (index) => ({
+        url: '/auth/delete_address',
+        method: 'PUT',
+        body: index,
+      }),
+      invalidatesTags: ['User'],
+    }),
     changePassword: builder.mutation({
       query: (change) => ({
         url: 'auth/change_password',
@@ -68,4 +76,5 @@ export const {
   useUpdateInfoMutation,
   useUpdateAddressMutation,
   useChangePasswordMutation,
+  useDeleteAddressMutation,
 } = apiSlice

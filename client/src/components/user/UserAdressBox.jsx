@@ -1,8 +1,9 @@
 import React from 'react'
-import UploadWidget from '../common/UploadWidget'
-import Wrapper from '../common/Wrapper'
+import { useDeleteAddressMutation } from '../../features/apis/apiSlice'
 
-function UserAdressBox({ name, phone, address }) {
+function UserAdressBox({ name, phone, address, id }) {
+  console.log(id)
+  const [deleteAddress, { isLoading }] = useDeleteAddressMutation()
   return (
     <div className="py-[2rem] border-b-solid border-b-[.1rem] border-b-grayColor w-full flex justify-between">
       <div>
@@ -16,8 +17,16 @@ function UserAdressBox({ name, phone, address }) {
         <p className="text-[1.6rem] py-[1rem] text-grayColor">{address}</p>
       </div>
       <div className="flex gap-[2rem]">
-        <span className="text-[1.6rem] text-orangeColor cursor-pointer">Chỉnh sửa</span>
-        <span className="text-[1.6rem] text-orangeColor cursor-pointer">Xóa</span>
+        <span
+          className="text-[1.6rem] text-orangeColor cursor-pointer"
+          onClick={() =>
+            deleteAddress({
+              index: id,
+            })
+          }
+        >
+          Xóa
+        </span>
       </div>
     </div>
   )

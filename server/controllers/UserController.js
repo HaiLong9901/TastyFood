@@ -2,7 +2,11 @@ const express = require('express')
 const argon2 = require('argon2')
 const jwt = require('jsonwebtoken')
 const User = require('../models/User')
+// import { nanoid } from 'nanoid'
 const e = require('express')
+const { v4: uuidv4 } = require('uuid')
+const Cart = require('../models/Cart')
+// const { nanoid } = require('nanoid')
 
 const UserControler = {
   register: async (req, res) => {
@@ -31,8 +35,11 @@ const UserControler = {
         phone,
         password: hashPassword,
       })
-
+      let userCart = new Cart({
+        userId: newUser._id,
+      })
       await newUser.save()
+      await userCart.save()
 
       //return AccessToken
 
@@ -157,9 +164,13 @@ const UserControler = {
           success: false,
           passage: 'Missing address',
         })
+      const newAddress = {
+        address,
+        id: uuidv4(),
+      }
       const updateAddress = await User.findByIdAndUpdate(
         req.userId,
-        { address: [...user.address, address] },
+        { address: [...user.address, newAddress] },
         { new: true },
       )
       if (updateAddress)
@@ -189,7 +200,7 @@ const UserControler = {
         })
       const updateAddress = await User.findByIdAndUpdate(
         req.userId,
-        { address: user.address.slice(0, index).concat(user.address.slice(index + 1, user.address.length)) },
+        { address: [...user.address.filter((a) => a.id !== index)] },
         { new: true },
       )
       if (updateAddress)

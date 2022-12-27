@@ -23,6 +23,9 @@ const UserSchema = new Schema(
     address: {
       type: Array,
     },
+    // address: [
+
+    // ]
     credit: {
       type: String,
     },

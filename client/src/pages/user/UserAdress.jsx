@@ -55,13 +55,22 @@ function UserAdress() {
   let AddressList
   if (isFetchingUser) AddressList = <div>Loading</div>
   else if (isSuccessUser)
-    AddressList = (
-      <div>
-        {user.result.address?.map((a, index) => (
-          <UserAdressBox name={user.result.name} phone={user.result.phone} address={a} key={index} />
-        ))}
-      </div>
-    )
+    if (!user.result.address.length)
+      AddressList = <div className="text-[1.6rem] italic text-grayColor">Bạn chưa có địa chỉ nào</div>
+    else
+      AddressList = (
+        <div>
+          {user.result.address?.map((a, index) => (
+            <UserAdressBox
+              name={user.result.name}
+              phone={user.result.phone}
+              address={a.address}
+              key={index}
+              id={a.id}
+            />
+          ))}
+        </div>
+      )
   return (
     <div className="px-[2rem] py-[1rem] min-h-[70vh]">
       <div className="w-full border-b-solid border-b-[.1rem] border-b-primaryColor pb-[1rem] flex justify-between items-center">
