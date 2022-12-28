@@ -15,7 +15,7 @@ export const apiSlice = createApi({
       return headers
     },
   }),
-  tagTypes: ['User', 'Address'],
+  tagTypes: ['User', 'Address', 'Cart'],
   endpoints: (builder) => ({
     getAllProducts: builder.query({
       query: () => 'product/get_all_products',
@@ -64,6 +64,18 @@ export const apiSlice = createApi({
         body: change,
       }),
     }),
+    getCart: builder.query({
+      query: () => '/cart/get_cart',
+      providesTags: ['Cart'],
+    }),
+    addToCart: builder.mutation({
+      query: (item) => ({
+        url: '/cart/add_to_cart',
+        method: 'PUT',
+        body: item,
+      }),
+      invalidatesTags: ['Cart'],
+    }),
   }),
 })
 
@@ -77,4 +89,6 @@ export const {
   useUpdateAddressMutation,
   useChangePasswordMutation,
   useDeleteAddressMutation,
+  useGetCartQuery,
+  useAddToCartMutation,
 } = apiSlice

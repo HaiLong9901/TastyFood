@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 const { ObjectId } = require('mongoose')
 const AuthRouter = require('./routes/auth')
 const ProductRouter = require('./routes/product')
+const CartRouter = require('./routes/cart')
 const cors = require('cors')
 const app = express()
 app.use(express.json())
@@ -30,6 +31,7 @@ app.use(
 )
 app.use('/api/auth', AuthRouter)
 app.use('/api/product', ProductRouter)
+app.use('/api/cart', CartRouter)
 app.get('/', (req, res) => res.send('Hello world'))
 
 const port = 5000

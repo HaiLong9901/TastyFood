@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { useGetProductByIdQuery } from '../features/apis/apiSlice'
+import { useGetProductByIdQuery, useAddToCartMutation } from '../features/apis/apiSlice'
 import img from '../assets/Image/spicy-red-soup-beef-noodle-bowl-wooden-table.jpg'
 import Wrapper from '../components/common/Wrapper'
 import { AiOutlineTag } from 'react-icons/ai'
@@ -14,6 +14,17 @@ function ProductDetail() {
     isSuccess: isSuccessDetail,
     isFetching: isFetchingDetail,
   } = useGetProductByIdQuery(params.productId)
+  const [addToCart, { isLoading }] = useAddToCartMutation()
+  const handleAddToCart = () => {
+    try {
+      addToCart({
+        productId: detail.result._id,
+        quantity,
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
   let Detail
   if (isFetchingDetail) {
     Detail = <div>Loading</div>
@@ -63,7 +74,10 @@ function ProductDetail() {
             </div>
           </div>
           <div className="py-[2rem] flex items-center justify-center lg:justify-start">
-            <span className="text-whiteColor text-[1.6rem] font-bold bg-orangeColor text-white py-[1rem] px-[3rem] rounded-[2rem] hover:bg-transparent hover:text-orangeColor border-solid border-orangeColor border-[.1rem] cursor-pointer box-border duration-300">
+            <span
+              className="text-whiteColor text-[1.6rem] font-bold bg-orangeColor text-white py-[1rem] px-[3rem] rounded-[2rem] hover:bg-transparent hover:text-orangeColor border-solid border-orangeColor border-[.1rem] cursor-pointer box-border duration-300"
+              onClick={handleAddToCart}
+            >
               Thêm vào giỏ hàng
             </span>
           </div>
