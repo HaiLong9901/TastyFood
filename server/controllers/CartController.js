@@ -7,12 +7,6 @@ const _ = require('lodash')
 const CartController = {
   getCart: async (req, res) => {
     try {
-      // const user = await User.findById(req.params.userId)
-      // if (!user)
-      //   return res.status(400).json({
-      //     success: false,
-      //     passage: 'User didnt exist',
-      //   })
       const cart = await Cart.findOne({ userId: req.userId })
         .populate({
           path: 'products',
@@ -72,6 +66,21 @@ const CartController = {
         success: true,
         passage: 'Add to cart successfully',
       })
+    } catch (error) {
+      console.log(error)
+    }
+  },
+  deleteItemFromCart: async (req, res) => {
+    const { productId } = req.body
+    if (!productId)
+      return res.status(400).json({
+        success: false,
+        passage: 'Missing information',
+      })
+    try {
+      const cart = Cart.findOne({ userId: req.userId }).exec()
+      cart.products = [...cart.products.filter((product) => product.productId !== productId)]
+      await cart.save()
     } catch (error) {
       console.log(error)
     }

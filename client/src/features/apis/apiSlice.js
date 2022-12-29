@@ -76,6 +76,14 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ['Cart'],
     }),
+    removeItemFromCart: builder.mutation({
+      query: ({ productId }) => ({
+        url: '/cart/remove_item',
+        method: 'PUT',
+        body: { productId },
+      }),
+      invalidatesTags: ['Cart'],
+    }),
   }),
 })
 
@@ -91,4 +99,5 @@ export const {
   useDeleteAddressMutation,
   useGetCartQuery,
   useAddToCartMutation,
+  useRemoveItemFromCartMutation,
 } = apiSlice

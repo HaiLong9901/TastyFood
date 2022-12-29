@@ -1,23 +1,57 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
+import { Link } from 'react-router-dom'
+import { FaCheck } from 'react-icons/fa'
+import { addToOrder, removeFromOrder } from '../../features/order/orderSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectProductsFromOrder, selectAmountOfOrder } from '../../features/order/orderSlice'
+import { useAddToCartMutation, useRemoveItemFromCartMutation } from '../../features/apis/apiSlice'
 
-function CartProduct({ imageURL, name, quantity, sale_price, original_price }) {
+function CartProduct({ imageURL, name, quantity, sale_price, original_price, productId }) {
+  const checkRef = useRef()
+  const [addToCart, { isLoading }] = useAddToCartMutation()
+  const [removeItem, { isLoading: isLoadingRemove }] = useRemoveItemFromCartMutation()
+  const dispatch = useDispatch()
+  const products = useSelector(selectProductsFromOrder)
   const [productQuantity, setProductQuantity] = useState(quantity)
-  const handleIncreaseQuantity = () => {
-    setProductQuantity((prev) => prev + 1)
-  }
-  const handleDecreaseQuantity = () => {
-    console.log('sub')
-    if (quantity === 1) return
-    setProductQuantity((prev) => prev - 1)
-  }
+  // products.map((p) => console.log(p))
+  const index = products.findIndex((product) => product.productId === productId)
+  const [check, setCheck] = useState(index > -1 ? true : false)
+  console.log(products)
+  // if (index > 0) {
+  //   setCheck(true)
+  // }
   return (
     <div className="w-full border-[.1rem] border-solid border-gray-300 rounded-[.5rem] h-[15rem] bg-white flex justify-center items-center p-[2rem]">
       <div className="w-[50%] flex items-center gap-[2rem]">
-        <input type="checkbox" className="text-[1.6rem]"></input>
+        <label
+          htmlFor={productId}
+          className={
+            check
+              ? 'w-[2.5rem] h-[2.5rem] bg-orangeColor rounded-[.5rem] flex justify-center items-center'
+              : 'w-[2.5rem] h-[2.5rem] border-solid border-[.1rem] border-primaryColor rounded-[.5rem]'
+          }
+        >
+          {check ? <FaCheck className="text-[1.6rem] text-white" /> : ''}
+        </label>
+        <input
+          type="checkbox"
+          id={productId}
+          className="hidden"
+          checked={check}
+          onChange={(e) => {
+            console.log(e.target.checked)
+            setCheck(e.target.checked)
+            if (e.target.checked) dispatch(addToOrder({ productId, quantity, sale_price }))
+            else dispatch(removeFromOrder({ productId }))
+          }}
+          ref={checkRef}
+        />
         <div className="w-[10rem] h-[10rem] rounded-[.5rem] overflow-hidden">
           <img src={imageURL} alt={name} className="w-full h-full object-cover" />
         </div>
-        <h3 className="text-[1.6rem]">{name}</h3>
+        <Link to={`/product/${productId}`} className="text-[1.6rem]">
+          {name}
+        </Link>
       </div>
       <div className="w-[10%] flex justify-between">
         <span className="text-[1.6rem] italic text-primaryColor line-through">{original_price}</span>
@@ -30,6 +64,7 @@ function CartProduct({ imageURL, name, quantity, sale_price, original_price }) {
             onClick={() => {
               if (productQuantity === 1) return
               setProductQuantity((prev) => prev - 1)
+              addToCart({ productId, quantity: -1 })
             }}
           >
             -
@@ -41,6 +76,8 @@ function CartProduct({ imageURL, name, quantity, sale_price, original_price }) {
             className="text-[1.6rem] text-primaryColor w-[3rem] h-[3rem] text-center border-solid border-primaryColor border-[.1rem] cursor-pointer"
             onClick={() => {
               setProductQuantity((prev) => prev + 1)
+              addToCart({ productId, quantity: 1 })
+              dispatch(addToOrder({ productId, quantity, sale_price }))
             }}
           >
             +
@@ -48,7 +85,12 @@ function CartProduct({ imageURL, name, quantity, sale_price, original_price }) {
         </div>
       </div>
       <div className="w-[10%] text-[1.6rem] text-primaryColor italic text-center">{sale_price}</div>
-      <div className="w-[10%] text-[1.6rem] text-orangeColor cursor-pointer text-center">Xóa</div>
+      <div
+        className="w-[10%] text-[1.6rem] text-orangeColor cursor-pointer text-center"
+        onClick={() => removeItem({ productId })}
+      >
+        Xóa
+      </div>
     </div>
   )
 }
