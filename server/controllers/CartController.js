@@ -72,15 +72,22 @@ const CartController = {
   },
   deleteItemFromCart: async (req, res) => {
     const { productId } = req.body
+    console.log(req.userId)
     if (!productId)
       return res.status(400).json({
         success: false,
         passage: 'Missing information',
       })
     try {
-      const cart = Cart.findOne({ userId: req.userId }).exec()
-      cart.products = [...cart.products.filter((product) => product.productId !== productId)]
+      const cart = await Cart.findOne({ userId: req.userId }).exec()
+      // console.log()
+      cart.products = [...cart.products.filter((product) => product.productId != productId)]
+      console.log(cart.products)
       await cart.save()
+      res.json({
+        success: true,
+        passage: 'delete product from cart successfully',
+      })
     } catch (error) {
       console.log(error)
     }

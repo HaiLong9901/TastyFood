@@ -7,7 +7,7 @@ import { AiOutlineTag } from 'react-icons/ai'
 import ReviewBox from '../components/common/ReviewBox'
 import { USER_DEFAULT_AVATAR } from '../shared/Constants'
 function ProductDetail() {
-  const [quantity, setQuantity] = useState(0)
+  const [quantity, setQuantity] = useState(1)
   const params = useParams()
   const {
     data: detail,
@@ -54,7 +54,7 @@ function ProductDetail() {
               <div
                 className="text-[1.6rem] font-bold flex items-center justify-center w-[4rem] aspect-square bg-secondaryColor text-white rounded-[.5rem] cursor-pointer"
                 onClick={() => {
-                  if (quantity === 0) return
+                  if (quantity === 1) return
                   setQuantity((prev) => prev - 1)
                 }}
               >

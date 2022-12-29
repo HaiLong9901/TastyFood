@@ -1,8 +1,20 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAddToCartMutation } from '../../features/apis/apiSlice'
 
 function ProductCard({ imageURL, name, original_price, sale_price, _id }) {
   const navigate = useNavigate()
+  const [addToCart, { isLoading }] = useAddToCartMutation()
+  const handleAddToCart = () => {
+    try {
+      addToCart({
+        productId: _id,
+        quantity: 1,
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
   return (
     <div className="md:w-[22rem] w-[16rem] aspect-[3/4] box-border border-solid border-[.1rem] border-orangeColor rounded-[.5rem] overflow-hidden relative grow-0">
       <div className="w-full aspect-[4/3]">
@@ -21,7 +33,10 @@ function ProductCard({ imageURL, name, original_price, sale_price, _id }) {
             {original_price.toString().concat('đ')}
           </span>
         </div>
-        <div className="w-full bg-orangeColor text-center text-[1.6rem] text-white font-bold absolute bottom-0 py-[.5rem] md:py-[1rem] cursor-pointer hover:text-orangeColor hover:bg-transparent hover:border-t-solid hover:border-t-[.1rem] hover:border-t-orangeColor duration-200">
+        <div
+          className="w-full bg-orangeColor text-center text-[1.6rem] text-white font-bold absolute bottom-0 py-[.5rem] md:py-[1rem] cursor-pointer hover:text-orangeColor hover:bg-transparent hover:border-t-solid hover:border-t-[.1rem] hover:border-t-orangeColor duration-200"
+          onClick={handleAddToCart}
+        >
           Thêm vào giỏ hàng
         </div>
       </div>

@@ -13,13 +13,10 @@ function CartProduct({ imageURL, name, quantity, sale_price, original_price, pro
   const dispatch = useDispatch()
   const products = useSelector(selectProductsFromOrder)
   const [productQuantity, setProductQuantity] = useState(quantity)
-  // products.map((p) => console.log(p))
   const index = products.findIndex((product) => product.productId === productId)
   const [check, setCheck] = useState(index > -1 ? true : false)
   console.log(products)
-  // if (index > 0) {
-  //   setCheck(true)
-  // }
+
   return (
     <div className="w-full border-[.1rem] border-solid border-gray-300 rounded-[.5rem] h-[15rem] bg-white flex justify-center items-center p-[2rem]">
       <div className="w-[50%] flex items-center gap-[2rem]">
@@ -64,6 +61,8 @@ function CartProduct({ imageURL, name, quantity, sale_price, original_price, pro
             onClick={() => {
               if (productQuantity === 1) return
               setProductQuantity((prev) => prev - 1)
+              if (checkRef.current.checked)
+                dispatch(addToOrder({ productId, quantity: parseInt(quantity) - 1, sale_price }))
               addToCart({ productId, quantity: -1 })
             }}
           >
@@ -76,8 +75,9 @@ function CartProduct({ imageURL, name, quantity, sale_price, original_price, pro
             className="text-[1.6rem] text-primaryColor w-[3rem] h-[3rem] text-center border-solid border-primaryColor border-[.1rem] cursor-pointer"
             onClick={() => {
               setProductQuantity((prev) => prev + 1)
+              if (checkRef.current.checked)
+                dispatch(addToOrder({ productId, quantity: parseInt(quantity) + 1, sale_price }))
               addToCart({ productId, quantity: 1 })
-              dispatch(addToOrder({ productId, quantity, sale_price }))
             }}
           >
             +
@@ -87,7 +87,10 @@ function CartProduct({ imageURL, name, quantity, sale_price, original_price, pro
       <div className="w-[10%] text-[1.6rem] text-primaryColor italic text-center">{sale_price}</div>
       <div
         className="w-[10%] text-[1.6rem] text-orangeColor cursor-pointer text-center"
-        onClick={() => removeItem({ productId })}
+        onClick={() => {
+          dispatch(removeFromOrder({ productId }))
+          removeItem({ productId })
+        }}
       >
         Xóa
       </div>
