@@ -6,7 +6,7 @@ import { selectCurrentToken } from '../features/auth/authSlice'
 function ProtectedRoute() {
   const token = useSelector(selectCurrentToken)
   const location = useLocation()
-  return token ? <Outlet /> : <Navigate to="/login" state={{ from: location }} replace />
+  return token ? <Outlet /> : <Navigate to="/login" state={{ from: location }} />
 }
 
 export default ProtectedRoute

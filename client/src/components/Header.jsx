@@ -92,7 +92,7 @@ function Header() {
               )}
 
               <li className="leading-[5rem] flex items-center">
-                <Link to={user.id ? `/cart/${user.id}` : '/login'} className="text-[1.6rem] text-white">
+                <Link to={user.id ? '/cart' : '/login'} className="text-[1.6rem] text-white">
                   <FaShoppingCart className="text-[2rem] text-white" />
                 </Link>
               </li>

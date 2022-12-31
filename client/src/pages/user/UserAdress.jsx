@@ -21,7 +21,6 @@ function UserAdress() {
   const [missingLocation, setMissingLocation] = useState(false)
   const { data: districts, isSuccess: districtsSuccess } = useGetAllDistrictQuery()
   const handleOpenAddAddressForm = () => {
-    console.log(addAddressForm)
     setAddAddressForm(!addAddressForm)
   }
   const handleSubmitAddress = () => {
@@ -50,8 +49,8 @@ function UserAdress() {
     setMissingLocation(true)
   }
   let { data: wards, isSuccess: wardsSuccess } = useGetAllWardQuery(districtId)
-  const { id, imageURL } = useSelector(selectCurrentUser)
-  const { data: user, isSuccess: isSuccessUser, isFetching: isFetchingUser } = useGetUserQuery(id)
+  // const { id, imageURL } = useSelector(selectCurrentUser)
+  const { data: user, isSuccess: isSuccessUser, isFetching: isFetchingUser } = useGetUserQuery()
   let AddressList
   if (isFetchingUser) AddressList = <div>Loading</div>
   else if (isSuccessUser)
@@ -142,7 +141,7 @@ function UserAdress() {
               value={districtId}
               onChange={(e) => {
                 setDistrictId(e.target.value)
-                setDistrict(districts.results?.filter((dist) => dist.district_id === districtId)[0].district_name)
+                setDistrict(districts.results?.filter((dist) => dist.district_id == districtId)[0].district_name)
               }}
               className="w-full p-[1rem] outline-none border-grayColor border-solid border-[.1rem] text-[1.6rem] rounded-[.5rem]"
             >

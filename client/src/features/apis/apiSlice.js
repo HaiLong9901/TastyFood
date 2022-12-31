@@ -24,7 +24,7 @@ export const apiSlice = createApi({
       query: (productId) => `product/${productId}`,
     }),
     getUser: builder.query({
-      query: (userId) => `auth/get_user/${userId}`,
+      query: (userId) => 'auth/get_user',
       providesTags: ['User'],
     }),
     getAllDistrict: builder.query({
@@ -35,7 +35,7 @@ export const apiSlice = createApi({
     }),
     updateInfo: builder.mutation({
       query: (user) => ({
-        url: `/auth/update/${user.id}`,
+        url: '/auth/update',
         method: 'PUT',
         body: user,
       }),

@@ -4,8 +4,10 @@ import Wrapper from '../components/common/Wrapper'
 import { useGetCartQuery } from '../features/apis/apiSlice'
 import { useSelector } from 'react-redux'
 import { selectAmountOfOrder } from '../features/order/orderSlice'
+import { useNavigate } from 'react-router-dom'
 
 function Cart() {
+  const navigate = useNavigate()
   const amount = useSelector(selectAmountOfOrder)
   const {
     data: cart,
@@ -45,7 +47,10 @@ function Cart() {
           </div>
           <div className="w-full bg-white py-[2rem] px-[4rem] rounded-[.5rem] flex justify-between mt-[2rem] bottom-0">
             <h3 className="text-[2.5rem] text-primaryColor font-bold">Tổng tiền: {amount}</h3>
-            <button className="text-[1.6rem] text-white py-[1rem] px-[3rem] rounded-[.5rem] bg-orangeColor">
+            <button
+              className="text-[1.6rem] text-white py-[1rem] px-[3rem] rounded-[.5rem] bg-orangeColor"
+              onClick={() => navigate('/checkout')}
+            >
               Mua hàng
             </button>
           </div>

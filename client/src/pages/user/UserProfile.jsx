@@ -13,7 +13,7 @@ function UserProfile() {
   const [updateInfo, { isLoading }] = useUpdateInfoMutation()
   const { id, imageURL } = useSelector(selectCurrentUser)
   const [imageURLCloudinary, setImageURLCloudinary] = useState(imageURL)
-  const { data: user, isSuccess: isSuccessUser, isFetching: isFetchingUser } = useGetUserQuery(id)
+  const { data: user, isSuccess: isSuccessUser, isFetching: isFetchingUser } = useGetUserQuery()
   const [name, setName] = useState('')
   const cloudinaryRef = useRef()
   const widgetRef = useRef()

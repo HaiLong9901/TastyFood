@@ -112,7 +112,7 @@ const UserControler = {
 
   getUser: async (req, res) => {
     try {
-      const user = await User.findById(req.params.id)
+      const user = await User.findById(req.userId)
       if (!user)
         return res.status(400).json({
           success: false,
@@ -140,7 +140,7 @@ const UserControler = {
           passage: 'No update',
         })
       // const postUpdateCondition = _id: req.params.id, user: req.userId
-      updatedInfo = await User.findOneAndUpdate({ _id: req.params.id }, updatedInfo, { new: true })
+      updatedInfo = await User.findOneAndUpdate({ _id: req.userId }, updatedInfo, { new: true })
       return res.json({
         success: true,
         passage: 'updated successfully',

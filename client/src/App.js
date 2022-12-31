@@ -19,6 +19,8 @@ import UserProfile from './pages/user/UserProfile'
 import UserAccount from './pages/user/UserAccount'
 import UserAdress from './pages/user/UserAdress'
 import UserPassword from './pages/user/UserPassword'
+import Checkout from './pages/Checkout'
+import NotFound from './pages/NotFound'
 function App() {
   const user = useSelector(selectCurrentUser)
 
@@ -36,20 +38,22 @@ function App() {
       ) : (
         <div className="App overflow-hidden">
           <Routes>
-            <Route element={<Layout loginHeaderPath={['/login', '/register']} />}>
+            <Route element={<Layout loginHeaderPath={['/login', '/register', '/checkout']} />}>
               <Route path="/" element={<Home />} />
               <Route path="/product" element={<ProductsList />} />
               <Route path="/product/:productId" element={<ProductDetail />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route element={<ProtectedRoute />}>
-                <Route path="/cart/:userId" element={<Cart />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/checkout" element={<Checkout />} />
                 <Route path="/user" element={<UserAccount />}>
                   <Route path="/user/account/profile" element={<UserProfile />} />
                   <Route path="/user/account/address" element={<UserAdress />} />
                   <Route path="/user/account/password" element={<UserPassword />} />
                 </Route>
               </Route>
+              <Route path="/*" element={<NotFound />} />
               {/* <Route element={<AdminRoute />}>
               <Route path="/admin" element={<Admin />} />
             </Route> */}

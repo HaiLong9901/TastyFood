@@ -35,7 +35,7 @@ function HeaderForLogin() {
               <span className="text-[2.5rem] text-orangeColor font-logoFont">d</span>
             </Link>
             <h3 className="text-[2.4rem] font-bold text-primaryColor">
-              {pathname.includes('login') ? 'ĐĂNG NHẬP' : 'ĐĂNG KÝ'}
+              {pathname.includes('login') ? 'ĐĂNG NHẬP' : pathname.includes('register') ? 'ĐĂNG KÝ' : 'THANH TOÁN'}
             </h3>
           </div>
         </Wrapper>

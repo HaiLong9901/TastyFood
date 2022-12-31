@@ -1,9 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { LOCAL_STORAGE_PRODUCTS_ORDER } from '../../shared/Constants'
 
 const orderSlice = createSlice({
   name: 'order',
   initialState: {
-    products: [],
+    products: localStorage.getItem(LOCAL_STORAGE_PRODUCTS_ORDER)
+      ? JSON.parse(localStorage.getItem(LOCAL_STORAGE_PRODUCTS_ORDER))
+      : [],
     amount: 0,
   },
   reducers: {
@@ -17,10 +20,13 @@ const orderSlice = createSlice({
           quantity,
           sale_price,
         })
+
+      localStorage.setItem(LOCAL_STORAGE_PRODUCTS_ORDER, JSON.stringify(state.products))
     },
     removeFromOrder: (state, action) => {
       const { productId } = action.payload
       state.products = [...state.products.filter((product) => product.productId !== productId)]
+      localStorage.setItem(LOCAL_STORAGE_PRODUCTS_ORDER, JSON.stringify(state.products))
     },
   },
 })
