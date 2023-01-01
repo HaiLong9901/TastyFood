@@ -11,7 +11,7 @@ const orderSlice = createSlice({
   },
   reducers: {
     addToOrder: (state, action) => {
-      const { productId, quantity, sale_price } = action.payload
+      const { productId, quantity, sale_price, imageURL, name } = action.payload
       const index = state.products.findIndex((product) => product.productId === productId)
       if (index > -1) state.products[index].quantity = quantity
       else
@@ -19,6 +19,8 @@ const orderSlice = createSlice({
           productId,
           quantity,
           sale_price,
+          imageURL,
+          name,
         })
 
       localStorage.setItem(LOCAL_STORAGE_PRODUCTS_ORDER, JSON.stringify(state.products))

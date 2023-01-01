@@ -38,7 +38,7 @@ function CartProduct({ imageURL, name, quantity, sale_price, original_price, pro
           onChange={(e) => {
             console.log(e.target.checked)
             setCheck(e.target.checked)
-            if (e.target.checked) dispatch(addToOrder({ productId, quantity, sale_price }))
+            if (e.target.checked) dispatch(addToOrder({ productId, quantity, sale_price, imageURL, name }))
             else dispatch(removeFromOrder({ productId }))
           }}
           ref={checkRef}
@@ -62,7 +62,7 @@ function CartProduct({ imageURL, name, quantity, sale_price, original_price, pro
               if (productQuantity === 1) return
               setProductQuantity((prev) => prev - 1)
               if (checkRef.current.checked)
-                dispatch(addToOrder({ productId, quantity: parseInt(quantity) - 1, sale_price }))
+                dispatch(addToOrder({ productId, quantity: parseInt(quantity) - 1, sale_price, imageURL, name }))
               addToCart({ productId, quantity: -1 })
             }}
           >
@@ -76,7 +76,7 @@ function CartProduct({ imageURL, name, quantity, sale_price, original_price, pro
             onClick={() => {
               setProductQuantity((prev) => prev + 1)
               if (checkRef.current.checked)
-                dispatch(addToOrder({ productId, quantity: parseInt(quantity) + 1, sale_price }))
+                dispatch(addToOrder({ productId, quantity: parseInt(quantity) + 1, sale_price, imageURL, name }))
               addToCart({ productId, quantity: 1 })
             }}
           >

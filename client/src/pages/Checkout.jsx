@@ -3,8 +3,22 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { selectProductsFromOrder } from '../features/order/orderSlice'
 import { useSelector } from 'react-redux'
 import { ImLocation2 } from 'react-icons/im'
+import { FaTicketAlt } from 'react-icons/fa'
 import Wrapper from '../components/common/Wrapper'
 import { useGetUserQuery } from '../features/apis/apiSlice'
+
+export const CheckoutItem = ({ name, quantity, sale_price, imageURL }) => (
+  <div className="flex px-[2rem] py-[2rem] box-border border-gray-200 border-dashed border-b-[.1rem]">
+    <div className="w-[50%] flex gap-[1rem] items-center">
+      <div className="w-[5rem] h-[5rem] rounded-[.5rem] overflow-hidden">
+        <img src={imageURL} alt={name} className="w-full h-full object-cover" />
+      </div>
+      <h4 className="text-[1.6rem] text-primaryColor">{name}</h4>
+    </div>
+    <div className="w-[25%] text-[1.6rem] text-primaryColor text-center">{quantity}</div>
+    <div className="w-[25%] text-[1.6rem] text-primaryColor text-center">{sale_price}</div>
+  </div>
+)
 function Checkout() {
   const location = useLocation()
   const navigate = useNavigate()
@@ -20,73 +34,120 @@ function Checkout() {
   } = useGetUserQuery()
   let OrderRender
   if (isFetchingUser) OrderRender = <div>Loading</div>
-  else if (isSuccessUser) console.log(user)
-  const LocationBox = (
-    <div className="w-screen h-screen bg-primaryColor/50 absolute top-0 left-0 flex justify-center items-center">
-      <div className="bg-white w-[35%] h-[80%] rounded-[.5rem] flex flex-col">
-        <div className="w-full border-solid border-grayColor border-b-[.1rem] p-[2rem]">
-          <h2 className="text-[1.6rem] text-primaryColor font-bold">Địa chỉ của bạn</h2>
-        </div>
-        <div className="w-full p-[2rem] grow overflow-y-auto">
-          {user.result.address?.map((address, index) => (
-            <div className="w-full flex gap-[1rem] py-[1rem] border-gray-200 border-dashed border-b-[.1rem]">
-              <input
-                type="radio"
-                id={address._id}
-                name="address"
-                checked={index === addressIndex}
-                onChange={() => {
-                  setAddressIndex(index)
-                  setChangeLocationBox(false)
-                }}
-              />
-              <label htmlFor={address._id} className="text-[1.6rem] text-primaryColor">
-                {address.address}
-              </label>
-            </div>
-          ))}
-        </div>
-        <div className="p-[2rem] flex justify-between">
-          <button
-            className="text-[1.6rem] text-white py-[1rem] bg-orangeColor px-[2rem] rounded-[.5rem]"
-            onClick={() => navigate('/user/account/address')}
-          >
-            Thêm địa chỉ
-          </button>
-          <button
-            className="text-[1.6rem] text-primaryColor py-[1rem] px-[2rem] rounded-[.5rem] border-solid border-primaryColor border-[.1rem]"
-            onClick={() => setChangeLocationBox(false)}
-          >
-            Quay lại
-          </button>
-        </div>
-        {/* <div>
+  else if (isSuccessUser) {
+    console.log(user)
+    const LocationBox = (
+      <div className="w-screen h-screen bg-primaryColor/50 absolute top-0 left-0 flex justify-center items-center">
+        <div className="bg-white w-[35%] h-[80%] rounded-[.5rem] flex flex-col">
+          <div className="w-full border-solid border-grayColor border-b-[.1rem] p-[2rem]">
+            <h2 className="text-[1.6rem] text-primaryColor font-bold">Địa chỉ của bạn</h2>
+          </div>
+          <div className="w-full p-[2rem] grow overflow-y-auto">
+            {user.result.address?.map((address, index) => (
+              <div className="w-full flex gap-[1rem] py-[1rem] border-gray-200 border-dashed border-b-[.1rem]">
+                <input
+                  type="radio"
+                  id={address._id}
+                  name="address"
+                  checked={index === addressIndex}
+                  onChange={() => {
+                    setAddressIndex(index)
+                    setChangeLocationBox(false)
+                  }}
+                />
+                <label htmlFor={address._id} className="text-[1.6rem] text-primaryColor">
+                  {address.address}
+                </label>
+              </div>
+            ))}
+          </div>
+          <div className="p-[2rem] flex justify-between">
+            <button
+              className="text-[1.6rem] text-white py-[1rem] bg-orangeColor px-[2rem] rounded-[.5rem]"
+              onClick={() => navigate('/user/account/address')}
+            >
+              Thêm địa chỉ
+            </button>
+            <button
+              className="text-[1.6rem] text-primaryColor py-[1rem] px-[2rem] rounded-[.5rem] border-solid border-primaryColor border-[.1rem]"
+              onClick={() => setChangeLocationBox(false)}
+            >
+              Quay lại
+            </button>
+          </div>
+          {/* <div>
           <button>Quay lại</button>
         </div> */}
-      </div>
-    </div>
-  )
-  OrderRender = (
-    <div className="w-full bg-gray-200 py-[5rem]">
-      {changeLocationBox ? LocationBox : null}
-      <Wrapper>
-        <div className="bg-white rounded-[.5rem] p-[2rem]">
-          <h2 className="text-[2rem] text-orangeColor font-bold flex gap-[1rem] items-center">
-            <ImLocation2 className="text-[2rem]" /> Địa chỉ nhận hàng
-          </h2>
-          <div className="flex gap-[2rem] mt-[1rem]">
-            <h4 className="text-[1.6rem] text-primaryColor">{user.result.address[addressIndex].address}</h4>
-            <span
-              className="text-[1.6rem] text-blue-500 italic cursor-pointer"
-              onClick={() => setChangeLocationBox(true)}
-            >
-              Thay đổi
-            </span>
-          </div>
         </div>
-      </Wrapper>
-    </div>
-  )
+      </div>
+    )
+    OrderRender = (
+      <div className="w-full bg-gray-200 py-[5rem]">
+        {changeLocationBox ? LocationBox : null}
+        <Wrapper>
+          <div className="bg-white rounded-[.5rem] p-[2rem]">
+            <h2 className="text-[2rem] text-orangeColor font-bold flex gap-[1rem] items-center">
+              <ImLocation2 className="text-[2rem]" /> Địa chỉ nhận hàng
+            </h2>
+            <div className="flex gap-[2rem] mt-[1rem]">
+              {user.result.address.length ? (
+                <>
+                  <h4 className="text-[1.6rem] text-primaryColor">{user.result.address[addressIndex].address}</h4>
+                  <span
+                    className="text-[1.6rem] text-blue-500 italic cursor-pointer"
+                    onClick={() => setChangeLocationBox(true)}
+                  >
+                    Thay đổi
+                  </span>
+                </>
+              ) : (
+                <div className="flex items-center gap-[2rem]">
+                  <h4 className="text-[1.6rem] text-primaryColor">Bạn chưa có địa chỉ</h4>
+                  <button
+                    className="text-[1.6rem] text-white bg-orangeColor py-[1rem] px-[2rem] rounded-[.5rem]"
+                    onClick={() => navigate('/user/account/address')}
+                  >
+                    Thêm địa chỉ
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="bg-white rounded-[.5rem] py-[2rem] mt-[2rem]">
+            <div className="px-[2rem] flex">
+              <div className="text-[1.6rem] font-bold text-primaryColor w-[50%]">Sản phẩm</div>
+              <div className="text-[1.6rem] font-bold text-primaryColor w-[25%] text-center">Số lượng</div>
+              <div className="text-[1.6rem] font-bold text-primaryColor w-[25%] text-center">Đơn giá</div>
+            </div>
+            <div>
+              {productsOrder?.map((product) => (
+                <CheckoutItem key={product.productId} {...product} />
+              ))}
+            </div>
+          </div>
+          <div className="bg-white rounded-[.5rem] mt-[2rem] py-[2rem]">
+            <div className="flex justify-between border-solid border-gray-200 border-b-[.1rem] pb-[2rem]  px-[2rem]  box-border">
+              <h3 className="text-[2rem] text-orangeColor font-bold flex gap-[2rem] items-center">
+                <FaTicketAlt className="text-[2.5rem]" /> Voucher
+              </h3>
+              <div className="flex w-[40%] gap-[2.5rem] items-center">
+                <input
+                  type="text"
+                  className="text-[1.6rem] outline-none p-[.5rem] border-orangeColor border-solid border-[.1rem] rounded-[.5rem] grow"
+                />
+                <span className="text-[1.6rem] text-blue-600 font-bold cursor-pointer">Chọn voucher</span>
+              </div>
+            </div>
+            <div className="flex gap-[2rem]">
+              <h3 className="text-[2rem] font-bold">Hình thức thanh toán</h3>
+              <button>Thanh toán khi nhận hàng</button>
+              <button>Thanh toán bằng thẻ tín dụng</button>
+            </div>
+          </div>
+        </Wrapper>
+      </div>
+    )
+  }
   return productsOrder.length ? <>{OrderRender}</> : <Navigate to="/" state={{ from: location }} replace />
 }
 
