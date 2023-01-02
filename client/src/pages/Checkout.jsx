@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
-import { selectProductsFromOrder } from '../features/order/orderSlice'
-import { useSelector } from 'react-redux'
+import { selectAmountOfOrder, selectProductsFromOrder, removeAllProduct } from '../features/order/orderSlice'
+import { useSelector, useDispatch } from 'react-redux'
 import { ImLocation2 } from 'react-icons/im'
 import { FaTicketAlt } from 'react-icons/fa'
 import Wrapper from '../components/common/Wrapper'
-import { useGetUserQuery } from '../features/apis/apiSlice'
+import { useGetUserQuery, useCreateOrderMutation, useRemoveItemFromCartMutation } from '../features/apis/apiSlice'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 export const CheckoutItem = ({ name, quantity, sale_price, imageURL }) => (
   <div className="flex px-[2rem] py-[2rem] box-border border-gray-200 border-dashed border-b-[.1rem]">
@@ -22,9 +24,13 @@ export const CheckoutItem = ({ name, quantity, sale_price, imageURL }) => (
 function Checkout() {
   const location = useLocation()
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const [changeLocationBox, setChangeLocationBox] = useState(false)
   const [addressIndex, setAddressIndex] = useState(0)
   const productsOrder = useSelector(selectProductsFromOrder)
+  const amount = useSelector(selectAmountOfOrder)
+  const [createOrder, { isLoading }] = useCreateOrderMutation()
+  const [removeItemFromCart, { isLoading: isLoadingRemoveItem }] = useRemoveItemFromCartMutation()
   const {
     data: user,
     isFetching: isFetchingUser,
@@ -138,17 +144,94 @@ function Checkout() {
                 <span className="text-[1.6rem] text-blue-600 font-bold cursor-pointer">Chọn voucher</span>
               </div>
             </div>
-            <div className="flex gap-[2rem]">
+            <div className="flex gap-[2rem] p-[2rem] border-solid border-gray-200 border-b-[.1rem]">
               <h3 className="text-[2rem] font-bold">Hình thức thanh toán</h3>
-              <button>Thanh toán khi nhận hàng</button>
-              <button>Thanh toán bằng thẻ tín dụng</button>
+              <button className="text-[1.6rem] text-orangeColor border-solid border-orangeColor border-[.1rem] py-[.5rem] px-[1rem]">
+                Thanh toán khi nhận hàng
+              </button>
+              <button className="text-[1.6rem] text-grayColor border-solid border-grayColor border-[.1rem] py-[.5rem] px-[1rem]">
+                Thanh toán bằng thẻ tín dụng
+              </button>
+            </div>
+            <div className="flex justify-end p-[2rem] box-border border-solid border-gray-200 border-b-[.1rem]">
+              <div className="w-[30%] flex flex-col gap-[1rem]">
+                <div className="flex justify-between">
+                  <h4 className="text-[1.6rem] text-primaryColor">Tổng tiền hàng:</h4>
+                  <span className="text-[1.6rem] text-primaryColor">{amount}</span>
+                </div>
+                <div className="flex justify-between">
+                  <h4 className="text-[1.6rem] text-primaryColor">Giảm giá:</h4>
+                  <span className="text-[1.6rem] text-primaryColor">{'- '.concat(10000)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <h4 className="text-[1.6rem] text-primaryColor">Phí vận chuyển:</h4>
+                  <span className="text-[1.6rem] text-primaryColor">{10000}</span>
+                </div>
+                <div className="flex justify-between">
+                  <h4 className="text-[1.6rem] text-primaryColor">Tổng:</h4>
+                  <span className="text-[2rem] text-primaryColor font-bold">{10000}</span>
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-end p-[2rem]">
+              <button
+                className="text-white bg-orangeColor py-[1rem] px-[3rem] text-[1.6rem] rounded-[.5rem]"
+                onClick={() => {
+                  if (!user.result.address.length) {
+                    toast.error('Bạn chưa có địa chỉ', {
+                      position: 'top-center',
+                      autoClose: 500,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                      draggable: true,
+                      progress: undefined,
+                      theme: 'colored',
+                    })
+                    return
+                  } else {
+                    toast.success('Đặt hàng thành công', {
+                      position: 'top-center',
+                      autoClose: 500,
+                      hideProgressBar: false,
+                      closeOnClick: true,
+                      pauseOnHover: true,
+                      draggable: true,
+                      progress: undefined,
+                      theme: 'colored',
+                    })
+                    try {
+                      createOrder({
+                        amount,
+                        products: productsOrder,
+                        address: user.result.address[addressIndex],
+                      })
+                      removeItemFromCart({
+                        products: productsOrder.map((product) => product.productId),
+                      })
+                      dispatch(removeAllProduct)
+                    } catch (error) {
+                      console.log(error)
+                    }
+                    setTimeout(() => navigate('/'), 1000)
+                  }
+                }}
+              >
+                Thanh toán
+              </button>
             </div>
           </div>
         </Wrapper>
       </div>
     )
   }
-  return productsOrder.length ? <>{OrderRender}</> : <Navigate to="/" state={{ from: location }} replace />
+  return productsOrder.length ? (
+    <div>
+      {OrderRender} <ToastContainer />
+    </div>
+  ) : (
+    <Navigate to="/" state={{ from: location }} replace />
+  )
 }
 
 export default Checkout

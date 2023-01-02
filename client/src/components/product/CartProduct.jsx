@@ -89,7 +89,7 @@ function CartProduct({ imageURL, name, quantity, sale_price, original_price, pro
         className="w-[10%] text-[1.6rem] text-orangeColor cursor-pointer text-center"
         onClick={() => {
           dispatch(removeFromOrder({ productId }))
-          removeItem({ productId })
+          removeItem({ products: [productId] })
         }}
       >
         Xóa

@@ -30,10 +30,14 @@ const orderSlice = createSlice({
       state.products = [...state.products.filter((product) => product.productId !== productId)]
       localStorage.setItem(LOCAL_STORAGE_PRODUCTS_ORDER, JSON.stringify(state.products))
     },
+    removeAllProduct: (state, action) => {
+      state.products = []
+      localStorage.setItem(LOCAL_STORAGE_PRODUCTS_ORDER, JSON.stringify(state.products))
+    },
   },
 })
 
-export const { addToOrder, removeFromOrder } = orderSlice.actions
+export const { addToOrder, removeFromOrder, removeAllProduct } = orderSlice.actions
 export default orderSlice.reducer
 export const selectProductsFromOrder = (state) => state.order.products
 export const selectAmountOfOrder = (state) => {

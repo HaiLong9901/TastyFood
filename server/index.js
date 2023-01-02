@@ -5,6 +5,7 @@ const { ObjectId } = require('mongoose')
 const AuthRouter = require('./routes/auth')
 const ProductRouter = require('./routes/product')
 const CartRouter = require('./routes/cart')
+const OrderRouter = require('./routes/order')
 const cors = require('cors')
 const app = express()
 app.use(express.json())
@@ -32,6 +33,7 @@ app.use(
 app.use('/api/auth', AuthRouter)
 app.use('/api/product', ProductRouter)
 app.use('/api/cart', CartRouter)
+app.use('/api/order', OrderRouter)
 app.get('/', (req, res) => res.send('Hello world'))
 
 const port = 5000
