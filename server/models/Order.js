@@ -27,6 +27,7 @@ const OrderSchema = new Schema(
     status: {
       type: String,
       default: 'pending',
+      enum: ['pending', 'success', 'rejected', 'shipping'],
     },
     address: {
       type: Object,

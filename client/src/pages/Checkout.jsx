@@ -209,7 +209,7 @@ function Checkout() {
                       removeItemFromCart({
                         products: productsOrder.map((product) => product.productId),
                       })
-                      dispatch(removeAllProduct)
+                      dispatch(removeAllProduct())
                     } catch (error) {
                       console.log(error)
                     }

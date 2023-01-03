@@ -93,6 +93,11 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ['Order'],
     }),
+
+    getAllOrder: builder.query({
+      query: (status) => `/order/get_all/${status}`,
+      providesTags: ['Order'],
+    }),
   }),
 })
 
@@ -110,4 +115,5 @@ export const {
   useAddToCartMutation,
   useRemoveItemFromCartMutation,
   useCreateOrderMutation,
+  useGetAllOrderQuery,
 } = apiSlice

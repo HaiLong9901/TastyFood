@@ -59,10 +59,20 @@ function UserAccount() {
               >
                 Đổi mật khẩu
               </NavLink>
-              <div className="flex gap-[1rem] items-center">
+              <NavLink
+                to="/user/purchase"
+                style={({ isActive }) =>
+                  isActive
+                    ? {
+                        color: '#FF8303',
+                      }
+                    : undefined
+                }
+                className="flex gap-[1rem] items-center"
+              >
                 <FaFileInvoice className="text-[1.6rem] w-[2rem]" />{' '}
                 <span className="text-[1.6rem] font-bold">Đơn hàng</span>
-              </div>
+              </NavLink>
               <div className="flex gap-[1rem] items-center">
                 <FaRegCommentDots className="text-[1.6rem] w-[2rem]" />{' '}
                 <span className="text-[1.6rem] font-bold">Đánh giá sản phẩm</span>

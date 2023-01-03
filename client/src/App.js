@@ -21,6 +21,8 @@ import UserAdress from './pages/user/UserAdress'
 import UserPassword from './pages/user/UserPassword'
 import Checkout from './pages/Checkout'
 import NotFound from './pages/NotFound'
+import UserPurchase from './pages/user/UserPurchase'
+import UserPurchaseList from './pages/user/UserPurchaseList'
 function App() {
   const user = useSelector(selectCurrentUser)
 
@@ -51,6 +53,13 @@ function App() {
                   <Route path="/user/account/profile" element={<UserProfile />} />
                   <Route path="/user/account/address" element={<UserAdress />} />
                   <Route path="/user/account/password" element={<UserPassword />} />
+                  <Route path="/user/purchase" element={<UserPurchase />}>
+                    <Route path="/user/purchase/all" element={<UserPurchaseList status="all" />} />
+                    <Route path="/user/purchase/pending" element={<UserPurchaseList status="pending" />} />
+                    <Route path="/user/purchase/shipping" element={<UserPurchaseList status="shipping" />} />
+                    <Route path="/user/purchase/success" element={<UserPurchaseList status="success" />} />
+                    <Route path="/user/purchase/rejected" element={<UserPurchaseList status="rejected" />} />
+                  </Route>
                 </Route>
               </Route>
               <Route path="/*" element={<NotFound />} />
