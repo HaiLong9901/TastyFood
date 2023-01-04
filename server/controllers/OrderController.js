@@ -50,10 +50,20 @@ const OrderController = {
   },
 
   getAllOrders: async (req, res) => {
-    const { orderStatus } = req.params.status
+    const orderStatus = req.params.status
+    console.log(orderStatus)
     try {
-      if (!orderStatus) {
+      if (!orderStatus || orderStatus === 'all') {
         const orders = await Order.find({ userId: req.userId })
+          .populate({
+            path: 'products',
+            populate: {
+              path: 'productId',
+              select: ['name', 'imageURL', 'original_price', 'sale_price'],
+            },
+          })
+          .sort({ updatedAt: -1 })
+          .exec()
         return res.json({
           success: true,
           passage: 'Get all orders successfully',
@@ -61,6 +71,14 @@ const OrderController = {
         })
       }
       const orders = await Order.find({ userId: req.userId, status: orderStatus })
+        .populate({
+          path: 'products',
+          populate: {
+            path: 'productId',
+            select: ['name', 'imageURL', 'original_price', 'sale_price'],
+          },
+        })
+        .exec()
       return res.json({
         success: true,
         passage: `Get all orders with status ${orderStatus} successfully`,
