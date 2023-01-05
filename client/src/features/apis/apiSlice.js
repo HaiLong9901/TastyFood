@@ -15,7 +15,7 @@ export const apiSlice = createApi({
       return headers
     },
   }),
-  tagTypes: ['User', 'Address', 'Cart', 'Order'],
+  tagTypes: ['User', 'Address', 'Cart', 'Order', 'Voucher'],
   endpoints: (builder) => ({
     getAllProducts: builder.query({
       query: () => 'product/get_all_products',
@@ -98,6 +98,11 @@ export const apiSlice = createApi({
       query: (status) => `/order/get_all/${status}`,
       providesTags: ['Order'],
     }),
+
+    getAllVoucher: builder.query({
+      query: () => '/voucher/get_all',
+      providesTags: ['Voucher'],
+    }),
   }),
 })
 
@@ -116,4 +121,5 @@ export const {
   useRemoveItemFromCartMutation,
   useCreateOrderMutation,
   useGetAllOrderQuery,
+  useGetAllVoucherQuery,
 } = apiSlice

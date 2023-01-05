@@ -5,7 +5,12 @@ import { useSelector, useDispatch } from 'react-redux'
 import { ImLocation2 } from 'react-icons/im'
 import { FaTicketAlt } from 'react-icons/fa'
 import Wrapper from '../components/common/Wrapper'
-import { useGetUserQuery, useCreateOrderMutation, useRemoveItemFromCartMutation } from '../features/apis/apiSlice'
+import {
+  useGetUserQuery,
+  useCreateOrderMutation,
+  useRemoveItemFromCartMutation,
+  useGetAllVoucherQuery,
+} from '../features/apis/apiSlice'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -26,7 +31,10 @@ function Checkout() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [changeLocationBox, setChangeLocationBox] = useState(false)
+  const [voucherBox, setVoucherBox] = useState(false)
   const [addressIndex, setAddressIndex] = useState(0)
+  const [voucherValue, setVoucherValue] = useState(0)
+  const [voucherCode, setVoucherCode] = useState('')
   const productsOrder = useSelector(selectProductsFromOrder)
   const amount = useSelector(selectAmountOfOrder)
   const [createOrder, { isLoading }] = useCreateOrderMutation()
@@ -38,6 +46,13 @@ function Checkout() {
     isError: isErrorUSer,
     error: errorUser,
   } = useGetUserQuery()
+  const {
+    data: vouchers,
+    isFetching: isFetchingVouchers,
+    isSuccess: isSuccessVoucher,
+    isError: isErrorVoucher,
+    error: errorVoucher,
+  } = useGetAllVoucherQuery()
   let OrderRender
   if (isFetchingUser) OrderRender = <div>Loading</div>
   else if (isSuccessUser) {
@@ -81,15 +96,59 @@ function Checkout() {
               Quay lại
             </button>
           </div>
-          {/* <div>
-          <button>Quay lại</button>
-        </div> */}
+        </div>
+      </div>
+    )
+    const VoucherBox = (
+      <div className="w-screen h-screen bg-primaryColor/50 absolute top-0 left-0 flex justify-center items-center">
+        <div className="bg-white w-[35%] h-[80%] rounded-[.5rem] flex flex-col p-[2rem]">
+          <div className="text-[2rem] text-orangeColor text-center font-bold pb-[1rem]">Kho Voucher</div>
+          <div className="flex flex-col gap-[2rem] grow overflow-y-auto ">
+            {isSuccessVoucher
+              ? vouchers.result?.map((voucher) => (
+                  <div key={voucher._id} className="flex shadow-sm ">
+                    <div className="w-[30%] flex items-center justify-center text-[1.6rem] font-bold py-[2rem] bg-yellowColor border-white border-dotted border-l-[.7rem] box-border">
+                      {voucher.code}
+                    </div>
+                    <div className="flex flex-col w-[40%] justify-center items-center">
+                      <strong className="text-[1.3rem]">Giảm tới {voucher.value * 100}%</strong>
+                      <span className="text-[1.3rem]">Đơn tối thiểu {voucher.apply_for}</span>
+                    </div>
+                    <div className="w-[30%] flex justify-center items-center">
+                      {voucher.apply_for <= amount ? (
+                        <button
+                          className="text-[1.3rem] text-white bg-orangeColor py-[.5rem] px-[1rem] rounded-[.5rem]"
+                          onClick={() => {
+                            setVoucherCode(voucher.code)
+                            setVoucherBox(false)
+                            setVoucherValue(voucher.value)
+                          }}
+                        >
+                          Sử dụng
+                        </button>
+                      ) : (
+                        <div>Bạn cần mua thêm {voucher.apply_for - amount}</div>
+                      )}
+                    </div>
+                  </div>
+                ))
+              : undefined}
+          </div>
+          <div className="flex justify-end py-[1rem]">
+            <button
+              className="text-[1.6rem] text-primaryColor py-[1rem] px-[2rem] border-solid border-primaryColor border-[.1rem] rounded-[.5rem]"
+              onClick={() => setVoucherBox(false)}
+            >
+              Quay lại
+            </button>
+          </div>
         </div>
       </div>
     )
     OrderRender = (
       <div className="w-full bg-gray-200 py-[5rem]">
         {changeLocationBox ? LocationBox : null}
+        {voucherBox ? VoucherBox : null}
         <Wrapper>
           <div className="bg-white rounded-[.5rem] p-[2rem]">
             <h2 className="text-[2rem] text-orangeColor font-bold flex gap-[1rem] items-center">
@@ -139,9 +198,15 @@ function Checkout() {
               <div className="flex w-[40%] gap-[2.5rem] items-center">
                 <input
                   type="text"
+                  value={voucherCode}
                   className="text-[1.6rem] outline-none p-[.5rem] border-orangeColor border-solid border-[.1rem] rounded-[.5rem] grow"
                 />
-                <span className="text-[1.6rem] text-blue-600 font-bold cursor-pointer">Chọn voucher</span>
+                <span
+                  className="text-[1.6rem] text-blue-600 font-bold cursor-pointer"
+                  onClick={() => setVoucherBox(true)}
+                >
+                  Chọn voucher
+                </span>
               </div>
             </div>
             <div className="flex gap-[2rem] p-[2rem] border-solid border-gray-200 border-b-[.1rem]">
@@ -161,7 +226,7 @@ function Checkout() {
                 </div>
                 <div className="flex justify-between">
                   <h4 className="text-[1.6rem] text-primaryColor">Giảm giá:</h4>
-                  <span className="text-[1.6rem] text-primaryColor">{'- '.concat(10000)}</span>
+                  <span className="text-[1.6rem] text-primaryColor">{'- '.concat(amount * voucherValue)}</span>
                 </div>
                 <div className="flex justify-between">
                   <h4 className="text-[1.6rem] text-primaryColor">Phí vận chuyển:</h4>
@@ -169,7 +234,7 @@ function Checkout() {
                 </div>
                 <div className="flex justify-between">
                   <h4 className="text-[1.6rem] text-primaryColor">Tổng:</h4>
-                  <span className="text-[2rem] text-primaryColor font-bold">{10000}</span>
+                  <span className="text-[2rem] text-primaryColor font-bold">{amount * (1 - voucherValue) + 10000}</span>
                 </div>
               </div>
             </div>
@@ -202,7 +267,7 @@ function Checkout() {
                     })
                     try {
                       createOrder({
-                        amount,
+                        amount: amount * (1 - voucherValue) + 10000,
                         products: productsOrder,
                         address: user.result.address[addressIndex],
                       })

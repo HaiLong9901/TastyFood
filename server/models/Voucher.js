@@ -16,18 +16,13 @@ const VoucherSchema = new Schema(
       required: true,
       default: Date.now,
     },
-    expireOn: {
+    expiredOn: {
       type: Date,
       required: true,
       default: Date.now,
     },
     apply_for: {
-      productType: {
-        type: String,
-      },
-      amount: {
-        type: Number,
-      },
+      type: Number,
     },
   },
   {
