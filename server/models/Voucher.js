@@ -13,13 +13,11 @@ const VoucherSchema = new Schema(
     },
     startOn: {
       type: Date,
-      required: true,
       default: Date.now,
     },
     expiredOn: {
       type: Date,
       required: true,
-      default: Date.now,
     },
     apply_for: {
       type: Number,

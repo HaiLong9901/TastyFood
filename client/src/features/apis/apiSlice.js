@@ -99,6 +99,15 @@ export const apiSlice = createApi({
       providesTags: ['Order'],
     }),
 
+    updateOrderStatus: builder.mutation({
+      query: (updateOrder) => ({
+        url: '/order/update_status',
+        method: 'PUT',
+        body: updateOrder,
+      }),
+      invalidatesTags: ['Order'],
+    }),
+
     getAllVoucher: builder.query({
       query: () => '/voucher/get_all',
       providesTags: ['Voucher'],
@@ -121,5 +130,6 @@ export const {
   useRemoveItemFromCartMutation,
   useCreateOrderMutation,
   useGetAllOrderQuery,
+  useUpdateOrderStatusMutation,
   useGetAllVoucherQuery,
 } = apiSlice

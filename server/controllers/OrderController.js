@@ -51,7 +51,6 @@ const OrderController = {
 
   getAllOrders: async (req, res) => {
     const orderStatus = req.params.status
-    console.log(orderStatus)
     try {
       if (!orderStatus || orderStatus === 'all') {
         const orders = await Order.find({ userId: req.userId })
@@ -78,6 +77,7 @@ const OrderController = {
             select: ['name', 'imageURL', 'original_price', 'sale_price'],
           },
         })
+        .sort({ updatedAt: -1 })
         .exec()
       return res.json({
         success: true,
@@ -97,10 +97,7 @@ const OrderController = {
         passage: 'Missing order id',
       })
     try {
-      const order = await Order.find({
-        _id: orderId,
-        userId: req.userId,
-      })
+      const order = await Order.findById(orderId)
       if (!order)
         return res.status(400).json({
           success: false,

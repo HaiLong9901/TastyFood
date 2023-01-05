@@ -35,6 +35,7 @@ function Checkout() {
   const [addressIndex, setAddressIndex] = useState(0)
   const [voucherValue, setVoucherValue] = useState(0)
   const [voucherCode, setVoucherCode] = useState('')
+  const [errorVoucher, setErrorVoucher] = useState('')
   const productsOrder = useSelector(selectProductsFromOrder)
   const amount = useSelector(selectAmountOfOrder)
   const [createOrder, { isLoading }] = useCreateOrderMutation()
@@ -49,16 +50,16 @@ function Checkout() {
   const {
     data: vouchers,
     isFetching: isFetchingVouchers,
-    isSuccess: isSuccessVoucher,
-    isError: isErrorVoucher,
-    error: errorVoucher,
+    isSuccess: isSuccessVouchers,
+    isError: isErrorVouchers,
+    error: errorVouchers,
   } = useGetAllVoucherQuery()
   let OrderRender
   if (isFetchingUser) OrderRender = <div>Loading</div>
-  else if (isSuccessUser) {
+  else if (isSuccessUser && isSuccessVouchers) {
     console.log(user)
     const LocationBox = (
-      <div className="w-screen h-screen bg-primaryColor/50 absolute top-0 left-0 flex justify-center items-center">
+      <div className="w-screen h-screen bg-primaryColor/50 fixed top-0 left-0 flex justify-center items-center">
         <div className="bg-white w-[35%] h-[80%] rounded-[.5rem] flex flex-col">
           <div className="w-full border-solid border-grayColor border-b-[.1rem] p-[2rem]">
             <h2 className="text-[1.6rem] text-primaryColor font-bold">Địa chỉ của bạn</h2>
@@ -100,39 +101,37 @@ function Checkout() {
       </div>
     )
     const VoucherBox = (
-      <div className="w-screen h-screen bg-primaryColor/50 absolute top-0 left-0 flex justify-center items-center">
+      <div className="w-screen h-screen bg-primaryColor/50 fixed left-0 top-0  flex justify-center items-center">
         <div className="bg-white w-[35%] h-[80%] rounded-[.5rem] flex flex-col p-[2rem]">
           <div className="text-[2rem] text-orangeColor text-center font-bold pb-[1rem]">Kho Voucher</div>
           <div className="flex flex-col gap-[2rem] grow overflow-y-auto ">
-            {isSuccessVoucher
-              ? vouchers.result?.map((voucher) => (
-                  <div key={voucher._id} className="flex shadow-sm ">
-                    <div className="w-[30%] flex items-center justify-center text-[1.6rem] font-bold py-[2rem] bg-yellowColor border-white border-dotted border-l-[.7rem] box-border">
-                      {voucher.code}
-                    </div>
-                    <div className="flex flex-col w-[40%] justify-center items-center">
-                      <strong className="text-[1.3rem]">Giảm tới {voucher.value * 100}%</strong>
-                      <span className="text-[1.3rem]">Đơn tối thiểu {voucher.apply_for}</span>
-                    </div>
-                    <div className="w-[30%] flex justify-center items-center">
-                      {voucher.apply_for <= amount ? (
-                        <button
-                          className="text-[1.3rem] text-white bg-orangeColor py-[.5rem] px-[1rem] rounded-[.5rem]"
-                          onClick={() => {
-                            setVoucherCode(voucher.code)
-                            setVoucherBox(false)
-                            setVoucherValue(voucher.value)
-                          }}
-                        >
-                          Sử dụng
-                        </button>
-                      ) : (
-                        <div>Bạn cần mua thêm {voucher.apply_for - amount}</div>
-                      )}
-                    </div>
-                  </div>
-                ))
-              : undefined}
+            {vouchers.result?.map((voucher) => (
+              <div key={voucher._id} className="flex shadow-sm ">
+                <div className="w-[30%] flex items-center justify-center text-[1.6rem] font-bold py-[2rem] bg-yellowColor border-white border-dotted border-l-[.7rem] box-border">
+                  {voucher.code}
+                </div>
+                <div className="flex flex-col w-[40%] justify-center items-center">
+                  <strong className="text-[1.3rem]">Giảm tới {voucher.value * 100}%</strong>
+                  <span className="text-[1.3rem]">Đơn tối thiểu {voucher.apply_for}</span>
+                </div>
+                <div className="w-[30%] flex justify-center items-center">
+                  {voucher.apply_for <= amount ? (
+                    <button
+                      className="text-[1.3rem] text-white bg-orangeColor py-[.5rem] px-[1rem] rounded-[.5rem]"
+                      onClick={() => {
+                        setVoucherCode(voucher.code)
+                        setVoucherBox(false)
+                        setVoucherValue(voucher.value)
+                      }}
+                    >
+                      Sử dụng
+                    </button>
+                  ) : (
+                    <div>Bạn cần mua thêm {voucher.apply_for - amount}</div>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
           <div className="flex justify-end py-[1rem]">
             <button
@@ -196,11 +195,30 @@ function Checkout() {
                 <FaTicketAlt className="text-[2.5rem]" /> Voucher
               </h3>
               <div className="flex w-[40%] gap-[2.5rem] items-center">
-                <input
-                  type="text"
-                  value={voucherCode}
-                  className="text-[1.6rem] outline-none p-[.5rem] border-orangeColor border-solid border-[.1rem] rounded-[.5rem] grow"
-                />
+                <div className="grow">
+                  <input
+                    type="text"
+                    value={voucherCode}
+                    onChange={(e) => {
+                      setVoucherCode(e.target.value)
+                      let index = vouchers.result.findIndex((voucher) => voucher.code === e.target.value)
+                      if (index < 0) {
+                        setVoucherValue(0)
+                        setErrorVoucher('Voucher không tồn tại')
+                      } else {
+                        if (vouchers.result[index].apply_for > amount)
+                          setErrorVoucher('bạn chưa đủ đơn hàng tối thiểu để sử dụng voucher này')
+                        else {
+                          setErrorVoucher('')
+                          setVoucherValue(vouchers.result[index].value)
+                        }
+                      }
+                    }}
+                    className="w-full text-[1.6rem] outline-none p-[.5rem] border-orangeColor border-solid border-[.1rem] rounded-[.5rem]"
+                  />
+                  <i className="text-[1.3rem] text-red-600">{errorVoucher}</i>
+                </div>
+
                 <span
                   className="text-[1.6rem] text-blue-600 font-bold cursor-pointer"
                   onClick={() => setVoucherBox(true)}
@@ -245,7 +263,7 @@ function Checkout() {
                   if (!user.result.address.length) {
                     toast.error('Bạn chưa có địa chỉ', {
                       position: 'top-center',
-                      autoClose: 500,
+                      autoClose: 2000,
                       hideProgressBar: false,
                       closeOnClick: true,
                       pauseOnHover: true,
@@ -254,32 +272,21 @@ function Checkout() {
                       theme: 'colored',
                     })
                     return
-                  } else {
-                    toast.success('Đặt hàng thành công', {
-                      position: 'top-center',
-                      autoClose: 500,
-                      hideProgressBar: false,
-                      closeOnClick: true,
-                      pauseOnHover: true,
-                      draggable: true,
-                      progress: undefined,
-                      theme: 'colored',
-                    })
-                    try {
-                      createOrder({
-                        amount: amount * (1 - voucherValue) + 10000,
-                        products: productsOrder,
-                        address: user.result.address[addressIndex],
-                      })
-                      removeItemFromCart({
-                        products: productsOrder.map((product) => product.productId),
-                      })
-                      dispatch(removeAllProduct())
-                    } catch (error) {
-                      console.log(error)
-                    }
-                    setTimeout(() => navigate('/'), 1000)
                   }
+                  try {
+                    createOrder({
+                      amount: amount * (1 - voucherValue) + 10000,
+                      products: productsOrder,
+                      address: user.result.address[addressIndex],
+                    })
+                    removeItemFromCart({
+                      products: productsOrder.map((product) => product.productId),
+                    })
+                    dispatch(removeAllProduct())
+                  } catch (error) {
+                    console.log(error)
+                  }
+                  navigate('/user/purchase/pending')
                 }}
               >
                 Thanh toán

@@ -60,7 +60,7 @@ function UserAccount() {
                 Đổi mật khẩu
               </NavLink>
               <NavLink
-                to="/user/purchase"
+                to="/user/purchase/all"
                 style={({ isActive }) =>
                   isActive
                     ? {

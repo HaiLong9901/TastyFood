@@ -7,8 +7,6 @@ import {
   useUpdateAddressMutation,
   useGetUserQuery,
 } from '../../features/apis/apiSlice'
-import { useSelector } from 'react-redux'
-import { selectCurrentUser } from '../../features/auth/authSlice'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 function UserAdress() {
@@ -28,7 +26,6 @@ function UserAdress() {
       setLocation('')
       setAddAddressForm(false)
       setMissingLocation(false)
-      setDistrictId(271)
       const newAddress = location + ', ' + ward + ', ' + district + ', Hà Nội'
       console.log(newAddress)
       updateAddress({
@@ -48,8 +45,7 @@ function UserAdress() {
     }
     setMissingLocation(true)
   }
-  let { data: wards, isSuccess: wardsSuccess } = useGetAllWardQuery(districtId)
-  // const { id, imageURL } = useSelector(selectCurrentUser)
+  const { data: wards, isSuccess: wardsSuccess } = useGetAllWardQuery(districtId)
   const { data: user, isSuccess: isSuccessUser, isFetching: isFetchingUser } = useGetUserQuery()
   let AddressList
   if (isFetchingUser) AddressList = <div>Loading</div>
@@ -82,18 +78,6 @@ function UserAdress() {
         </button>
       </div>
       <div className="py-[2rem] flex flex-col gap-[2rem]">
-        {/* <ToastContainer
-          position="top-center"
-          autoClose={1000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-        /> */}
         <ToastContainer />
         <h2 className="text-[1.6rem] text-primaryColor">Địa chỉ</h2>
         <div>{AddressList}</div>
@@ -141,7 +125,7 @@ function UserAdress() {
               value={districtId}
               onChange={(e) => {
                 setDistrictId(e.target.value)
-                setDistrict(districts.results?.filter((dist) => dist.district_id == districtId)[0].district_name)
+                setDistrict(districts.results?.filter((dist) => dist.district_id == e.target.value)[0].district_name)
               }}
               className="w-full p-[1rem] outline-none border-grayColor border-solid border-[.1rem] text-[1.6rem] rounded-[.5rem]"
             >

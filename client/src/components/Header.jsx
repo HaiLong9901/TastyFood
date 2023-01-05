@@ -71,7 +71,10 @@ function Header() {
                     >
                       Tài khoản của tôi
                     </Link>
-                    <Link className="text-primaryColor text-[1.5rem] font-bold text-center py-[1rem]" to="/">
+                    <Link
+                      className="text-primaryColor text-[1.5rem] font-bold text-center py-[1rem]"
+                      to="/user/purchase/all"
+                    >
                       Đơn hàng
                     </Link>
                     <span

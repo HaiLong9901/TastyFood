@@ -1,7 +1,9 @@
 import React from 'react'
-import { useGetAllOrderQuery } from '../../features/apis/apiSlice'
-
+import { useGetAllOrderQuery, useUpdateOrderStatusMutation } from '../../features/apis/apiSlice'
+import { useNavigate } from 'react-router-dom'
 function UserPurchaseList({ status }) {
+  const navigate = useNavigate()
+  const [updateOrderStatus, { isLoading }] = useUpdateOrderStatusMutation()
   const {
     data: orders,
     isFetching: isFetchingOrders,
@@ -27,7 +29,7 @@ function UserPurchaseList({ status }) {
       OrderRender = (
         <div>
           {orders.result?.map((order) => (
-            <div className=" border-dashed border-gray-200 border-b-[.2rem] my-[2rem]">
+            <div className=" border-dashed border-gray-200 border-b-[.2rem] my-[2rem] shadow-md">
               <div className="flex p-[.5rem] justify-between items-center border-solid border-gray-200 border-b-[.1rem]">
                 <div>
                   <h3 className="text-[1.3rem] text-primaryColor">{order.createdAt}</h3>
@@ -73,7 +75,20 @@ function UserPurchaseList({ status }) {
                   Thành tiền <span className="text-[2rem] font-bold text-orangeColor">{order.amount}</span>
                 </div>
                 {order.status === 'pending' ? (
-                  <button className="text-white text-[1.6rem] bg-orangeColor py-[1rem] px-[2rem] rounded-[.5rem]">
+                  <button
+                    className="text-white text-[1.6rem] bg-orangeColor py-[1rem] px-[2rem] rounded-[.5rem]"
+                    onClick={() => {
+                      try {
+                        updateOrderStatus({
+                          orderId: order._id,
+                          status: 'rejected',
+                        })
+                        navigate('/user/purchase/rejected')
+                      } catch (error) {
+                        console.log(error)
+                      }
+                    }}
+                  >
                     Hủy đơn hàng
                   </button>
                 ) : undefined}
