@@ -5,11 +5,15 @@ import { FaFacebook, FaInstagram, FaTiktok, FaShoppingCart, FaTimes, FaBars, FaS
 import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { selectCurrentUser, selectCurrentToken } from '../features/auth/authSlice'
+import { useGetCartQuery } from '../features/apis/apiSlice'
 import { USER_DEFAULT_AVATAR } from '../shared/Constants'
 import { logOut } from '../features/auth/authSlice'
 function Header() {
   const dispatch = useDispatch()
   const user = useSelector(selectCurrentUser)
+  const { data: cart, isSuccess } = useGetCartQuery(user.id)
+  let numberItems
+  if (isSuccess) numberItems = cart.cart.products.length
   const [openMenu, setOpenMenu] = useState(false)
   return (
     <div className="w-full relative">
@@ -94,9 +98,14 @@ function Header() {
                 </li>
               )}
 
-              <li className="leading-[5rem] flex items-center">
+              <li className="leading-[5rem] flex items-center relative">
                 <Link to={user.id ? '/cart' : '/login'} className="text-[1.6rem] text-white">
                   <FaShoppingCart className="text-[2rem] text-white" />
+                  {numberItems === 0 ? undefined : (
+                    <div className="absolute w-[1.5rem] h-[1.5rem] rounded-[50%] text-orangeColor z-50 top-[1rem] right-[-1rem] bg-white flex justify-center items-center font-bold border-solid border-orangeColor border-[.1rem]">
+                      {numberItems}
+                    </div>
+                  )}
                 </Link>
               </li>
               <li className="leading-[5rem] flex items-center">

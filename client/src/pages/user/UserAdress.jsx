@@ -186,15 +186,6 @@ function UserAdress() {
             </button>
             <button
               className="text-[1.6rem] text-white px-[2rem] py-[.25rem] rounded-[.5rem] bg-orangeColor"
-              // onClick={() => {
-              //   if (location.length) {
-              //     setLocation('')
-              //     setAddAddressForm(false)
-              //     setMissingLocation(false)
-              //     return
-              //   }
-              //   setMissingLocation(true)
-              // }}
               onClick={handleSubmitAddress}
             >
               Thêm

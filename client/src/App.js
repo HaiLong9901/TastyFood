@@ -25,7 +25,6 @@ import UserPurchase from './pages/user/UserPurchase'
 import UserPurchaseList from './pages/user/UserPurchaseList'
 function App() {
   const user = useSelector(selectCurrentUser)
-
   return (
     <Router>
       {user.isAdmin ? (
