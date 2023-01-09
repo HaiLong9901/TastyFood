@@ -30,7 +30,7 @@ function ProductCard({ imageURL, name, original_price, sale_price, _id }) {
         <div className="w-full flex gap-[1rem] md:gap-[2rem] justify-center my-[.5rem]  md:my-[1rem]">
           <span className="text-primaryColor font-bold text-[1.6rem] md:text-[1.8rem]">{sale_price.toString()}</span>
           <span className="text-primaryColor opacity-75 text-[1.3rem] md:text-[1.6rem] line-through">
-            {original_price.toString().concat('đ')}
+            {sale_price === original_price ? undefined : original_price.toString().concat('đ')}
           </span>
         </div>
         <div

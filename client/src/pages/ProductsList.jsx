@@ -5,23 +5,37 @@ import img from '../assets/Image/spicy-red-soup-beef-noodle-bowl-wooden-table.jp
 import ProductCard from '../components/product/ProductCard'
 import { FaAngleRight, FaAngleDown } from 'react-icons/fa'
 import SuccessBox from '../components/common/SuccessBox'
+import { useSearchParams } from 'react-router-dom'
 
 function ProductsList() {
+  const [searchParams, setSearchParams] = useSearchParams()
   const [openFilterBox, setOpenFilterBox] = useState(false)
   const { data: productsList, isSuccess: isSuccessList, isFetching: isFetchingList } = useGetAllProductsQuery()
+  const sort = parseInt(searchParams.get('sort_by'))
+  console.log('sort: ', typeof sort)
   let ProductsList
   if (isFetchingList) {
     ProductsList = (
       <>
-        {Array.apply(Array(8)).map((product) => (
-          <div className="md:w-[22rem] w-[16rem] aspect-[3/4] animate-pulse bg-yelowColor"></div>
+        {Array.apply(undefined, Array(8)).map(() => (
+          <div className="md:w-[22rem] w-[16rem] aspect-[3/4] animate-pulse bg-gray-200 rounded-[.5rem]"></div>
         ))}
       </>
     )
   } else if (isSuccessList) {
+    let list = productsList.results
+    let sortList = [...list]
+    if (sort === 0) list = sortList.sort((product1, product2) => product2.sale_price - product1.sale_price)
+    else if (sort === 1) list = sortList.sort((product1, product2) => product1.sale_price - product2.sale_price)
+    else if (sort === 2)
+      list = sortList.sort(
+        (product1, product2) =>
+          product1.sale_price / product1.original_price - product2.sale_price / product2.original_price,
+      )
+    console.log('list: ', list)
     ProductsList = (
       <>
-        {productsList.results?.map((product) => (
+        {list?.map((product) => (
           <ProductCard key={product.key} {...product} />
         ))}
       </>
@@ -48,11 +62,21 @@ function ProductsList() {
                   <select
                     name=""
                     id=""
-                    className="w-full p-[.5rem] text-[1.3rem] outline-none rounded-[.5rem] text-secondaryColor"
+                    className="w-full p-[.5rem] text-[1.5rem] outline-none rounded-[.5rem] text-secondaryColor"
+                    onChange={(e) => {
+                      console.log(e.target.value)
+                      setSearchParams({ sort_by: e.target.value })
+                    }}
                   >
-                    <option value="0">Giá cao đến thấp</option>
-                    <option value="1">Giá thấp đến cao</option>
-                    <option value="2">Giảm giá nhiều</option>
+                    <option className="text-[1.5rem]" value="0">
+                      Giá cao đến thấp
+                    </option>
+                    <option className="text-[1.5rem]" value="1">
+                      Giá thấp đến cao
+                    </option>
+                    <option className="text-[1.5rem]" value="2">
+                      Giảm giá nhiều
+                    </option>
                   </select>
                 </div>
                 <div>

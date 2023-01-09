@@ -23,7 +23,8 @@ const ProductSchema = new Schema(
       type: String,
     },
     genre: {
-      type: Array,
+      type: Schema.Types.ObjectId,
+      ref: 'genre',
       required: true,
     },
   },
