@@ -40,6 +40,7 @@ function App() {
                 <Route path="/admin/order/pending" element={<AllOrder status="pending" />} />
                 <Route path="/admin/order/success" element={<AllOrder status="success" />} />
                 <Route path="/admin/order/rejected" element={<AllOrder status="rejected" />} />
+                <Route path="/admin/order/shipping" element={<AllOrder status="shipping" />} />
               </Route>
             </Routes>
           </div>
