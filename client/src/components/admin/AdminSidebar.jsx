@@ -1,9 +1,9 @@
 import React from 'react'
 import Wrapper from '../common/Wrapper'
 import { GiTomato } from 'react-icons/gi'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { USER_DEFAULT_AVATAR } from '../../shared/Constants'
-import { FaFileInvoice, FaPizzaSlice, FaRegChartBar, FaSignOutAlt } from 'react-icons/fa'
+import { FaFileInvoice, FaPizzaSlice, FaRegChartBar, FaSignOutAlt, FaUserAlt } from 'react-icons/fa'
 import { useSelector } from 'react-redux'
 import { selectCurrentUser } from '../../features/auth/authSlice'
 
@@ -21,37 +21,85 @@ function AdminSidebar() {
         </div>
         <h3 className="text-white text-[1.8rem] font-bold">Nguyen Van A</h3>
       </div>
-      <div className="w-full py-[2rem] flex flex-col h-[80%] ">
-        <div className="flex w-full justify-start items-center gap-[2rem] p-[2rem] h-[20%]">
+      <div className="w-full flex flex-col h-[80%] pl-[2rem] ">
+        <NavLink
+          to="/admin/order"
+          className={({ isActive }) =>
+            isActive
+              ? 'flex w-full justify-start items-center gap-[2rem] p-[2rem] h-[calc(100%/6)] bg-white rounded-l-[5rem] text-orangeColor font-bold'
+              : 'flex w-full justify-start items-center gap-[2rem] p-[2rem] h-[calc(100%/6)] text-white'
+          }
+        >
           <div className="w-[15%] flex justify-center items-center">
-            <FaFileInvoice className="text-white text-[2.5rem]" />
+            <FaFileInvoice className="text-[2.5rem]" />
           </div>
-          <h3 className="text-white text-[1.8rem]">Đơn hàng</h3>
-        </div>
-        <div className="flex w-full justify-start items-center gap-[2rem] p-[2rem] h-[20%]">
+          <h3 className="text-[1.8rem]">Đơn hàng</h3>
+        </NavLink>
+        <NavLink
+          to="/"
+          className={({ isActive }) =>
+            isActive
+              ? 'flex w-full justify-start items-center gap-[2rem] p-[2rem] h-[calc(100%/6)] bg-white rounded-l-[5rem] text-orangeColor font-bold'
+              : 'flex w-full justify-start items-center gap-[2rem] p-[2rem] h-[calc(100%/6)] text-white'
+          }
+        >
           <div className="w-[15%] flex justify-center items-center">
-            <FaPizzaSlice className="text-white text-[2.5em]" />
+            <FaPizzaSlice className="text-[2.5em]" />
           </div>
-          <h3 className="text-white text-[1.8rem]">Sản phẩm</h3>
-        </div>
-        <div className="flex w-full justify-start items-center gap-[2rem] p-[2rem] h-[20%]">
+          <h3 className="text-[1.8rem]">Sản phẩm</h3>
+        </NavLink>
+        <NavLink
+          to="/"
+          className={({ isActive }) =>
+            isActive
+              ? 'flex w-full justify-start items-center gap-[2rem] p-[2rem] h-[calc(100%/6)] bg-white rounded-l-[5rem] text-orangeColor font-bold'
+              : 'flex w-full justify-start items-center gap-[2rem] p-[2rem] h-[calc(100%/6)] text-white'
+          }
+        >
           <div className="w-[15%] flex justify-center items-center">
-            <FaFileInvoice className="text-white text-[2.5rem]" />
+            <FaFileInvoice className="text-[2.5rem]" />
           </div>
-          <h3 className="text-white text-[1.8rem]">Voucher</h3>
-        </div>
-        <div className="flex w-full justify-start items-center gap-[2rem] p-[2rem] h-[20%]">
+          <h3 className="text-[1.8rem]">Voucher</h3>
+        </NavLink>
+        <NavLink
+          to="/"
+          className={({ isActive }) =>
+            isActive
+              ? 'flex w-full justify-start items-center gap-[2rem] p-[2rem] h-[calc(100%/6)] bg-white rounded-l-[5rem] text-orangeColor font-bold'
+              : 'flex w-full justify-start items-center gap-[2rem] p-[2rem] h-[calc(100%/6)] text-white'
+          }
+        >
           <div className="w-[15%] flex justify-center items-center">
-            <FaRegChartBar className="text-white text-[2.5rem]" />
+            <FaRegChartBar className="text-[2.5rem]" />
           </div>
-          <h3 className="text-white text-[1.8rem]">Thống kê</h3>
-        </div>
-        <div className="flex w-full justify-start items-center gap-[2rem] p-[2rem] h-[20%]">
+          <h3 className="text-[1.8rem]">Thống kê</h3>
+        </NavLink>
+        <NavLink
+          to="/"
+          className={({ isActive }) =>
+            isActive
+              ? 'flex w-full justify-start items-center gap-[2rem] p-[2rem] h-[calc(100%/6)] bg-white rounded-l-[5rem] text-orangeColor font-bold'
+              : 'flex w-full justify-start items-center gap-[2rem] p-[2rem] h-[calc(100%/6)] text-white'
+          }
+        >
           <div className="w-[15%] flex justify-center items-center">
-            <FaSignOutAlt className="text-white text-[2.5rem]" />
+            <FaUserAlt className="text-[2.5rem]" />
           </div>
-          <h3 className="text-white text-[1.8rem]">Đăng xuất</h3>
-        </div>
+          <h3 className="text-[1.8rem]">Nhân sự</h3>
+        </NavLink>
+        <NavLink
+          to="/"
+          className={({ isActive }) =>
+            isActive
+              ? 'flex w-full justify-start items-center gap-[2rem] p-[2rem] h-[calc(100%/6)] bg-white rounded-l-[5rem] text-orangeColor font-bold'
+              : 'flex w-full justify-start items-center gap-[2rem] p-[2rem] h-[calc(100%/6)] text-white'
+          }
+        >
+          <div className="w-[15%] flex justify-center items-center">
+            <FaSignOutAlt className=" text-[2.5rem]" />
+          </div>
+          <h3 className=" text-[1.8rem]">Đăng xuất</h3>
+        </NavLink>
       </div>
     </div>
   )

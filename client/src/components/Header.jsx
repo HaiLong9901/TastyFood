@@ -13,7 +13,10 @@ function Header() {
   const user = useSelector(selectCurrentUser)
   const { data: cart, isSuccess } = useGetCartQuery(user.id)
   let numberItems
-  if (isSuccess) numberItems = cart.cart.products.length
+  if (user) {
+    if (isSuccess) numberItems = cart.cart.products.length
+  }
+
   const [openMenu, setOpenMenu] = useState(false)
   return (
     <div className="w-full relative">

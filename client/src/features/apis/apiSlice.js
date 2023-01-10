@@ -99,6 +99,11 @@ export const apiSlice = createApi({
       providesTags: ['Order'],
     }),
 
+    getAllOrdersByAdmin: builder.query({
+      query: (status) => `/order/get_all_byadmin/${status}`,
+      providesTags: ['Order'],
+    }),
+
     updateOrderStatus: builder.mutation({
       query: (updateOrder) => ({
         url: '/order/update_status',
@@ -132,4 +137,5 @@ export const {
   useGetAllOrderQuery,
   useUpdateOrderStatusMutation,
   useGetAllVoucherQuery,
+  useGetAllOrdersByAdminQuery,
 } = apiSlice

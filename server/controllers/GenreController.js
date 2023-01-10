@@ -62,3 +62,5 @@ const GenreController = {
     }
   },
 }
+
+module.exports = GenreController

@@ -73,10 +73,20 @@ function UserAccount() {
                 <FaFileInvoice className="text-[1.6rem] w-[2rem]" />{' '}
                 <span className="text-[1.6rem] font-bold">Đơn hàng</span>
               </NavLink>
-              <div className="flex gap-[1rem] items-center">
+              <NavLink
+                to="/user/review"
+                style={({ isActive }) =>
+                  isActive
+                    ? {
+                        color: '#FF8303',
+                      }
+                    : undefined
+                }
+                className="flex gap-[1rem] items-center"
+              >
                 <FaRegCommentDots className="text-[1.6rem] w-[2rem]" />{' '}
                 <span className="text-[1.6rem] font-bold">Đánh giá sản phẩm</span>
-              </div>
+              </NavLink>
             </div>
           </div>
           <div className="w-[75%] bg-white">

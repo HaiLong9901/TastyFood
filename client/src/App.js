@@ -23,6 +23,8 @@ import Checkout from './pages/Checkout'
 import NotFound from './pages/NotFound'
 import UserPurchase from './pages/user/UserPurchase'
 import UserPurchaseList from './pages/user/UserPurchaseList'
+import UserReview from './pages/user/UserReview'
+import AdminOrder, { AllOrder } from './pages/admin/AdminOrder'
 function App() {
   const user = useSelector(selectCurrentUser)
   return (
@@ -33,6 +35,12 @@ function App() {
           <div className="w-[80%]">
             <Routes>
               <Route path="/admin" element={<Admin />} />
+              <Route path="/admin/order" element={<AdminOrder />}>
+                <Route path="/admin/order/all" element={<AllOrder status="all" />} />
+                <Route path="/admin/order/pending" element={<AllOrder status="pending" />} />
+                <Route path="/admin/order/success" element={<AllOrder status="success" />} />
+                <Route path="/admin/order/rejected" element={<AllOrder status="rejected" />} />
+              </Route>
             </Routes>
           </div>
         </div>
@@ -52,6 +60,7 @@ function App() {
                   <Route path="/user/account/profile" element={<UserProfile />} />
                   <Route path="/user/account/address" element={<UserAdress />} />
                   <Route path="/user/account/password" element={<UserPassword />} />
+                  <Route path="/user/review" element={<UserReview />} />
                   <Route path="/user/purchase" element={<UserPurchase />}>
                     <Route path="/user/purchase/all" element={<UserPurchaseList status="all" />} />
                     <Route path="/user/purchase/pending" element={<UserPurchaseList status="pending" />} />

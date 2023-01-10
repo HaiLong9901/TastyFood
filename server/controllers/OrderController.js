@@ -115,6 +115,46 @@ const OrderController = {
       console.log(error)
     }
   },
+
+  getAllOrderByAdmin: async (req, res) => {
+    const orderStatus = req.params.status
+    try {
+      if (!orderStatus || orderStatus === 'all') {
+        const orders = await Order.find()
+          .populate({
+            path: 'products',
+            populate: {
+              path: 'productId',
+              select: ['name'],
+            },
+          })
+          .populate('userId', ['name', 'phone'])
+          .sort({ updatedAt: -1 })
+          .exec()
+        return res.json({
+          success: true,
+          result: orders,
+        })
+      }
+      const orders = await Order.find({ status: orderStatus })
+        .populate({
+          path: 'products',
+          populate: {
+            path: 'productId',
+            select: ['name'],
+          },
+        })
+        .populate('userId', ['name', 'phone'])
+        .sort({ updatedAt: -1 })
+        .exec()
+      return res.json({
+        success: true,
+        result: orders,
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  },
 }
 
 module.exports = OrderController
