@@ -25,6 +25,7 @@ import UserPurchase from './pages/user/UserPurchase'
 import UserPurchaseList from './pages/user/UserPurchaseList'
 import UserReview from './pages/user/UserReview'
 import AdminOrder, { AllOrder } from './pages/admin/AdminOrder'
+import AdminDetailOrder from './pages/admin/AdminDetailOrder'
 function App() {
   const user = useSelector(selectCurrentUser)
   return (
@@ -42,6 +43,7 @@ function App() {
                 <Route path="/admin/order/rejected" element={<AllOrder status="rejected" />} />
                 <Route path="/admin/order/shipping" element={<AllOrder status="shipping" />} />
               </Route>
+              <Route path="/admin/order/:orderId" element={<AdminDetailOrder />} />
             </Routes>
           </div>
         </div>

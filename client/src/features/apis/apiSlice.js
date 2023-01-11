@@ -112,7 +112,10 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ['Order'],
     }),
-
+    getDetailOrder: builder.query({
+      query: (orderId) => `/order/get_detail_byAd/${orderId}`,
+      providesTags: ['Order'],
+    }),
     getAllVoucher: builder.query({
       query: () => '/voucher/get_all',
       providesTags: ['Voucher'],
@@ -138,4 +141,5 @@ export const {
   useUpdateOrderStatusMutation,
   useGetAllVoucherQuery,
   useGetAllOrdersByAdminQuery,
+  useGetDetailOrderQuery,
 } = apiSlice

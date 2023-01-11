@@ -155,6 +155,34 @@ const OrderController = {
       console.log(error)
     }
   },
+
+  getDetailOrderAdmin: async (req, res) => {
+    const orderId = req.params.orderId
+    if (!orderId)
+      return res.status(400).json({
+        success: false,
+        passage: 'Missing information',
+      })
+    try {
+      const order = await Order.findById(orderId)
+        .populate('userId', ['name', 'phone'])
+        .populate({
+          path: 'products',
+          populate: {
+            path: 'productId',
+            select: ['name', 'original_price', 'sale_price'],
+          },
+        })
+        .populate('voucher', ['code', 'value'])
+        .exec()
+      return res.json({
+        success: true,
+        result: order,
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  },
 }
 
 module.exports = OrderController

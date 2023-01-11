@@ -35,6 +35,7 @@ function Checkout() {
   const [addressIndex, setAddressIndex] = useState(0)
   const [voucherValue, setVoucherValue] = useState(0)
   const [voucherCode, setVoucherCode] = useState('')
+  const [voucherId, setVoucherId] = useState(null)
   const [errorVoucher, setErrorVoucher] = useState('')
   const productsOrder = useSelector(selectProductsFromOrder)
   const amount = useSelector(selectAmountOfOrder)
@@ -122,6 +123,7 @@ function Checkout() {
                         setVoucherCode(voucher.code)
                         setVoucherBox(false)
                         setVoucherValue(voucher.value)
+                        setVoucherId(voucher._id)
                       }}
                     >
                       Sử dụng
@@ -204,6 +206,7 @@ function Checkout() {
                       let index = vouchers.result.findIndex((voucher) => voucher.code === e.target.value)
                       if (index < 0) {
                         setVoucherValue(0)
+                        setVoucherId(null)
                         setErrorVoucher('Voucher không tồn tại')
                       } else {
                         if (vouchers.result[index].apply_for > amount)
@@ -211,6 +214,7 @@ function Checkout() {
                         else {
                           setErrorVoucher('')
                           setVoucherValue(vouchers.result[index].value)
+                          setVoucherId(vouchers.result[index]._id)
                         }
                       }
                     }}
@@ -278,6 +282,7 @@ function Checkout() {
                       amount: amount * (1 - voucherValue) + 10000,
                       products: productsOrder,
                       address: user.result.address[addressIndex],
+                      voucher: voucherId,
                     })
                     removeItemFromCart({
                       products: productsOrder.map((product) => product.productId),

@@ -1,13 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, NavLink, Outlet } from 'react-router-dom'
 import { useGetAllOrdersByAdminQuery } from '../../features/apis/apiSlice'
 import { parseISO, format } from 'date-fns'
 import { FaCircle, FaChevronRight, FaChevronLeft } from 'react-icons/fa'
-import { useState } from 'react'
 
 const OrderItem = ({ orderId, orderUser, orderAddress, orderStatus, orderDate }) => {
-  const date = format(parseISO(orderDate), 'MM/dd/yyy')
-  console.log('date: ', date)
   return (
     <div>
       <div className="flex shadow-sm px-[1rem] py-[2rem] rounded-[.5rem] hover:scale-[1.01] cursor-pointer">
