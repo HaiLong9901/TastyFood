@@ -1,6 +1,7 @@
 import React, { forwardRef } from 'react'
 import { toISODate } from '../../shared/FormatDate'
 function OrderPrint({ order }, ref) {
+  let total = 0
   return (
     <div ref={ref}>
       <div className="p-[5rem] flex flex-col gap-[1rem]">
@@ -50,6 +51,30 @@ function OrderPrint({ order }, ref) {
             </tr>
           ))}
         </table>
+        <div className="flex flex-col items-end gap-[1rem]">
+          <div className="w-[40%] flex justify-between">
+            <h3 className="text-[1.6rem] text-primaryColor">Tổng đơn hàng: </h3>
+            <span className="text-[1.6rem] text-primaryColor">{total}</span>
+          </div>
+          {order.result.voucher ? (
+            <div className="w-[40%] flex justify-between">
+              <h3 className="text-[1.6rem] text-primaryColor">
+                Voucher: <strong className="text-[1.6rem]">{order.result.voucher.code}</strong>
+              </h3>
+              <span className="text-[1.6rem] text-primaryColor">
+                -{order.result.voucher.value * 100}% = {order.result.voucher.value * total}
+              </span>
+            </div>
+          ) : undefined}
+          <div className="w-[40%] flex justify-between">
+            <h3 className="text-[1.6rem] text-primaryColor">Phí vận chuyển</h3>
+            <span className="text-[1.6rem] text-primaryColor">+10000</span>
+          </div>
+          <div className="w-[40%] flex justify-between">
+            <h3 className="text-[1.6rem] text-primaryColor">Tổng thanh toán: </h3>
+            <strong className="text-[1.6rem] text-primaryColor">{order.result.amount}</strong>
+          </div>
+        </div>
       </div>
     </div>
   )

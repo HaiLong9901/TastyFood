@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link, NavLink, Outlet } from 'react-router-dom'
+import { Link, NavLink, Outlet, useSearchParams } from 'react-router-dom'
 import { useGetAllOrdersByAdminQuery } from '../../features/apis/apiSlice'
 import { parseISO, format } from 'date-fns'
 import { FaCircle, FaChevronRight, FaChevronLeft } from 'react-icons/fa'
@@ -34,7 +34,8 @@ const OrderItem = ({ orderId, orderUser, orderAddress, orderStatus, orderDate })
   )
 }
 export const AllOrder = ({ status }) => {
-  const [currentPage, setCurrentPage] = useState(1)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get('page')) || 1)
   let maxPage
   const {
     data: orders,
@@ -79,7 +80,8 @@ export const AllOrder = ({ status }) => {
                 className="text-[1.8rem] text-primaryColor cursor-pointer"
                 onClick={() => {
                   if (currentPage <= 1) return
-                  setCurrentPage((prev) => currentPage - 1)
+                  setCurrentPage((prev) => prev - 1)
+                  setSearchParams({ page: currentPage - 1 })
                 }}
               >
                 <FaChevronLeft />
@@ -95,7 +97,12 @@ export const AllOrder = ({ status }) => {
                     className={`text-[1.6rem] ${
                       currentPage === pageValue ? 'text-orangeColor' : 'text-primaryColor'
                     } cursor-pointer`}
-                    onClick={() => setCurrentPage(pageValue)}
+                    onClick={() => {
+                      setCurrentPage(pageValue)
+                      setSearchParams({
+                        page: pageValue,
+                      })
+                    }}
                   >
                     {pageValue}
                   </div>
@@ -106,6 +113,7 @@ export const AllOrder = ({ status }) => {
                 onClick={() => {
                   if (currentPage >= maxPage) return
                   setCurrentPage((prev) => prev + 1)
+                  setSearchParams(currentPage + 1)
                 }}
               >
                 <FaChevronRight />
@@ -119,6 +127,8 @@ export const AllOrder = ({ status }) => {
   return <>{OrderTable}</>
 }
 function AdminOrder() {
+  const [fromDate, setFromDate] = useState(new Date('2022-09-09').toISOString().substring(0, 10))
+  const [toDate, setToDate] = useState(new Date(Date.now()).toISOString().substring(0, 10))
   return (
     <div>
       <div className="flex flex-col p-[2rem] h-screen">
@@ -167,7 +177,7 @@ function AdminOrder() {
                   : 'text-[1.5rem] text-primaryColor py-[1rem] mr-[2rem]'
               }
             >
-              Đơn hàng thành cồng
+              Đơn hàng thành công
             </NavLink>
             <NavLink
               to="/admin/order/rejected"
@@ -188,6 +198,8 @@ function AdminOrder() {
               className="text-[1.5rem] outline-none border-none bg-gray-200 p-[.5rem] rounded-[.5rem]"
               type="date"
               id="From"
+              value={fromDate}
+              onChange={(e) => setFromDate(e.target.value)}
             />
             <label className="text-[1.5rem] text-primaryColor italic" htmlFor="To">
               Đến
@@ -196,6 +208,8 @@ function AdminOrder() {
               className="text-[1.5rem] outline-none border-none bg-gray-200 p-[.5rem] rounded-[.5rem]"
               type="date"
               id="To"
+              value={toDate}
+              onChange={(e) => setToDate(e.target.value)}
             />
           </div>
         </div>
