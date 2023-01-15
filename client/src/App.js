@@ -37,7 +37,7 @@ function App() {
             <Routes>
               <Route path="/admin" element={<Admin />} />
               <Route path="/admin/order" element={<AdminOrder />}>
-                <Route path="/admin/order/all" element={<AllOrder status="all" />} />
+                <Route path="/admin/order" element={<AllOrder status="all" />} />
                 <Route path="/admin/order/pending" element={<AllOrder status="pending" />} />
                 <Route path="/admin/order/success" element={<AllOrder status="success" />} />
                 <Route path="/admin/order/rejected" element={<AllOrder status="rejected" />} />
