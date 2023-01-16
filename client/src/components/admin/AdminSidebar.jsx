@@ -36,7 +36,7 @@ function AdminSidebar() {
           <h3 className="text-[1.8rem]">Đơn hàng</h3>
         </NavLink>
         <NavLink
-          to="/"
+          to="/admin/products"
           className={({ isActive }) =>
             isActive
               ? 'flex w-full justify-start items-center gap-[2rem] p-[2rem] h-[calc(100%/6)] bg-white rounded-l-[5rem] text-orangeColor font-bold'

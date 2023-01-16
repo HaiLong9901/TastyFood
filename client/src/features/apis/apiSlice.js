@@ -15,7 +15,7 @@ export const apiSlice = createApi({
       return headers
     },
   }),
-  tagTypes: ['User', 'Address', 'Cart', 'Order', 'Voucher'],
+  tagTypes: ['User', 'Address', 'Cart', 'Order', 'Voucher', 'Genre'],
   endpoints: (builder) => ({
     getAllProducts: builder.query({
       query: () => 'product/get_all_products',
@@ -120,6 +120,15 @@ export const apiSlice = createApi({
       query: () => '/voucher/get_all',
       providesTags: ['Voucher'],
     }),
+
+    createGenre: builder.mutation({
+      query: (genre) => ({
+        url: '/genre/create_genre',
+        method: 'POST',
+        body: genre,
+      }),
+      invalidatesTags: ['Genre'],
+    }),
   }),
 })
 
@@ -142,4 +151,5 @@ export const {
   useGetAllVoucherQuery,
   useGetAllOrdersByAdminQuery,
   useGetDetailOrderQuery,
+  useCreateGenreMutation,
 } = apiSlice

@@ -41,7 +41,7 @@ const ProductController = {
 
   getAllProducts: async (req, res) => {
     try {
-      const results = await Product.find()
+      const results = await Product.find().populate('genre').exec()
       res.json({
         success: true,
         passage: 'Find all successfully',
