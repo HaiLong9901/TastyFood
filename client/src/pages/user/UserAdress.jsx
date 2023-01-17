@@ -10,7 +10,7 @@ import {
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 function UserAdress() {
-  const [updateAddress, { isLoading }] = useUpdateAddressMutation()
+  const [updateAddress] = useUpdateAddressMutation()
   const [addAddressForm, setAddAddressForm] = useState(false)
   const [district, setDistrict] = useState('')
   const [ward, setWard] = useState('')
@@ -21,26 +21,39 @@ function UserAdress() {
   const handleOpenAddAddressForm = () => {
     setAddAddressForm(!addAddressForm)
   }
-  const handleSubmitAddress = () => {
+  const handleSubmitAddress = async () => {
     if (location.length) {
-      setLocation('')
-      setAddAddressForm(false)
-      setMissingLocation(false)
-      const newAddress = location + ', ' + ward + ', ' + district + ', Hà Nội'
-      console.log(newAddress)
-      updateAddress({
-        address: newAddress,
-      })
-      toast.success('Thêm địa chỉ thành công', {
-        position: 'top-center',
-        autoClose: 500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: 'colored',
-      })
+      try {
+        setLocation('')
+        setAddAddressForm(false)
+        setMissingLocation(false)
+        const newAddress = location + ', ' + ward + ', ' + district + ', Hà Nội'
+        console.log(newAddress)
+        await updateAddress({
+          address: newAddress,
+        }).unwrap()
+        toast.success('Thêm địa chỉ thành công', {
+          position: 'top-center',
+          autoClose: 500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'colored',
+        })
+      } catch (error) {
+        toast.error(error.data.passage, {
+          position: 'top-center',
+          autoClose: 500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'colored',
+        })
+      }
       return
     }
     setMissingLocation(true)

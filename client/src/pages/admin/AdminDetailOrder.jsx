@@ -110,12 +110,16 @@ function AdminDetailOrder() {
             {order.result.status === 'shipping' ? (
               <button
                 className="text-[1.6rem] text-white py-[1rem] px-[2rem] bg-secondaryColor border-solid border-secondaryColor border-[.1rem] rounded-[.5rem]"
-                onClick={() => {
-                  updateOrderStatus({
-                    orderId: order.result._id,
-                    status: 'success',
-                  })
-                  navigate('/admin/order/success')
+                onClick={async () => {
+                  try {
+                    await updateOrderStatus({
+                      orderId: order.result._id,
+                      status: 'success',
+                    })
+                    navigate('/admin/order/success')
+                  } catch (error) {
+                    console.log(error.data.passage)
+                  }
                 }}
               >
                 Giao thành công

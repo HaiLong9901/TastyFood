@@ -129,6 +129,10 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ['Genre'],
     }),
+    getAllGenre: builder.query({
+      query: () => '/genre/get_all',
+      providesTags: ['Genre'],
+    }),
   }),
 })
 
@@ -152,4 +156,5 @@ export const {
   useGetAllOrdersByAdminQuery,
   useGetDetailOrderQuery,
   useCreateGenreMutation,
+  useGetAllGenreQuery,
 } = apiSlice

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { USER_DEFAULT_AVATAR } from '../../shared/Constants'
 import { useSelector, useDispatch } from 'react-redux'
-import { selectCurrentUser, updateCredentials, selectCurrentToken } from '../../features/auth/authSlice'
+import { selectCurrentUser, updateCredentials } from '../../features/auth/authSlice'
 import { useGetUserQuery } from '../../features/apis/apiSlice'
 import { useUpdateInfoMutation } from '../../features/apis/apiSlice'
 import { useState } from 'react'
@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css'
 
 function UserProfile() {
   const dispatch = useDispatch()
-  const [updateInfo, { isLoading }] = useUpdateInfoMutation()
+  const [updateInfo] = useUpdateInfoMutation()
   const { id, imageURL } = useSelector(selectCurrentUser)
   const [imageURLCloudinary, setImageURLCloudinary] = useState(imageURL)
   const { data: user, isSuccess: isSuccessUser, isFetching: isFetchingUser } = useGetUserQuery()
@@ -105,22 +105,20 @@ function UserProfile() {
           <button
             onClick={async () => {
               try {
-                const updatedUser = await updateInfo({ id, imageURL: imageURLCloudinary, name })
-                if (updatedUser) {
-                  dispatch(updateCredentials({ imageURL: imageURLCloudinary }))
-                  toast.success('Cập nhật thông tin thành công', {
-                    position: 'top-center',
-                    autoClose: 1000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: 'colored',
-                  })
-                }
+                await updateInfo({ id, imageURL: imageURLCloudinary, name }).unwrap()
+                dispatch(updateCredentials({ imageURL: imageURLCloudinary }))
+                toast.success('Cập nhật thông tin thành công', {
+                  position: 'top-center',
+                  autoClose: 1000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: 'colored',
+                })
               } catch (error) {
-                toast.error('Đã có lỗi xảy ra, vui lòng kiểm tra lại!', {
+                toast.error(error.data.passage, {
                   position: 'top-center',
                   autoClose: 1000,
                   hideProgressBar: false,
