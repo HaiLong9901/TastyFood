@@ -15,13 +15,39 @@ export const apiSlice = createApi({
       return headers
     },
   }),
-  tagTypes: ['User', 'Address', 'Cart', 'Order', 'Voucher', 'Genre'],
+  tagTypes: ['User', 'Address', 'Cart', 'Order', 'Voucher', 'Genre', 'Product'],
   endpoints: (builder) => ({
     getAllProducts: builder.query({
       query: () => 'product/get_all_products',
+      providesTags: ['Product'],
     }),
     getProductById: builder.query({
       query: (productId) => `product/${productId}`,
+      providesTags: ['Product'],
+    }),
+    createProduct: builder.mutation({
+      query: (product) => ({
+        url: '/product/create_product',
+        method: 'POST',
+        body: product,
+      }),
+      invalidatesTags: ['Product'],
+    }),
+    updateProduct: builder.mutation({
+      query: (product) => ({
+        url: '/product/update_product',
+        method: 'PUT',
+        body: product,
+      }),
+      invalidatesTags: ['Product'],
+    }),
+    deleteProduct: builder.mutation({
+      query: (product) => ({
+        url: '/product/delete_product',
+        method: 'PUT',
+        body: product,
+      }),
+      invalidatesTags: ['Product'],
     }),
     getUser: builder.query({
       query: (userId) => 'auth/get_user',
@@ -139,6 +165,9 @@ export const apiSlice = createApi({
 export const {
   useGetAllProductsQuery,
   useGetProductByIdQuery,
+  useCreateProductMutation,
+  useUpdateProductMutation,
+  useDeleteProductMutation,
   useGetUserQuery,
   useGetAllDistrictQuery,
   useGetAllWardQuery,

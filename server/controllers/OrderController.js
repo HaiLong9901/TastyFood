@@ -97,7 +97,7 @@ const OrderController = {
         passage: 'Missing order id',
       })
     try {
-      const order = await Order.findById(orderId)
+      let order = await Order.findById(orderId)
       if (!order)
         return res.status(400).json({
           success: false,

@@ -41,7 +41,7 @@ const ProductController = {
 
   getAllProducts: async (req, res) => {
     try {
-      const results = await Product.find().populate('genre').exec()
+      const results = await Product.find({ isSelling: true }).populate('genre').sort({ updatedAt: -1 }).exec()
       res.json({
         success: true,
         passage: 'Find all successfully',
@@ -59,7 +59,6 @@ const ProductController = {
   getProductById: async (req, res) => {
     try {
       const result = await Product.findById(req.params.id)
-      console.log(result)
       return res.json({
         success: true,
         passage: 'Successfully',
@@ -71,6 +70,46 @@ const ProductController = {
         success: false,
         passage: 'No result is found',
       })
+    }
+  },
+
+  updateProduct: async (req, res) => {
+    const { name, original_price, sale_price, imageURL, desc, genre, id } = req.body
+    if (!id)
+      return res.status(400).json({
+        success: false,
+        passage: 'Missing product id',
+      })
+    try {
+      let product = await Product.findById(id).exec()
+      product.name = name
+      product.desc = desc
+      product.original_price = original_price
+      product.sale_price = sale_price
+      product.imageURL = imageURL
+      product.genre = genre
+      await product.save()
+      return res.json({
+        success: true,
+        passage: 'Update product successfully',
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  },
+
+  deleteProduct: async (req, res) => {
+    const { productId } = req.body
+    try {
+      let product = await Product.findById(productId).exec()
+      product.isSelling = false
+      await product.save()
+      return res.json({
+        success: true,
+        passage: 'Delete product successfully',
+      })
+    } catch (error) {
+      console.log(error)
     }
   },
 }

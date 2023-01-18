@@ -27,6 +27,10 @@ const ProductSchema = new Schema(
       ref: 'genre',
       required: true,
     },
+    isSelling: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true },
 )
