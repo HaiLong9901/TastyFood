@@ -9,6 +9,8 @@ import {
   useDeleteProductMutation,
   useUpdateProductMutation,
 } from '../../features/apis/apiSlice'
+import { useSearchParams } from 'react-router-dom'
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -310,12 +312,14 @@ const UpdateProduct = ({ open, setOpen, product }) => {
     )
   }, [])
   useEffect(() => {
-    setName(product.name)
-    setDesc(product.desc)
-    setOriginalPrice(product.original_price)
-    setSalePrice(product.sale_price)
-    setGenreId(product.genre._id)
-    setImageURL(product.imageURL)
+    if (product) {
+      setName(product.name)
+      setDesc(product.desc)
+      setOriginalPrice(product.original_price)
+      setSalePrice(product.sale_price)
+      setGenreId(product.genre._id)
+      setImageURL(product.imageURL)
+    }
   }, [product])
 
   return (
@@ -480,13 +484,6 @@ const UpdateProduct = ({ open, setOpen, product }) => {
               <button
                 className="text-[1.6rem] py-[1rem] px-[2rem] rounded-[.5rem] border-solid border-primaryColor border-[.1rem]"
                 onClick={() => {
-                  // setName('')
-                  // setDesc('')
-                  // setImageURL('')
-                  // setSalePrice(0)
-                  // setGenreId('')
-                  // setErrorStr('')
-                  // setOriginalPrice('')
                   setOpen(false)
                 }}
               >
@@ -506,6 +503,11 @@ function AdminProducts() {
   const [openAddProduct, setOpenAddProduct] = useState(false)
   const [openUpdateProduct, setOpenUpdateProduct] = useState(false)
   const [needUpdateProduct, setNeedUpdateProduct] = useState()
+  const [genre, setGenre] = useState('all')
+  const [searchKey, setSearchKey] = useState('')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get('page')) || 1)
+  const searchRef = useRef()
   const {
     data: products,
     isFetching: isFetchingProducts,
@@ -513,82 +515,170 @@ function AdminProducts() {
     isError: isErrorProducts,
     error: errorProducts,
   } = useGetAllProductsQuery()
+  const { data: genres, isSuccess: isSuccessGenres } = useGetAllGenreQuery()
+  useEffect(() => {
+    setSearchParams({ genre, key: searchParams.get('key') || [], page: searchParams.get('page') || [] })
+    if (searchKey !== '')
+      setSearchParams({ genre: searchParams.get('genre') || [], key: searchKey, page: searchParams.get('page') || [] })
+    else setSearchParams({ genre, page: searchParams.get('page') || [] })
+  }, [genre, searchKey])
   let ProductsTableRender
   if (isFetchingProducts) ProductsTableRender = <div>Loading...</div>
   else if (isSuccessProducts) {
-    if (!products.results.length)
+    let filterProducts = [...products.results]
+    filterProducts = filterProducts.filter((product) => {
+      if (searchParams.get('key') && !searchParams.get('genre')) return product.name.includes(searchParams.get('key'))
+      if (searchParams.get('key') && searchParams.get('genre')) {
+        if (searchParams.get('genre') === 'all') return product.name.includes(searchParams.get('key'))
+        return product.genre.name === searchParams.get('genre') && product.name.includes(searchParams.get('key'))
+      }
+
+      if (searchParams.get('genre') && !searchParams.get('key')) {
+        if (searchParams.get('genre') === 'all') return true
+        return product.genre.name === searchParams.get('genre')
+      }
+      return true
+    })
+    if (!filterProducts.length)
       ProductsTableRender = (
         <div className="text-[1.8rem] text-orangeColor font-bold flex justify-center items-center h-[10rem]">
           Không có sản phẩm nào
         </div>
       )
     else {
+      let maxPage = Math.ceil(filterProducts.length / 7)
       ProductsTableRender = (
-        <table className="w-full table-auto">
-          <tr className="bg-yellowColor">
-            <th className="text-[1.5rem] text-primaryColor font-bold">Mã sản phẩm</th>
-            <th className="text-[1.5rem] text-primaryColor font-bold">Tên sản phẩm</th>
-            <th className="text-[1.5rem] text-primaryColor font-bold">Giá gốc</th>
-            <th className="text-[1.5rem] text-primaryColor font-bold">Giá bán</th>
-            <th className="text-[1.5rem] text-primaryColor font-bold">Phân loại</th>
-            <th className="text-[1.5rem] text-primaryColor font-bold">Ảnh</th>
-            <th className="text-[1.5rem] text-primaryColor font-bold">Mô tả</th>
-            <th className="text-[1.5rem] text-primaryColor font-bold"></th>
-            <th className="text-[1.5rem] text-primaryColor font-bold"></th>
-          </tr>
-          {products.results?.map((product, index) => (
-            <tr className={index % 2 ? 'bg-gray-100' : null}>
-              <td className="text-[1.5rem] p-[1rem]">{product._id.slice(0, 10)}...</td>
-              <td className="text-[1.5rem] p-[1rem]">{product.name}</td>
-              <td className="text-[1.5rem] p-[1rem]">{product.original_price}</td>
-              <td className="text-[1.5rem] p-[1rem]">{product.sale_price}</td>
-              <td className="text-[1.5rem] p-[1rem]">{product.genre ? product.genre.name : undefined}</td>
-              <td className="text-[1.5rem] p-[1rem]">{product.imageURL.slice(0, 10)}...</td>
-              <td className="text-[1.5rem] p-[1rem]">{product.desc.slice(0, 50)}...</td>
-              <td className="text-[1.5rem] p-[1rem]">
-                <button
-                  className="text-blue-500"
-                  onClick={() => {
-                    setNeedUpdateProduct(product)
-                    setOpenUpdateProduct(true)
-                  }}
-                >
-                  Sửa
-                </button>
-              </td>
-              <td className="text-[1.5rem] p-[1rem]">
-                <button
-                  className="text-red-500"
-                  onClick={async () => {
-                    try {
-                      await deleteProduct({ productId: product._id }).unwrap()
-                    } catch (error) {
-                      toast.error(error.data.passage, {
-                        position: 'top-center',
-                        autoClose: 500,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: 'colored',
+        <div className="grow">
+          <div className="min-h-[70%]">
+            <table className="w-full table-fixed">
+              <tr className="bg-yellowColor">
+                <th className="text-[1.5rem] text-primaryColor font-bold py-[1rem]">Mã sản phẩm</th>
+                <th className="text-[1.5rem] text-primaryColor font-bold py-[1rem] w-[15%]">Tên sản phẩm</th>
+                <th className="text-[1.5rem] text-primaryColor font-bold py-[1rem] w-[10%]">Giá gốc</th>
+                <th className="text-[1.5rem] text-primaryColor font-bold py-[1rem] w-[10%]">Giá bán</th>
+                <th className="text-[1.5rem] text-primaryColor font-bold py-[1rem]">Phân loại</th>
+                <th className="text-[1.5rem] text-primaryColor font-bold py-[1rem]">Ảnh</th>
+                <th className="text-[1.5rem] text-primaryColor font-bold py-[1rem] w-[20%]">Mô tả</th>
+                <th className="text-[1.5rem] text-primaryColor font-bold py-[1rem] w-[5%]"></th>
+                <th className="text-[1.5rem] text-primaryColor font-bold py-[1rem] w-[5%]"></th>
+              </tr>
+              {filterProducts.map((product, index) => {
+                if (index >= currentPage * 7 || index < (currentPage - 1) * 7) return
+                return (
+                  <tr className={index % 2 ? 'bg-gray-100' : null}>
+                    <td className="text-[1.5rem] p-[1rem]">{product._id.slice(0, 10)}...</td>
+                    <td className="text-[1.5rem] p-[1rem]">{product.name}</td>
+                    <td className="text-[1.5rem] p-[1rem]">{product.original_price}</td>
+                    <td className="text-[1.5rem] p-[1rem]">{product.sale_price}</td>
+                    <td className="text-[1.5rem] p-[1rem]">{product.genre ? product.genre.name : undefined}</td>
+                    <td className="text-[1.5rem] p-[1rem]">{product.imageURL.slice(0, 10)}...</td>
+                    <td className="text-[1.5rem] p-[1rem]">{product.desc.slice(0, 50)}...</td>
+                    <td className="text-[1.5rem] p-[1rem]">
+                      <button
+                        className="text-blue-500"
+                        onClick={() => {
+                          setNeedUpdateProduct(product)
+                          setOpenUpdateProduct(true)
+                        }}
+                      >
+                        Sửa
+                      </button>
+                    </td>
+                    <td className="text-[1.5rem] p-[1rem]">
+                      <button
+                        className="text-red-500"
+                        onClick={async () => {
+                          try {
+                            await deleteProduct({ productId: product._id }).unwrap()
+                          } catch (error) {
+                            toast.error(error.data.passage, {
+                              position: 'top-center',
+                              autoClose: 500,
+                              hideProgressBar: false,
+                              closeOnClick: true,
+                              pauseOnHover: true,
+                              draggable: true,
+                              progress: undefined,
+                              theme: 'colored',
+                            })
+                          }
+                        }}
+                      >
+                        Xóa
+                      </button>
+                    </td>
+                  </tr>
+                )
+              })}
+            </table>
+          </div>
+          <div className="flex justify-between items-center mt-[1rem]">
+            <div className="text-[1.5rem] text-primaryColor">
+              Trang {currentPage} trong {maxPage} trang
+            </div>
+            <div className="flex gap-[2rem] items-center">
+              <div
+                className="text-[1.8rem] text-primaryColor cursor-pointer"
+                onClick={() => {
+                  if (currentPage <= 1) return
+                  setCurrentPage((prev) => prev - 1)
+                  setSearchParams({
+                    page: currentPage - 1,
+                    genre: searchParams.get('genre') || [],
+                    key: searchParams.get('key') || [],
+                  })
+                }}
+              >
+                <FaChevronLeft />
+              </div>
+              {Array.apply(undefined, Array(5)).map((value, index) => {
+                const pageValue =
+                  currentPage % 5 === 0
+                    ? Math.trunc((currentPage - 1) / 5) * 5 + index + 1
+                    : Math.trunc(currentPage / 5) * 5 + index + 1
+                if (pageValue > maxPage) return
+                return (
+                  <div
+                    className={`text-[1.6rem] ${
+                      currentPage === pageValue ? 'text-orangeColor' : 'text-primaryColor'
+                    } cursor-pointer`}
+                    onClick={() => {
+                      setCurrentPage(pageValue)
+                      setSearchParams({
+                        page: pageValue,
+                        genre: searchParams.get('genre') || [],
+                        key: searchParams.get('key') || [],
                       })
-                    }
-                  }}
-                >
-                  Xóa
-                </button>
-              </td>
-            </tr>
-          ))}
-        </table>
+                    }}
+                  >
+                    {pageValue}
+                  </div>
+                )
+              })}
+              <div
+                className="text-[1.8rem] text-primaryColor cursor-pointer"
+                onClick={() => {
+                  if (currentPage >= maxPage) return
+                  setCurrentPage((prev) => prev + 1)
+                  setSearchParams({
+                    page: currentPage + 1,
+                    genre: searchParams.get('genre') || [],
+                    key: searchParams.get('key') || [],
+                  })
+                }}
+              >
+                <FaChevronRight />
+              </div>
+            </div>
+          </div>
+        </div>
       )
     }
   }
 
   return (
-    <div className="p-[2rem] flex justify-between">
-      <div className="w-[75%]">
+    <div className="p-[2rem] flex justify-between h-full">
+      <div className="w-[75%] flex flex-col">
         <div className="w-full flex justify-between mb-[2rem]">
           <h3 className="text-[2.5rem] text-primaryColor font-bold">Danh sách sản phẩm</h3>
           <div className="w-[30%] relative">
@@ -596,14 +686,46 @@ function AdminProducts() {
               type="text"
               className="w-full outline-none border-none py-[.5rem] px-[1rem] bg-gray-100 text-[1.6rem]"
               placeholder="Tìm kiếm sản phẩm"
+              ref={searchRef}
             />
-            <FaSearch className="absolute right-[1rem] top-[50%] text-orangeColor text-[1.6rem] translate-y-[-50%] cursor-pointer" />
+            <FaSearch
+              className="absolute right-[1rem] top-[50%] text-orangeColor text-[1.6rem] translate-y-[-50%] cursor-pointer"
+              onClick={() => {
+                setSearchKey(searchRef.current.value)
+              }}
+            />
           </div>
         </div>
         {ProductsTableRender}
       </div>
       <div className="w-[calc(25%-_2rem)] flex flex-col gap-[2rem]">
-        <div></div>
+        <div>
+          {isSuccessGenres && (
+            <div className="w-full flex flex-col gap-[2rem] bg-orangeColor py-[1rem] px-[.5rem] rounded-[.5rem]">
+              <label htmlFor="genre" className="text-[1.6rem] text-white text-center ">
+                Phân loại
+              </label>
+              <select
+                name="genre"
+                id="genre"
+                value={genre}
+                className="text-[1.6rem] outline-none w-[100%] text-center bg-white text-orangeColor py-[1rem] rounded-[.5rem]"
+                onChange={(e) => {
+                  setGenre(e.target.value)
+                }}
+              >
+                <option value="all" className="text-[1.3rem] text-orangeColor">
+                  Tất cả
+                </option>
+                {genres.result?.map((genre) => (
+                  <option value={genre.name} key={genre._id} className="text-[1.3rem] text-orangeColor">
+                    {genre.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+        </div>
         <button
           className="w-full bg-orangeColor py-[1rem] text-[1.6rem] text-white rounded-[.5rem]"
           onClick={() => setOpenAddGenre(true)}
