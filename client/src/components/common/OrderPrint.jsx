@@ -31,25 +31,28 @@ function OrderPrint({ order }, ref) {
               Giá bán
             </th>
           </tr>
-          {order.result.products?.map((product, index) => (
-            <tr>
-              <td className="text-[1.5rem] text-center py-[1rem] border-solid border-primaryColor border-[.1rem]">
-                {product.productId._id}
-              </td>
-              <td className="text-[1.5rem] text-center py-[1rem] border-solid border-primaryColor border-[.1rem]">
-                {product.productId.name}
-              </td>
-              <td className="text-[1.5rem] text-center py-[1rem] border-solid border-primaryColor border-[.1rem]">
-                {product.quantity}
-              </td>
-              <td className="text-[1.5rem] text-center py-[1rem] border-solid border-primaryColor border-[.1rem]">
-                {product.productId.original_price}
-              </td>
-              <td className="text-[1.5rem] text-center py-[1rem] border-solid border-primaryColor border-[.1rem]">
-                {product.productId.sale_price}
-              </td>
-            </tr>
-          ))}
+          {order.result.products?.map((product, index) => {
+            total += parseInt(product.productId.sale_price) * parseInt(product.quantity)
+            return (
+              <tr>
+                <td className="text-[1.5rem] text-center py-[1rem] border-solid border-primaryColor border-[.1rem]">
+                  {product.productId._id}
+                </td>
+                <td className="text-[1.5rem] text-center py-[1rem] border-solid border-primaryColor border-[.1rem]">
+                  {product.productId.name}
+                </td>
+                <td className="text-[1.5rem] text-center py-[1rem] border-solid border-primaryColor border-[.1rem]">
+                  {product.quantity}
+                </td>
+                <td className="text-[1.5rem] text-center py-[1rem] border-solid border-primaryColor border-[.1rem]">
+                  {product.productId.original_price}
+                </td>
+                <td className="text-[1.5rem] text-center py-[1rem] border-solid border-primaryColor border-[.1rem]">
+                  {product.productId.sale_price}
+                </td>
+              </tr>
+            )
+          })}
         </table>
         <div className="flex flex-col items-end gap-[1rem]">
           <div className="w-[40%] flex justify-between">

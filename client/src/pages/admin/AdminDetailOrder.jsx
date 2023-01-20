@@ -41,7 +41,7 @@ function AdminDetailOrder() {
             <th className="text-[1.5rem] text-center py-[1rem] font-bold">Giá bán</th>
           </tr>
           {order.result.products?.map((product, index) => {
-            total += parseInt(product.productId.sale_price)
+            total += parseInt(product.productId.sale_price) * parseInt(product.quantity)
             return (
               <tr className={!index % 2 ? 'bg-white' : 'bg-gray-200'}>
                 <td className="text-[1.5rem] text-center py-[1rem]">{product.productId._id}</td>

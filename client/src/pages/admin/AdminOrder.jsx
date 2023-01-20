@@ -109,7 +109,7 @@ export const AllOrder = ({ status }) => {
                     onClick={() => {
                       setCurrentPage(pageValue)
                       setSearchParams({
-                        from: searchParams.get('from'),
+                        from: searchParams.get('from') || [],
                         to: searchParams.get('to') || [],
                         page: pageValue,
                       })

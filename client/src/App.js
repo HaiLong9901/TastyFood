@@ -27,6 +27,7 @@ import UserReview from './pages/user/UserReview'
 import AdminOrder, { AllOrder } from './pages/admin/AdminOrder'
 import AdminDetailOrder from './pages/admin/AdminDetailOrder'
 import AdminProducts from './pages/admin/AdminProducts'
+import AdminSatistics from './pages/admin/AdminSatistics'
 function App() {
   const user = useSelector(selectCurrentUser)
   return (
@@ -46,6 +47,7 @@ function App() {
               </Route>
               <Route path="/admin/order/:orderId" element={<AdminDetailOrder />} />
               <Route path="/admin/products" element={<AdminProducts />} />
+              <Route path="/admin/statistics" element={<AdminSatistics />} />
             </Routes>
           </div>
         </div>
