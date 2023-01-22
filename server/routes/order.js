@@ -10,5 +10,6 @@ router.get('/get_all/:status', verifyToken, OrderController.getAllOrders)
 router.put('/update_status', verifyAdminRole, OrderController.updateStatus)
 router.get('/get_all_byadmin/:status', verifyAdminRole, OrderController.getAllOrderByAdmin)
 router.get('/get_detail_byAd/:orderId', verifyAdminRole, OrderController.getDetailOrderAdmin)
+router.get('/get_statistic', verifyAdminRole, OrderController.getStatisticSales)
 
 module.exports = router
