@@ -2,22 +2,23 @@ import React from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js'
 import { Bar } from 'react-chartjs-2'
-import { faker } from '@faker-js/faker'
 import { useGetStatisticSalesQuery } from '../../features/apis/apiSlice'
+import { toISODate } from '../../shared/FormatDate'
+import { useState } from 'react'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
-export const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'top',
-    },
-    title: {
-      display: true,
-      text: 'Chart.js Bar Chart',
-    },
-  },
-}
+// export const options = {
+//   responsive: true,
+//   plugins: {
+//     legend: {
+//       position: 'top',
+//     },
+//     title: {
+//       display: true,
+//       text: 'Chart.js Bar Chart',
+//     },
+//   },
+// }
 
 // const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July']
 
@@ -36,18 +37,35 @@ export const options = {
 //     },
 //   ],
 // }
-export const StatisticChart = ({ type }) => {
+export const SalesStatisticChart = () => {
+  const [type, setType] = useState('day')
   const { data: sales, isSuccess: isSuccessSales, isFetching: isFetchingSales } = useGetStatisticSalesQuery()
   let Render
   if (isFetchingSales) {
-    Render = <div>Loading...</div>
+    Render = (
+      <div className="w-full h-full flex justify-center items-center text-[2rem] font-bold text-orangeColor">
+        Loading...
+      </div>
+    )
   } else if (isSuccessSales) {
-    const labels = sales.result?.map((sale) => sale.date)
+    const options = {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
+        },
+        title: {
+          display: true,
+          text: `Thống kê doanh số ${type === 'day' ? 'ngày' : 'tháng'}`,
+        },
+      },
+    }
+    const labels = sales.result?.map((sale) => toISODate(sale.date).substring(0, 5))
     const data = {
       labels,
       datasets: [
         {
-          label: 'Thang',
+          label: 'Doanh số',
           data: sales.result?.map((sale) => sale.amount),
           backgroundColor: 'rgba(255, 99, 132, 0.5)',
         },
@@ -58,7 +76,10 @@ export const StatisticChart = ({ type }) => {
   return (
     <>
       <div className="flex justify-end">
-        <select name="" id=""></select>
+        <select name="type" id="type" value={type} onChange={(e) => setType(e.target.value)}>
+          <option value="day">Ngày</option>
+          <option value="month">Tháng</option>
+        </select>
       </div>
       <div className="w-[full] h-[40rem]">{Render}</div>
     </>
@@ -97,7 +118,7 @@ function AdminSatistics() {
         </div>
         <div>
           {/* <Outlet /> */}
-          <StatisticChart />
+          <SalesStatisticChart />
         </div>
       </div>
     </div>

@@ -155,17 +155,18 @@ function AdminOrder() {
         <div className="h-[10%] flex justify-between items-center">
           <div className="block">
             <NavLink
-              to={`/admin/order/${search}`}
+              to={`/admin/order`}
               className={({ isActive }) =>
                 isActive
                   ? 'text-[1.5rem] text-primaryColor border-solid font-bold border-orangeColor border-b-[.3rem] py-[1rem] mr-[2rem]'
                   : 'text-[1.5rem] text-primaryColor py-[1rem] mr-[2rem]'
               }
+              end
             >
               Tất cả đơn hàng
             </NavLink>
             <NavLink
-              to={`/admin/order/pending/${search}`}
+              to={`/admin/order/pending`}
               className={({ isActive }) =>
                 isActive
                   ? 'text-[1.5rem] text-primaryColor border-solid font-bold border-orangeColor border-b-[.3rem] py-[1rem] mr-[2rem]'
@@ -175,7 +176,7 @@ function AdminOrder() {
               Đơn hàng đang xử lý
             </NavLink>
             <NavLink
-              to={`/admin/order/shipping/${search}`}
+              to={`/admin/order/shipping`}
               className={({ isActive }) =>
                 isActive
                   ? 'text-[1.5rem] text-primaryColor border-solid font-bold border-orangeColor border-b-[.3rem] py-[1rem] mr-[2rem]'
@@ -185,7 +186,7 @@ function AdminOrder() {
               Đơn hàng đang vận chuyển
             </NavLink>
             <NavLink
-              to={`/admin/order/success/${search}`}
+              to={`/admin/order/success`}
               className={({ isActive }) =>
                 isActive
                   ? 'text-[1.5rem] text-primaryColor border-solid font-bold border-orangeColor border-b-[.3rem] py-[1rem] mr-[2rem]'
@@ -195,7 +196,7 @@ function AdminOrder() {
               Đơn hàng thành công
             </NavLink>
             <NavLink
-              to={`/admin/order/rejected/${search}`}
+              to={`/admin/order/rejected`}
               className={({ isActive }) =>
                 isActive
                   ? 'text-[1.5rem] text-primaryColor border-solid font-bold border-orangeColor border-b-[.3rem] py-[1rem] mr-[2rem]'

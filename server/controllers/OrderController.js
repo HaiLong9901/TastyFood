@@ -193,8 +193,8 @@ const OrderController = {
     //   })
     try {
       const today = new Date(Date.now())
-      const lastDay = new Date().setDate(today.getDate() - 3)
-      console.log(today, new Date(lastDay))
+      const lastDay = new Date().setDate(today.getDate() - 6)
+      console.log('month: ', today.getMonth())
       const orders = await Order.find({
         createdAt: {
           $gte: new Date(lastDay),
@@ -206,14 +206,14 @@ const OrderController = {
       for (let i = 0; i < 7; ++i) {
         const date = new Date(new Date().setDate(today.getDate() - i))
         const amount = orders.reduce((total, order) => {
-          console.log(new Date(order.createdAt).toDateString(), date.toDateString())
+          // console.log(new Date(order.createdAt).toDateString(), date.toDateString())
           if (new Date(order.createdAt).toDateString() === date.toDateString()) return total + order.amount
           return total + 0
         }, 0)
-        console.log({
-          date,
-          amount,
-        })
+        // console.log({
+        //   date,
+        //   amount,
+        // })
         sales.push({
           date,
           amount,
@@ -222,6 +222,7 @@ const OrderController = {
       res.json({
         success: true,
         result: sales.reverse(),
+        orders,
       })
     } catch (error) {
       console.log(error)
