@@ -160,7 +160,11 @@ export const apiSlice = createApi({
       providesTags: ['Genre'],
     }),
     getStatisticSales: builder.query({
-      query: () => '/order/get_statistic',
+      query: (type) => `/order/get_statistic_sales/${type}`,
+      providesTags: ['Order'],
+    }),
+    getStatisticOrders: builder.query({
+      query: (type) => `/order/get_statistic_orders/${type}`,
       providesTags: ['Order'],
     }),
   }),
@@ -191,4 +195,5 @@ export const {
   useCreateGenreMutation,
   useGetAllGenreQuery,
   useGetStatisticSalesQuery,
+  useGetStatisticOrdersQuery,
 } = apiSlice

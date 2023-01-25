@@ -2,7 +2,7 @@ import React from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js'
 import { Bar } from 'react-chartjs-2'
-import { useGetStatisticSalesQuery } from '../../features/apis/apiSlice'
+import { useGetStatisticSalesQuery, useGetStatisticOrdersQuery } from '../../features/apis/apiSlice'
 import { toISODate } from '../../shared/FormatDate'
 import { useState } from 'react'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
@@ -37,9 +37,12 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 //     },
 //   ],
 // }
+export const ProductsStatisticChart = () => {
+  return <div>HEllo</div>
+}
 export const SalesStatisticChart = () => {
   const [type, setType] = useState('day')
-  const { data: sales, isSuccess: isSuccessSales, isFetching: isFetchingSales } = useGetStatisticSalesQuery()
+  const { data: sales, isSuccess: isSuccessSales, isFetching: isFetchingSales } = useGetStatisticSalesQuery(type)
   let Render
   if (isFetchingSales) {
     Render = (
@@ -56,11 +59,14 @@ export const SalesStatisticChart = () => {
         },
         title: {
           display: true,
-          text: `Thống kê doanh số ${type === 'day' ? 'ngày' : 'tháng'}`,
+          text: `Thống kê doanh số ${type === 'day' ? 'ngày' : 'tháng năm 2023'}`,
         },
       },
     }
-    const labels = sales.result?.map((sale) => toISODate(sale.date).substring(0, 5))
+    const labels =
+      type === 'day'
+        ? sales.result?.map((sale) => toISODate(sale.date).substring(0, 5))
+        : sales.result?.map((sale) => sale.date)
     const data = {
       labels,
       datasets: [
@@ -76,9 +82,85 @@ export const SalesStatisticChart = () => {
   return (
     <>
       <div className="flex justify-end">
-        <select name="type" id="type" value={type} onChange={(e) => setType(e.target.value)}>
-          <option value="day">Ngày</option>
-          <option value="month">Tháng</option>
+        <select
+          name="type"
+          id="type"
+          value={type}
+          onChange={(e) => setType(e.target.value)}
+          className="text-[1.5rem] text-primaryColor outline-none"
+        >
+          <option value="day" className="text-[1.5rem] text-primaryColor ">
+            Ngày
+          </option>
+          <option value="month" className="text-[1.5rem] text-primaryColor ">
+            Tháng
+          </option>
+        </select>
+      </div>
+      <div className="w-[full] h-[40rem]">{Render}</div>
+    </>
+  )
+}
+export const OrdersStatisticChart = () => {
+  const [type, setType] = useState('day')
+  const { data: sales, isSuccess: isSuccessSales, isFetching: isFetchingSales } = useGetStatisticOrdersQuery(type)
+  let Render
+  if (isFetchingSales) {
+    Render = (
+      <div className="w-full h-full flex justify-center items-center text-[2rem] font-bold text-orangeColor">
+        Loading...
+      </div>
+    )
+  } else if (isSuccessSales) {
+    const options = {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
+        },
+        title: {
+          display: true,
+          text: `Thống kê đơn hàng theo ${type === 'day' ? 'ngày' : 'tháng năm 2023'}`,
+        },
+      },
+    }
+    const labels =
+      type === 'day'
+        ? sales.result?.map((sale) => toISODate(sale.date).substring(0, 5))
+        : sales.result?.map((sale) => sale.date)
+    const data = {
+      labels,
+      datasets: [
+        {
+          label: 'Đơn thành công',
+          data: sales.result?.map((sale) => sale.success),
+          backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        },
+        {
+          label: 'Đơn không thành công',
+          data: sales.result?.map((sale) => sale.rejected),
+          backgroundColor: 'rgba(53, 162, 235, 0.5)',
+        },
+      ],
+    }
+    Render = <Bar options={options} data={data} />
+  }
+  return (
+    <>
+      <div className="flex justify-end">
+        <select
+          name="type"
+          id="type"
+          value={type}
+          onChange={(e) => setType(e.target.value)}
+          className="text-[1.5rem] text-primaryColor outline-none"
+        >
+          <option value="day" className="text-[1.5rem] text-primaryColor ">
+            Ngày
+          </option>
+          <option value="month" className="text-[1.5rem] text-primaryColor ">
+            Tháng
+          </option>
         </select>
       </div>
       <div className="w-[full] h-[40rem]">{Render}</div>
@@ -94,14 +176,24 @@ function AdminSatistics() {
       <div className="w-[60%] p-[1rem] border-solid border-grayColor border-[.1rem] rounded-[.5rem] shadow-md">
         <div className="flex gap-[2rem]">
           <NavLink
-            to="/admin/statistics/sales"
+            to="/admin/statistics"
             className={({ isActive }) =>
               isActive ? 'text-[1.5rem] text-orangeColor font-bold' : 'text-[1.5rem] text-primaryColor'
             }
+            end
           >
             Doanh số
           </NavLink>
           <NavLink
+            to="/admin/statistics/orders"
+            className={({ isActive }) =>
+              isActive ? 'text-[1.5rem] text-orangeColor font-bold' : 'text-[1.5rem] text-primaryColor'
+            }
+          >
+            Đơn hàng
+          </NavLink>
+          <NavLink
+            to="/admin/statistics/products"
             className={({ isActive }) =>
               isActive ? 'text-[1.5rem] text-orangeColor font-bold' : 'text-[1.5rem] text-primaryColor'
             }
@@ -117,8 +209,8 @@ function AdminSatistics() {
           </NavLink>
         </div>
         <div>
-          {/* <Outlet /> */}
-          <SalesStatisticChart />
+          <Outlet />
+          {/* <SalesStatisticChart /> */}
         </div>
       </div>
     </div>

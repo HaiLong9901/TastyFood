@@ -142,7 +142,6 @@ export const AllOrder = ({ status }) => {
   return <>{OrderTable}</>
 }
 function AdminOrder() {
-  const { search } = useLocation()
   const [fromDate, setFromDate] = useState(new Date('2022-09-09').toISOString().substring(0, 10))
   const [toDate, setToDate] = useState(new Date(Date.now()).toISOString().substring(0, 10))
   const [searchParams, setSearchParams] = useSearchParams()
