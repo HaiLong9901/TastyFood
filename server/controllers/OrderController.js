@@ -195,17 +195,22 @@ const OrderController = {
       let sales = []
       if (type === 'day') {
         const today = new Date(Date.now())
-        const lastDay = new Date().setDate(today.getDate() - 6)
+        const lastDay = new Date()
+        lastDay.setDate(today.getDate() - 6)
+        console.log(new Date(lastDay.setHours(0, 0, 0, 0)))
         const orders = await Order.find({
           createdAt: {
-            $gte: new Date(lastDay),
+            $gte: new Date(lastDay.setHours(0, 0, 0, 0)),
             $lte: today,
           },
           status: 'success',
         })
 
         for (let i = 0; i < 7; ++i) {
-          const date = new Date(new Date().setDate(today.getDate() - i))
+          const date = new Date()
+          date.setDate(today.getDate() - i)
+          date.setHours(0, 0, 0, 0)
+          console.log(date)
           const amount = orders.reduce((total, order) => {
             if (new Date(order.createdAt).toDateString() === date.toDateString()) return total + order.amount
             return total + 0
@@ -274,16 +279,19 @@ const OrderController = {
       let sales = []
       if (type === 'day') {
         const today = new Date(Date.now())
-        const lastDay = new Date().setDate(today.getDate() - 6)
+        const lastDay = new Date()
+        lastDay.setDate(today.getDate() - 6)
         const orders = await Order.find({
           createdAt: {
-            $gte: new Date(lastDay),
+            $gte: new Date(lastDay.setHours(0, 0, 0, 0)),
             $lte: today,
           },
         })
 
         for (let i = 0; i < 7; ++i) {
-          const date = new Date(new Date().setDate(today.getDate() - i))
+          const date = new Date()
+          date.setDate(today.getDate() - i)
+          date.setHours(0, 0, 0, 0)
           const success = orders.reduce((total, order) => {
             if (new Date(order.createdAt).toDateString() === date.toDateString() && order.status === 'success')
               return total + 1
@@ -323,18 +331,17 @@ const OrderController = {
             $gte: firstDate,
             $lt: lastDate,
           },
-          status: 'success',
         })
         for (let i = 0; i < 12; ++i) {
           const success = orders.reduce((total, order) => {
             if (new Date(order.createdAt).getMonth() === i && order.status === 'success') {
-              return (total += order.amount)
+              return total + 1
             }
             return total
           }, 0)
           const rejected = orders.reduce((total, order) => {
             if (new Date(order.createdAt).getMonth() === i && order.status === 'rejected') {
-              return (total += order.amount)
+              return total + 1
             }
             return total
           }, 0)
@@ -346,6 +353,52 @@ const OrderController = {
         }
       }
 
+      res.json({
+        success: true,
+        result: type === 'day' ? sales.reverse() : sales,
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  },
+
+  getStatisticProducts: async (req, res) => {
+    const { type } = req.params
+    if (!type)
+      return res.status(400).json({
+        success: false,
+        passage: 'Missing type of statistic',
+      })
+    try {
+      let sales = []
+      if (type === 'day') {
+        const today = new Date(Date.now())
+        const lastDay = new Date()
+        lastDay.setDate(today.getDate() - 6)
+        console.log(new Date(lastDay.setHours(0, 0, 0, 0)))
+        const orders = await Order.find({
+          createdAt: {
+            $gte: new Date(lastDay.setHours(0, 0, 0, 0)),
+            $lte: today,
+          },
+          status: 'success',
+        })
+
+        for (let i = 0; i < 7; ++i) {
+          const date = new Date()
+          date.setDate(today.getDate() - i)
+          date.setHours(0, 0, 0, 0)
+          console.log(date)
+          const amount = orders.reduce((total, order) => {
+            if (new Date(order.createdAt).toDateString() === date.toDateString()) return total + order.amount
+            return total + 0
+          }, 0)
+          sales.push({
+            date,
+            amount,
+          })
+        }
+      }
       res.json({
         success: true,
         result: type === 'day' ? sales.reverse() : sales,

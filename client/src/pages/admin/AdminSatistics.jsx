@@ -5,6 +5,7 @@ import { Bar } from 'react-chartjs-2'
 import { useGetStatisticSalesQuery, useGetStatisticOrdersQuery } from '../../features/apis/apiSlice'
 import { toISODate } from '../../shared/FormatDate'
 import { useState } from 'react'
+import { FaShoppingBag, FaFileInvoice, FaUserAlt } from 'react-icons/fa'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 // export const options = {
@@ -169,48 +170,76 @@ export const OrdersStatisticChart = () => {
 }
 function AdminSatistics() {
   return (
-    <div className="w-full h-full p-[2rem]">
-      <div>
-        <h3 className="text-[2.5rem] text-primaryColor font-bold">Thống kê</h3>
-      </div>
-      <div className="w-[60%] p-[1rem] border-solid border-grayColor border-[.1rem] rounded-[.5rem] shadow-md">
-        <div className="flex gap-[2rem]">
-          <NavLink
-            to="/admin/statistics"
-            className={({ isActive }) =>
-              isActive ? 'text-[1.5rem] text-orangeColor font-bold' : 'text-[1.5rem] text-primaryColor'
-            }
-            end
-          >
-            Doanh số
-          </NavLink>
-          <NavLink
-            to="/admin/statistics/orders"
-            className={({ isActive }) =>
-              isActive ? 'text-[1.5rem] text-orangeColor font-bold' : 'text-[1.5rem] text-primaryColor'
-            }
-          >
-            Đơn hàng
-          </NavLink>
-          <NavLink
-            to="/admin/statistics/products"
-            className={({ isActive }) =>
-              isActive ? 'text-[1.5rem] text-orangeColor font-bold' : 'text-[1.5rem] text-primaryColor'
-            }
-          >
-            Sản phẩm
-          </NavLink>
-          <NavLink
-            className={({ isActive }) =>
-              isActive ? 'text-[1.5rem] text-orangeColor font-bold' : 'text-[1.5rem] text-primaryColor'
-            }
-          >
-            Khách hàng
-          </NavLink>
-        </div>
-        <div>
-          <Outlet />
-          {/* <SalesStatisticChart /> */}
+    <div className="w-full h-full p-[2rem] flex flex-col gap-[2rem]">
+      <h3 className="text-[2.5rem] text-primaryColor font-bold">Thống kê</h3>
+      <div className="grow">
+        <div className="flex flex-col gap-[2rem] w-[65%] h-full">
+          <div className="w-full  p-[1rem] border-solid border-gray-200 border-[.1rem] rounded-[.5rem] shadow-md">
+            <div className="flex gap-[2rem]">
+              <NavLink
+                to="/admin/statistics"
+                className={({ isActive }) =>
+                  isActive ? 'text-[1.5rem] text-orangeColor font-bold' : 'text-[1.5rem] text-primaryColor'
+                }
+                end
+              >
+                Doanh số
+              </NavLink>
+              <NavLink
+                to="/admin/statistics/orders"
+                className={({ isActive }) =>
+                  isActive ? 'text-[1.5rem] text-orangeColor font-bold' : 'text-[1.5rem] text-primaryColor'
+                }
+              >
+                Đơn hàng
+              </NavLink>
+              <NavLink
+                to="/admin/statistics/products"
+                className={({ isActive }) =>
+                  isActive ? 'text-[1.5rem] text-orangeColor font-bold' : 'text-[1.5rem] text-primaryColor'
+                }
+              >
+                Sản phẩm
+              </NavLink>
+              <NavLink
+                className={({ isActive }) =>
+                  isActive ? 'text-[1.5rem] text-orangeColor font-bold' : 'text-[1.5rem] text-primaryColor'
+                }
+              >
+                Khách hàng
+              </NavLink>
+            </div>
+            <div>
+              <Outlet />
+              {/* <SalesStatisticChart /> */}
+            </div>
+          </div>
+          <div className="w-full grow flex justify-between">
+            <div className="w-[calc((100%-_4rem)/3)] h-full rounded-[.5rem] border-solid border-gray-200 border-[.1rem] shadow-sm p-[1rem] flex flex-col justify-between">
+              <div className="flex justify-between items-center">
+                <FaShoppingBag className="text-[2.8rem] text-blue-500" />
+                <h3 className="text-[2.8rem] font-bold text-green-500">+35%</h3>
+              </div>
+              <div className="text-[2.4rem] font-bold text-center">128.000</div>
+              <div className="text-[1.6rem] text-grayColor text-center">Doanh số ngày</div>
+            </div>
+            <div className="w-[calc((100%-_4rem)/3)] h-full rounded-[.5rem] border-solid border-gray-200 border-[.1rem] shadow-sm p-[1rem] flex flex-col justify-between">
+              <div className="flex justify-between items-center">
+                <FaFileInvoice className="text-[2.8rem] text-orangeColor" />
+                <h3 className="text-[2.8rem] font-bold text-red-500">-5%</h3>
+              </div>
+              <div className="text-[2.4rem] font-bold text-center">12</div>
+              <div className="text-[1.6rem] text-grayColor text-center">Số đơn hàng trong ngày</div>
+            </div>
+            <div className="w-[calc((100%-_4rem)/3)] h-full rounded-[.5rem] border-solid border-gray-200 border-[.1rem] shadow-sm p-[1rem] flex flex-col justify-between">
+              <div className="flex justify-between items-center">
+                <FaUserAlt className="text-[2.8rem] text-yellow-500" />
+                <h3 className="text-[2.8rem] font-bold text-green-500">+3%</h3>
+              </div>
+              <div className="text-[2.4rem] font-bold text-center">10</div>
+              <div className="text-[1.6rem] text-grayColor text-center">Khách hàng mới</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
