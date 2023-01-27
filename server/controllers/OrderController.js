@@ -194,23 +194,19 @@ const OrderController = {
     try {
       let sales = []
       if (type === 'day') {
-        const today = new Date(Date.now())
+        const today = new Date()
         const lastDay = new Date()
         lastDay.setDate(today.getDate() - 6)
-        console.log(new Date(lastDay.setHours(0, 0, 0, 0)))
         const orders = await Order.find({
           createdAt: {
-            $gte: new Date(lastDay.setHours(0, 0, 0, 0)),
+            $gte: new Date(lastDay.toISOString().substring(0, 10)),
             $lte: today,
           },
           status: 'success',
         })
-
         for (let i = 0; i < 7; ++i) {
           const date = new Date()
           date.setDate(today.getDate() - i)
-          date.setHours(0, 0, 0, 0)
-          console.log(date)
           const amount = orders.reduce((total, order) => {
             if (new Date(order.createdAt).toDateString() === date.toDateString()) return total + order.amount
             return total + 0
@@ -402,6 +398,35 @@ const OrderController = {
       res.json({
         success: true,
         result: type === 'day' ? sales.reverse() : sales,
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  },
+
+  getDailySatistic: async (req, res) => {
+    const months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
+    try {
+      const today = new Date()
+      const yesterday = new Date()
+      yesterday.setDate(today.getDate() - 1)
+      console.log(
+        new Date(today.toISOString().substring(0, 10).concat('T17:00:00Z')) -
+          new Date(yesterday.toISOString().substring(0, 10)),
+      )
+      console.log(
+        new Date(`${yesterday.getFullYear()}-${months[yesterday.getMonth()]}-${yesterday.getDate() - 1}T17:00:00Z`),
+      )
+      const ordersYesterday = await Order.find({
+        createdAt: {
+          $gte: new Date(
+            `${yesterday.getFullYear()}-${months[yesterday.getMonth()]}-${yesterday.getDate() - 1}T17:00:00Z`,
+          ),
+          $lte: new Date(`${today.getFullYear()}-${months[today.getMonth()]}-${today.getDate() - 1}T17:00:00Z`),
+        },
+      })
+      return res.json({
+        ordersYesterday,
       })
     } catch (error) {
       console.log(error)
