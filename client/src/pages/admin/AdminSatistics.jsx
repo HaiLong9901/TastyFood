@@ -2,10 +2,14 @@ import React from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js'
 import { Bar } from 'react-chartjs-2'
-import { useGetStatisticSalesQuery, useGetStatisticOrdersQuery } from '../../features/apis/apiSlice'
+import {
+  useGetStatisticSalesQuery,
+  useGetStatisticOrdersQuery,
+  useGetDailyStatisticQuery,
+} from '../../features/apis/apiSlice'
 import { toISODate } from '../../shared/FormatDate'
 import { useState } from 'react'
-import { FaShoppingBag, FaFileInvoice, FaUserAlt } from 'react-icons/fa'
+import { FaShoppingBag, FaFileInvoice, FaUserAlt, FaArrowUp } from 'react-icons/fa'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 // export const options = {
@@ -169,6 +173,76 @@ export const OrdersStatisticChart = () => {
   )
 }
 function AdminSatistics() {
+  const {
+    data: dailyStatistic,
+    isSuccess: isSuccessDailyStatistic,
+    isFetching: isFetchingDailyStatistic,
+  } = useGetDailyStatisticQuery()
+  let DailyStatisticRender
+  if (isFetchingDailyStatistic) {
+    DailyStatisticRender = (
+      <div className="w-full grow flex justify-between">
+        <div className="w-[calc((100%-_4rem)/3)] h-full rounded-[.5rem] border-solid border-gray-200 border-[.1rem] shadow-sm p-[1rem] flex flex-col justify-between animate-pulse"></div>
+        <div className="w-[calc((100%-_4rem)/3)] h-full rounded-[.5rem] border-solid border-gray-200 border-[.1rem] shadow-sm p-[1rem] flex flex-col justify-between animate-pulse"></div>
+        <div className="w-[calc((100%-_4rem)/3)] h-full rounded-[.5rem] border-solid border-gray-200 border-[.1rem] shadow-sm p-[1rem] flex flex-col justify-between animate-pulse"></div>
+      </div>
+    )
+  } else if (isSuccessDailyStatistic) {
+    const { amount, orderQuantity, newUser } = dailyStatistic.result
+    DailyStatisticRender = (
+      <div className="w-full grow flex justify-between">
+        <div className="w-[calc((100%-_4rem)/3)] h-full rounded-[.5rem] border-solid border-gray-200 border-[.1rem] shadow-sm p-[1rem] flex flex-col justify-between">
+          <div className="flex justify-between items-center">
+            <FaShoppingBag className="text-[2.8rem] text-blue-500" />
+            {amount.amountYesterday === 0 ? (
+              <FaArrowUp className="text-[2.8rem] font-bold text-green-500" />
+            ) : amount.amountToday === 0 ? undefined : amount.amountToday >= amount.amountYesterday ? (
+              <h3 className="text-[2.8rem] font-bold text-green-500">
+                {'+' + Math.trunc((amount.amountToday / amount.amountYesterday).toFixed(2)) * 100 + '%'}
+              </h3>
+            ) : (
+              <h3 className="text-[2.8rem] font-bold text-red-500">
+                {'-' + (amount.amountToday / amount.amountYesterday).toFixed(2) * 100 + '%'}
+              </h3>
+            )}
+          </div>
+          <div className="text-[2.4rem] font-bold text-center">{amount.amountToday}</div>
+          <div className="text-[1.6rem] text-grayColor text-center">Doanh số ngày</div>
+        </div>
+        <div className="w-[calc((100%-_4rem)/3)] h-full rounded-[.5rem] border-solid border-gray-200 border-[.1rem] shadow-sm p-[1rem] flex flex-col justify-between">
+          <div className="flex justify-between items-center">
+            <FaFileInvoice className="text-[2.8rem] text-orangeColor" />
+            {orderQuantity.yesterday === 0 ? (
+              <FaArrowUp className="text-[2.8rem] font-bold text-green-500" />
+            ) : orderQuantity.today === 0 ? undefined : orderQuantity.today >= orderQuantity.yesterday ? (
+              <h3 className="text-[2.8rem] font-bold text-green-500">
+                {'+' + Math.trunc((orderQuantity.today / orderQuantity.yesterday).toFixed(2)) * 100 + '%'}
+              </h3>
+            ) : (
+              <h3 className="text-[2.8rem] font-bold text-red-500">
+                {'-' + (orderQuantity.today / orderQuantity.yesterday).toFixed(2) * 100 + '%'}
+              </h3>
+            )}
+          </div>
+          <div className="text-[2.4rem] font-bold text-center">{orderQuantity.today}</div>
+          <div className="text-[1.6rem] text-grayColor text-center">Số đơn hàng trong ngày</div>
+        </div>
+        <div className="w-[calc((100%-_4rem)/3)] h-full rounded-[.5rem] border-solid border-gray-200 border-[.1rem] shadow-sm p-[1rem] flex flex-col justify-between">
+          <div className="flex justify-between items-center">
+            <FaUserAlt className="text-[2.8rem] text-yellow-500" />
+
+            {newUser.today - newUser.yesterday >= 0 ? (
+              <h3 className="text-[2.8rem] font-bold text-green-500">{'+' + (newUser.today - newUser.yesterday)}</h3>
+            ) : (
+              <h3 className="text-[2.8rem] font-bold text-red-500">{newUser.today - newUser.yesterday}</h3>
+            )}
+          </div>
+          <div className="text-[2.4rem] font-bold text-center">{newUser.today}</div>
+          <div className="text-[1.6rem] text-grayColor text-center">Khách hàng mới</div>
+        </div>
+      </div>
+    )
+  }
   return (
     <div className="w-full h-full p-[2rem] flex flex-col gap-[2rem]">
       <h3 className="text-[2.5rem] text-primaryColor font-bold">Thống kê</h3>
@@ -214,32 +288,7 @@ function AdminSatistics() {
               {/* <SalesStatisticChart /> */}
             </div>
           </div>
-          <div className="w-full grow flex justify-between">
-            <div className="w-[calc((100%-_4rem)/3)] h-full rounded-[.5rem] border-solid border-gray-200 border-[.1rem] shadow-sm p-[1rem] flex flex-col justify-between">
-              <div className="flex justify-between items-center">
-                <FaShoppingBag className="text-[2.8rem] text-blue-500" />
-                <h3 className="text-[2.8rem] font-bold text-green-500">+35%</h3>
-              </div>
-              <div className="text-[2.4rem] font-bold text-center">128.000</div>
-              <div className="text-[1.6rem] text-grayColor text-center">Doanh số ngày</div>
-            </div>
-            <div className="w-[calc((100%-_4rem)/3)] h-full rounded-[.5rem] border-solid border-gray-200 border-[.1rem] shadow-sm p-[1rem] flex flex-col justify-between">
-              <div className="flex justify-between items-center">
-                <FaFileInvoice className="text-[2.8rem] text-orangeColor" />
-                <h3 className="text-[2.8rem] font-bold text-red-500">-5%</h3>
-              </div>
-              <div className="text-[2.4rem] font-bold text-center">12</div>
-              <div className="text-[1.6rem] text-grayColor text-center">Số đơn hàng trong ngày</div>
-            </div>
-            <div className="w-[calc((100%-_4rem)/3)] h-full rounded-[.5rem] border-solid border-gray-200 border-[.1rem] shadow-sm p-[1rem] flex flex-col justify-between">
-              <div className="flex justify-between items-center">
-                <FaUserAlt className="text-[2.8rem] text-yellow-500" />
-                <h3 className="text-[2.8rem] font-bold text-green-500">+3%</h3>
-              </div>
-              <div className="text-[2.4rem] font-bold text-center">10</div>
-              <div className="text-[1.6rem] text-grayColor text-center">Khách hàng mới</div>
-            </div>
-          </div>
+          {DailyStatisticRender}
         </div>
       </div>
     </div>

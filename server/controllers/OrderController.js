@@ -1,5 +1,6 @@
 const express = require('express')
 const Order = require('../models/Order')
+const User = require('../models/User')
 const _ = require('lodash')
 
 const OrderController = {
@@ -422,11 +423,47 @@ const OrderController = {
           $gte: new Date(
             `${yesterday.getFullYear()}-${months[yesterday.getMonth()]}-${yesterday.getDate() - 1}T17:00:00Z`,
           ),
-          $lte: new Date(`${today.getFullYear()}-${months[today.getMonth()]}-${today.getDate() - 1}T17:00:00Z`),
+          $lt: new Date(`${today.getFullYear()}-${months[today.getMonth()]}-${today.getDate() - 1}T17:00:00Z`),
+        },
+        status: 'success',
+      })
+      const ordersToday = await Order.find({
+        createdAt: {
+          $gte: new Date(`${today.getFullYear()}-${months[today.getMonth()]}-${today.getDate() - 1}T17:00:00Z`),
+        },
+        status: 'success',
+      })
+      const amountYesterday = ordersYesterday.reduce((total, order) => total + order.amount, 0)
+      const amountToday = ordersToday.reduce((total, order) => total + order.amount, 0)
+      const userToday = await User.find({
+        createdAt: {
+          $gte: new Date(`${today.getFullYear()}-${months[today.getMonth()]}-${today.getDate() - 1}T17:00:00Z`),
+        },
+      })
+      const userYesterday = await User.find({
+        createdAt: {
+          $gte: new Date(
+            `${yesterday.getFullYear()}-${months[yesterday.getMonth()]}-${yesterday.getDate() - 1}T17:00:00Z`,
+          ),
+          $lt: new Date(`${today.getFullYear()}-${months[today.getMonth()]}-${today.getDate() - 1}T17:00:00Z`),
         },
       })
       return res.json({
-        ordersYesterday,
+        success: true,
+        result: {
+          amount: {
+            amountToday,
+            amountYesterday,
+          },
+          orderQuantity: {
+            today: ordersToday.length,
+            yesterday: ordersYesterday.length,
+          },
+          newUser: {
+            today: userToday.length,
+            yesterday: userYesterday.length,
+          },
+        },
       })
     } catch (error) {
       console.log(error)
