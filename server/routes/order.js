@@ -13,5 +13,6 @@ router.get('/get_detail_byAd/:orderId', verifyAdminRole, OrderController.getDeta
 router.get('/get_statistic_sales/:type', verifyAdminRole, OrderController.getStatisticSales)
 router.get('/get_statistic_orders/:type', verifyAdminRole, OrderController.getStatisticOrders)
 router.get('/get_dailyStatistic', verifyAdminRole, OrderController.getDailySatistic)
+router.get('/monthlyStatistic', verifyAdminRole, OrderController.getMonthlySatistic)
 
 module.exports = router

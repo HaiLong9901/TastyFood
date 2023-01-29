@@ -3,6 +3,7 @@ const Order = require('../models/Order')
 const User = require('../models/User')
 const _ = require('lodash')
 
+const months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
 const OrderController = {
   createOrder: async (req, res) => {
     const { address, products, voucher, amount } = req.body
@@ -406,18 +407,10 @@ const OrderController = {
   },
 
   getDailySatistic: async (req, res) => {
-    const months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
     try {
       const today = new Date()
       const yesterday = new Date()
       yesterday.setDate(today.getDate() - 1)
-      console.log(
-        new Date(today.toISOString().substring(0, 10).concat('T17:00:00Z')) -
-          new Date(yesterday.toISOString().substring(0, 10)),
-      )
-      console.log(
-        new Date(`${yesterday.getFullYear()}-${months[yesterday.getMonth()]}-${yesterday.getDate() - 1}T17:00:00Z`),
-      )
       const ordersYesterday = await Order.find({
         createdAt: {
           $gte: new Date(
@@ -468,6 +461,45 @@ const OrderController = {
     } catch (error) {
       console.log(error)
     }
+  },
+
+  getMonthlySatistic: async (req, res) => {
+    try {
+      const today = new Date()
+      const yesterday = new Date()
+      yesterday.setDate(today.getDate() - 1)
+      const orders = await Order.find({
+        createdAt: {
+          $gte: new Date(`${today.getFullYear()}-${months[today.getMonth()]}-01T17:00:00Z`),
+          $lte: today,
+        },
+      })
+      const successOrder = orders.reduce((total, order) => {
+        if (order.status === 'success') return total + 1
+        return total
+      }, 0)
+      const rejectedOrder = orders.reduce((total, order) => {
+        if (order.status === 'rejected') return total + 1
+        return total
+      }, 0)
+      const shippingOrder = orders.reduce((total, order) => {
+        if (order.status === 'shipping') return total + 1
+        return total
+      }, 0)
+      const pendingOrder = orders.reduce((total, order) => {
+        if (order.status === 'pending') return total + 1
+        return total
+      }, 0)
+      return res.json({
+        success: true,
+        result: {
+          successOrder,
+          rejectedOrder,
+          shippingOrder,
+          pendingOrder,
+        },
+      })
+    } catch (error) {}
   },
 }
 

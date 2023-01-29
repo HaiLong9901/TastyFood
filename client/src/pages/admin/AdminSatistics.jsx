@@ -1,16 +1,17 @@
 import React from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js'
-import { Bar } from 'react-chartjs-2'
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from 'chart.js'
+import { Bar, Doughnut } from 'react-chartjs-2'
 import {
   useGetStatisticSalesQuery,
   useGetStatisticOrdersQuery,
   useGetDailyStatisticQuery,
+  useGetMonthlyStatisticQuery,
 } from '../../features/apis/apiSlice'
 import { toISODate } from '../../shared/FormatDate'
 import { useState } from 'react'
 import { FaShoppingBag, FaFileInvoice, FaUserAlt, FaArrowUp } from 'react-icons/fa'
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement)
 
 // export const options = {
 //   responsive: true,
@@ -178,7 +179,13 @@ function AdminSatistics() {
     isSuccess: isSuccessDailyStatistic,
     isFetching: isFetchingDailyStatistic,
   } = useGetDailyStatisticQuery()
+  const {
+    data: monthlySatistic,
+    isSuccess: isSuccessMonthlyStatistic,
+    isFetching: isFetchingMonthlyStatistic,
+  } = useGetMonthlyStatisticQuery()
   let DailyStatisticRender
+  let MonthlyStatisticRender
   if (isFetchingDailyStatistic) {
     DailyStatisticRender = (
       <div className="w-full grow flex justify-between">
@@ -243,12 +250,60 @@ function AdminSatistics() {
       </div>
     )
   }
+
+  if (isFetchingMonthlyStatistic) {
+    MonthlyStatisticRender = <div className="w-full h-full bg-gray-200 animate-pulse"></div>
+  } else if (isSuccessMonthlyStatistic) {
+    const { successOrder, rejectedOrder, pendingOrder, shippingOrder } = monthlySatistic.result
+    const totalOrder = successOrder + rejectedOrder + pendingOrder + shippingOrder
+    if (totalOrder === 0)
+      MonthlyStatisticRender = (
+        <div className="w-full h-full flex justify-center items-center text-[1.8rem] italic text-orangeColor">
+          {' '}
+          Chưa có đơn nào trong tháng
+        </div>
+      )
+    else {
+      const data = {
+        labels: ['Thành công', 'Đang vận chuyển', 'Đang xử lý', 'Đã hủy'],
+        datasets: [
+          {
+            label: '# of Votes',
+            data: [
+              successOrder / totalOrder,
+              shippingOrder / totalOrder,
+              pendingOrder / totalOrder,
+              rejectedOrder / totalOrder,
+            ],
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              // 'rgba(153, 102, 255, 0.2)',
+              // 'rgba(255, 159, 64, 0.2)',
+            ],
+            borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              // 'rgba(153, 102, 255, 1)',
+              // 'rgba(255, 159, 64, 1)',
+            ],
+            borderWidth: 1,
+          },
+        ],
+      }
+      MonthlyStatisticRender = <Doughnut data={data} />
+    }
+  }
   return (
     <div className="w-full h-full p-[2rem] flex flex-col gap-[2rem]">
       <h3 className="text-[2.5rem] text-primaryColor font-bold">Thống kê</h3>
-      <div className="grow">
+      <div className="grow flex gap-[2rem]">
         <div className="flex flex-col gap-[2rem] w-[65%] h-full">
-          <div className="w-full  p-[1rem] border-solid border-gray-200 border-[.1rem] rounded-[.5rem] shadow-md">
+          <div className="w-full  p-[1rem] border-solid border-gray-200 border-[.1rem] rounded-[.5rem] shadow-sm">
             <div className="flex gap-[2rem]">
               <NavLink
                 to="/admin/statistics"
@@ -289,6 +344,9 @@ function AdminSatistics() {
             </div>
           </div>
           {DailyStatisticRender}
+        </div>
+        <div className="grow h-full border-solid border-gray-200 border-[.1rem] rounded-[.5rem] p-[1rem]">
+          <div className="w-full h-[40rem]">{MonthlyStatisticRender}</div>
         </div>
       </div>
     </div>

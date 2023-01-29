@@ -171,6 +171,10 @@ export const apiSlice = createApi({
       query: () => '/order/get_dailyStatistic',
       providesTags: ['User', 'Order'],
     }),
+    getMonthlyStatistic: builder.query({
+      query: () => '/order/monthlyStatistic',
+      providesTags: ['User', 'Order'],
+    }),
   }),
 })
 
@@ -201,4 +205,5 @@ export const {
   useGetStatisticSalesQuery,
   useGetStatisticOrdersQuery,
   useGetDailyStatisticQuery,
+  useGetMonthlyStatisticQuery,
 } = apiSlice
