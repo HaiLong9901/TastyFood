@@ -11,6 +11,7 @@ import {
 import { toISODate } from '../../shared/FormatDate'
 import { useState } from 'react'
 import { FaShoppingBag, FaFileInvoice, FaUserAlt, FaArrowUp } from 'react-icons/fa'
+import { SiMicrosoftexcel } from 'react-icons/si'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement)
 
 // export const options = {
@@ -79,7 +80,7 @@ export const SalesStatisticChart = () => {
         {
           label: 'Doanh số',
           data: sales.result?.map((sale) => sale.amount),
-          backgroundColor: 'rgba(255, 99, 132, 0.5)',
+          backgroundColor: 'rgba(255, 131, 3, 0.5)',
         },
       ],
     }
@@ -140,12 +141,12 @@ export const OrdersStatisticChart = () => {
         {
           label: 'Đơn thành công',
           data: sales.result?.map((sale) => sale.success),
-          backgroundColor: 'rgba(255, 99, 132, 0.5)',
+          backgroundColor: 'rgba(255, 131, 3, 0.5)',
         },
         {
           label: 'Đơn không thành công',
           data: sales.result?.map((sale) => sale.rejected),
-          backgroundColor: 'rgba(53, 162, 235, 0.5)',
+          backgroundColor: 'rgba(59, 130, 246, 0.5)',
         },
       ],
     }
@@ -174,6 +175,7 @@ export const OrdersStatisticChart = () => {
   )
 }
 function AdminSatistics() {
+  const [exportSaleStatistic, setExportSaleStatistic] = useState('day')
   const {
     data: dailyStatistic,
     isSuccess: isSuccessDailyStatistic,
@@ -205,11 +207,11 @@ function AdminSatistics() {
               <FaArrowUp className="text-[2.8rem] font-bold text-green-500" />
             ) : amount.amountToday === 0 ? undefined : amount.amountToday >= amount.amountYesterday ? (
               <h3 className="text-[2.8rem] font-bold text-green-500">
-                {'+' + Math.trunc((amount.amountToday / amount.amountYesterday).toFixed(2)) * 100 + '%'}
+                {'+' + ((amount.amountToday / amount.amountYesterday).toFixed(2) * 100 - 100) + '%'}
               </h3>
             ) : (
               <h3 className="text-[2.8rem] font-bold text-red-500">
-                {'-' + (amount.amountToday / amount.amountYesterday).toFixed(2) * 100 + '%'}
+                {'-' + (100 - (amount.amountToday / amount.amountYesterday).toFixed(2) * 100) + '%'}
               </h3>
             )}
           </div>
@@ -223,11 +225,11 @@ function AdminSatistics() {
               <FaArrowUp className="text-[2.8rem] font-bold text-green-500" />
             ) : orderQuantity.today === 0 ? undefined : orderQuantity.today >= orderQuantity.yesterday ? (
               <h3 className="text-[2.8rem] font-bold text-green-500">
-                {'+' + Math.trunc((orderQuantity.today / orderQuantity.yesterday).toFixed(2)) * 100 + '%'}
+                {'+' + ((orderQuantity.today / orderQuantity.yesterday).toFixed(2) * 100 - 100) + '%'}
               </h3>
             ) : (
               <h3 className="text-[2.8rem] font-bold text-red-500">
-                {'-' + (orderQuantity.today / orderQuantity.yesterday).toFixed(2) * 100 + '%'}
+                {'-' + (100 - (orderQuantity.today / orderQuantity.yesterday).toFixed(2) * 100) + '%'}
               </h3>
             )}
           </div>
@@ -276,20 +278,16 @@ function AdminSatistics() {
               rejectedOrder / totalOrder,
             ],
             backgroundColor: [
-              'rgba(255, 99, 132, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(255, 206, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)',
-              // 'rgba(153, 102, 255, 0.2)',
-              // 'rgba(255, 159, 64, 0.2)',
+              'rgba(255, 131, 3, 0.5)',
+              'rgba(59, 130, 246, 0.5)',
+              'rgba(34, 197, 94, 0.5)',
+              'rgba(152,157,166, 0.5)',
             ],
             borderColor: [
-              'rgba(255, 99, 132, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)',
-              // 'rgba(153, 102, 255, 1)',
-              // 'rgba(255, 159, 64, 1)',
+              'rgba(255, 131, 3, 1)',
+              'rgba(59, 130, 246, 1)',
+              'rgba(34, 197, 94, 1)',
+              'rgba(152,157,166, 1)',
             ],
             borderWidth: 1,
           },
@@ -345,8 +343,74 @@ function AdminSatistics() {
           </div>
           {DailyStatisticRender}
         </div>
-        <div className="grow h-full border-solid border-gray-200 border-[.1rem] rounded-[.5rem] p-[1rem]">
-          <div className="w-full h-[40rem]">{MonthlyStatisticRender}</div>
+        <div className="grow h-full border-solid border-gray-200 border-[.1rem] rounded-[.5rem] p-[1rem] shadow-sm">
+          <div className="w-full h-[35rem]  gap-[1rem] border-solid border-gray-200 border-b-[.1rem]">
+            <h3 className="text-[1.8rem] text-primaryColor font-bold text-center mb-[1rem]">Trạng thái đơn hàng</h3>
+            <div className="w-full h-[30rem] flex justify-center items-center">{MonthlyStatisticRender}</div>
+          </div>
+          <div className="mt-[1rem]">
+            <h3 className="text-[1.8rem] text-primaryColor font-bold text-center mb-[1rem]">Xuất báo cáo thống kê</h3>
+            <div className="w-full">
+              {/* <div>
+
+              </div> */}
+              <div className="flex justify-between">
+                <h4 className="text-[1.5rem] text-primaryColor">Thống kê doanh số</h4>
+                <div className="flex gap-[1rem] items-center">
+                  <input
+                    type="radio"
+                    id="daySale"
+                    name="sale"
+                    onChange={(e) => {
+                      if (e.target.checked) setExportSaleStatistic('day')
+                    }}
+                  />
+                  <label htmlFor="daySale" className="text-[1.5rem] text-primaryColor">
+                    Theo ngày
+                  </label>
+                </div>
+                <div className="flex gap-[1rem] items-center">
+                  <input
+                    type="radio"
+                    id="monthSale"
+                    name="sale"
+                    onChange={(e) => {
+                      if (e.target.checked) setExportSaleStatistic('month')
+                    }}
+                  />
+                  <label htmlFor="daySale" className="text-[1.5rem] text-primaryColor">
+                    Theo tháng
+                  </label>
+                </div>
+              </div>
+              <div className="w-full flex justify-between mt-[1rem]">
+                {exportSaleStatistic === 'day' ? (
+                  <input
+                    type="date"
+                    className="text-[1.5rem] outline-none border-solid border-orangeColor border-b-[.1rem] bg-gray-100 px-[1rem]"
+                  />
+                ) : (
+                  <select className="text-[1.5rem] outline-none border-orangeColor border-solid border-b-[.1rem] bg-gray-100 px-[1rem]">
+                    <option value="1">Tháng 1</option>
+                    <option value="2">Tháng 2</option>
+                    <option value="3">Tháng 3</option>
+                    <option value="3">Tháng 3</option>
+                    <option value="5">Tháng 5</option>
+                    <option value="6">Tháng 6</option>
+                    <option value="7">Tháng 7</option>
+                    <option value="8">Tháng 8</option>
+                    <option value="9">Tháng 9</option>
+                    <option value="10">Tháng 10</option>
+                    <option value="11">Tháng 11</option>
+                    <option value="12">Tháng 12</option>
+                  </select>
+                )}
+                <button className="w-[10rem] text-[1.5rem] py-[.5rem] flex justify-center gap-[1rem] items-center text-white bg-green-500 rounded-[.5rem]">
+                  export <SiMicrosoftexcel className="text-[1.5rem]" />
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
