@@ -1,5 +1,5 @@
-import React from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { NavLink, Outlet, useFetcher } from 'react-router-dom'
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from 'chart.js'
 import { Bar, Doughnut } from 'react-chartjs-2'
 import {
@@ -7,43 +7,20 @@ import {
   useGetStatisticOrdersQuery,
   useGetDailyStatisticQuery,
   useGetMonthlyStatisticQuery,
+  useGetSaleReportExcelByDateQuery,
 } from '../../features/apis/apiSlice'
 import { toISODate } from '../../shared/FormatDate'
 import { useState } from 'react'
 import { FaShoppingBag, FaFileInvoice, FaUserAlt, FaArrowUp } from 'react-icons/fa'
 import { SiMicrosoftexcel } from 'react-icons/si'
+import { CSVLink, CSVDownload } from 'react-csv'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement)
 
-// export const options = {
-//   responsive: true,
-//   plugins: {
-//     legend: {
-//       position: 'top',
-//     },
-//     title: {
-//       display: true,
-//       text: 'Chart.js Bar Chart',
-//     },
-//   },
-// }
-
-// const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July']
-
-// export const data = {
-//   labels,
-//   datasets: [
-//     {
-//       label: 'Thang',
-//       data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-//       backgroundColor: 'rgba(255, 99, 132, 0.5)',
-//     },
-//     {
-//       label: 'Dataset 2',
-//       data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-//       backgroundColor: 'rgba(53, 162, 235, 0.5)',
-//     },
-//   ],
-// }
+const testData = [
+  ['name', 'age', 'class'],
+  ['long', '22', '10'],
+  ['hieu', '16', 'a1'],
+]
 export const ProductsStatisticChart = () => {
   return <div>HEllo</div>
 }
@@ -176,6 +153,17 @@ export const OrdersStatisticChart = () => {
 }
 function AdminSatistics() {
   const [exportSaleStatistic, setExportSaleStatistic] = useState('day')
+  const [exportProductStatistic, setExportProductStatistic] = useState('day')
+  const [saleDate, setSaleDate] = useState(new Date().toISOString().substring(0, 10))
+  const [productDate, setProductDate] = useState(new Date().toISOString().substring(0, 10))
+  const [saleMonth, setSaleMonth] = useState(0)
+  const [productMonth, setProductMonth] = useState(0)
+  const [excelData, setExcelDate] = useState([])
+  const {
+    data: saleExcelDate,
+    isFetching: isSaleExcelDateFetching,
+    isSuccess: isSaleExcelDateSuccess,
+  } = useGetSaleReportExcelByDateQuery(saleDate)
   const {
     data: dailyStatistic,
     isSuccess: isSuccessDailyStatistic,
@@ -296,6 +284,11 @@ function AdminSatistics() {
       MonthlyStatisticRender = <Doughnut data={data} />
     }
   }
+  let dataDate
+  if (isSaleExcelDateFetching) dataDate = ['Mã đơn hàng', 'Tên khách hàng', 'Thanh toán']
+  else if (isSaleExcelDateSuccess) {
+    dataDate = [['Mã đơn hàng', 'Tên khách hàng', 'Thanh toán'], ...saleExcelDate.result]
+  }
   return (
     <div className="w-full h-full p-[2rem] flex flex-col gap-[2rem]">
       <h3 className="text-[2.5rem] text-primaryColor font-bold">Thống kê</h3>
@@ -328,32 +321,21 @@ function AdminSatistics() {
               >
                 Sản phẩm
               </NavLink>
-              <NavLink
-                className={({ isActive }) =>
-                  isActive ? 'text-[1.5rem] text-orangeColor font-bold' : 'text-[1.5rem] text-primaryColor'
-                }
-              >
-                Khách hàng
-              </NavLink>
             </div>
             <div>
               <Outlet />
-              {/* <SalesStatisticChart /> */}
             </div>
           </div>
           {DailyStatisticRender}
         </div>
-        <div className="grow h-full border-solid border-gray-200 border-[.1rem] rounded-[.5rem] p-[1rem] shadow-sm">
+        <div className="grow flex flex-col h-full border-solid border-gray-200 border-[.1rem] rounded-[.5rem] p-[1rem] shadow-sm">
           <div className="w-full h-[35rem]  gap-[1rem] border-solid border-gray-200 border-b-[.1rem]">
             <h3 className="text-[1.8rem] text-primaryColor font-bold text-center mb-[1rem]">Trạng thái đơn hàng</h3>
             <div className="w-full h-[30rem] flex justify-center items-center">{MonthlyStatisticRender}</div>
           </div>
-          <div className="mt-[1rem]">
+          <div className="mt-[1rem] flex flex-col justify-between grow">
             <h3 className="text-[1.8rem] text-primaryColor font-bold text-center mb-[1rem]">Xuất báo cáo thống kê</h3>
             <div className="w-full">
-              {/* <div>
-
-              </div> */}
               <div className="flex justify-between">
                 <h4 className="text-[1.5rem] text-primaryColor">Thống kê doanh số</h4>
                 <div className="flex gap-[1rem] items-center">
@@ -364,6 +346,7 @@ function AdminSatistics() {
                     onChange={(e) => {
                       if (e.target.checked) setExportSaleStatistic('day')
                     }}
+                    checked={exportSaleStatistic === 'day'}
                   />
                   <label htmlFor="daySale" className="text-[1.5rem] text-primaryColor">
                     Theo ngày
@@ -377,8 +360,9 @@ function AdminSatistics() {
                     onChange={(e) => {
                       if (e.target.checked) setExportSaleStatistic('month')
                     }}
+                    checked={exportSaleStatistic === 'month'}
                   />
-                  <label htmlFor="daySale" className="text-[1.5rem] text-primaryColor">
+                  <label htmlFor="monthSale" className="text-[1.5rem] text-primaryColor">
                     Theo tháng
                   </label>
                 </div>
@@ -387,10 +371,19 @@ function AdminSatistics() {
                 {exportSaleStatistic === 'day' ? (
                   <input
                     type="date"
+                    value={saleDate}
                     className="text-[1.5rem] outline-none border-solid border-orangeColor border-b-[.1rem] bg-gray-100 px-[1rem]"
+                    onChange={(e) => {
+                      setSaleDate(e.target.value)
+                    }}
                   />
                 ) : (
-                  <select className="text-[1.5rem] outline-none border-orangeColor border-solid border-b-[.1rem] bg-gray-100 px-[1rem]">
+                  <select
+                    className="text-[1.5rem] outline-none border-orangeColor border-solid border-b-[.1rem] bg-gray-100 px-[1rem]"
+                    onChange={(e) => {
+                      setSaleMonth(e.target.value)
+                    }}
+                  >
                     <option value="1">Tháng 1</option>
                     <option value="2">Tháng 2</option>
                     <option value="3">Tháng 3</option>
@@ -405,9 +398,89 @@ function AdminSatistics() {
                     <option value="12">Tháng 12</option>
                   </select>
                 )}
-                <button className="w-[10rem] text-[1.5rem] py-[.5rem] flex justify-center gap-[1rem] items-center text-white bg-green-500 rounded-[.5rem]">
+                <CSVLink
+                  data={
+                    exportSaleStatistic === 'day'
+                      ? isSaleExcelDateFetching
+                        ? [['Mã đơn hàng', 'Khách hàng', 'Thanh toán']]
+                        : [['Mã đơn hàng', 'Khách hàng', 'Thanh toán'], ...saleExcelDate.result]
+                      : [['Mã đơn hàng', 'Khách hàng', 'Thanh toán']]
+                  }
+                  className="w-[10rem] text-[1.5rem] py-[.5rem] flex justify-center gap-[1rem] items-center text-white bg-green-500 rounded-[.5rem]"
+                >
                   export <SiMicrosoftexcel className="text-[1.5rem]" />
-                </button>
+                </CSVLink>
+              </div>
+            </div>
+            <div className="w-full">
+              <div className="flex justify-between">
+                <h4 className="text-[1.5rem] text-primaryColor">Thống kê sản phẩm</h4>
+                <div className="flex gap-[1rem] items-center">
+                  <input
+                    type="radio"
+                    id="dayProduct"
+                    name="product"
+                    onChange={(e) => {
+                      if (e.target.checked) setExportProductStatistic('day')
+                    }}
+                    checked={exportProductStatistic === 'day'}
+                  />
+                  <label htmlFor="dayProduct" className="text-[1.5rem] text-primaryColor">
+                    Theo ngày
+                  </label>
+                </div>
+                <div className="flex gap-[1rem] items-center">
+                  <input
+                    type="radio"
+                    id="monthProduct"
+                    name="product"
+                    onChange={(e) => {
+                      if (e.target.checked) setExportProductStatistic('month')
+                    }}
+                    checked={exportProductStatistic === 'month'}
+                  />
+                  <label htmlFor="monthProduct" className="text-[1.5rem] text-primaryColor">
+                    Theo tháng
+                  </label>
+                </div>
+              </div>
+              <div className="w-full flex justify-between mt-[1rem]">
+                {exportProductStatistic === 'day' ? (
+                  <input
+                    type="date"
+                    className="text-[1.5rem] outline-none border-solid border-orangeColor border-b-[.1rem] bg-gray-100 px-[1rem]"
+                    value={productDate}
+                    onChange={(e) => {
+                      setProductDate(e.target.value)
+                    }}
+                  />
+                ) : (
+                  <select
+                    className="text-[1.5rem] outline-none border-orangeColor border-solid border-b-[.1rem] bg-gray-100 px-[1rem]"
+                    onChange={(e) => {
+                      setProductMonth(e.target.value)
+                    }}
+                  >
+                    <option value="1">Tháng 1</option>
+                    <option value="2">Tháng 2</option>
+                    <option value="3">Tháng 3</option>
+                    <option value="3">Tháng 3</option>
+                    <option value="5">Tháng 5</option>
+                    <option value="6">Tháng 6</option>
+                    <option value="7">Tháng 7</option>
+                    <option value="8">Tháng 8</option>
+                    <option value="9">Tháng 9</option>
+                    <option value="10">Tháng 10</option>
+                    <option value="11">Tháng 11</option>
+                    <option value="12">Tháng 12</option>
+                  </select>
+                )}
+                <CSVLink
+                  data={testData}
+                  className="w-[10rem] text-[1.5rem] py-[.5rem] flex justify-center gap-[1rem] items-center text-white bg-green-500 rounded-[.5rem]"
+                >
+                  export <SiMicrosoftexcel className="text-[1.5rem]" />
+                </CSVLink>
               </div>
             </div>
           </div>

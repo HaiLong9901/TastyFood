@@ -219,20 +219,6 @@ const OrderController = {
           })
         }
       } else if (type === 'month') {
-        const months = [
-          'Tháng 1',
-          'Tháng 2',
-          'Tháng 3',
-          'Tháng 4',
-          'Tháng 5',
-          'Tháng 6',
-          'Tháng 7',
-          'Tháng 8',
-          'Tháng 9',
-          'Tháng 10',
-          'Tháng 11',
-          'Tháng 12',
-        ]
         const date = new Date()
         const firstDate = new Date(`${date.getFullYear()}-01-01`)
         const lastDate = new Date(`${parseInt(date.getFullYear()) + 1}-01-01`)
@@ -413,16 +399,14 @@ const OrderController = {
       yesterday.setDate(today.getDate() - 1)
       const ordersYesterday = await Order.find({
         createdAt: {
-          $gte: new Date(
-            `${yesterday.getFullYear()}-${months[yesterday.getMonth()]}-${yesterday.getDate() - 1}T17:00:00Z`,
-          ),
-          $lt: new Date(`${today.getFullYear()}-${months[today.getMonth()]}-${today.getDate() - 1}T17:00:00Z`),
+          $gte: new Date(yesterday.getFullYear(), yesterday.getMonth(), yesterday.getDate(), 0, 0, 0),
+          $lt: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0),
         },
         status: 'success',
       })
       const ordersToday = await Order.find({
         createdAt: {
-          $gte: new Date(`${today.getFullYear()}-${months[today.getMonth()]}-${today.getDate() - 1}T17:00:00Z`),
+          $gte: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0),
         },
         status: 'success',
       })
@@ -430,15 +414,13 @@ const OrderController = {
       const amountToday = ordersToday.reduce((total, order) => total + order.amount, 0)
       const userToday = await User.find({
         createdAt: {
-          $gte: new Date(`${today.getFullYear()}-${months[today.getMonth()]}-${today.getDate() - 1}T17:00:00Z`),
+          $gte: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0),
         },
       })
       const userYesterday = await User.find({
         createdAt: {
-          $gte: new Date(
-            `${yesterday.getFullYear()}-${months[yesterday.getMonth()]}-${yesterday.getDate() - 1}T17:00:00Z`,
-          ),
-          $lt: new Date(`${today.getFullYear()}-${months[today.getMonth()]}-${today.getDate() - 1}T17:00:00Z`),
+          $gte: new Date(yesterday.getFullYear(), yesterday.getMonth(), yesterday.getDate(), 0, 0, 0),
+          $lt: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0),
         },
       })
       return res.json({
@@ -500,6 +482,36 @@ const OrderController = {
         },
       })
     } catch (error) {}
+  },
+
+  getSaleReportExcelByDate: async (req, res) => {
+    const { date } = req.params
+    if (!date)
+      return res.status(400).json({
+        success: false,
+        passage: 'missing date',
+      })
+    let arrOrder = []
+    try {
+      const now = new Date(date)
+      const orders = await Order.find({
+        createdAt: {
+          $gte: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0),
+          $lte: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59),
+        },
+      })
+        .populate('userId', ['name'])
+        .exec()
+      arrOrder = orders.map((order) => {
+        return [order._id, order.userId.name, order.amount]
+      })
+      return res.json({
+        success: true,
+        result: arrOrder,
+      })
+    } catch (error) {
+      console.log(error)
+    }
   },
 }
 

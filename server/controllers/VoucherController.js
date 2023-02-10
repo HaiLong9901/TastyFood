@@ -11,6 +11,21 @@ const VoucherController = {
         passage: 'Missing information',
       })
     try {
+      const today = new Date()
+      const existedVoucher = await Voucher.findOne({
+        code: code.toUpperCase(),
+        startOn: {
+          $lte: today,
+        },
+        expiredOn: {
+          $gte: today,
+        },
+      }).exec()
+      if (existedVoucher)
+        return res.status(400).json({
+          success: false,
+          passage: 'Voucher has already existed',
+        })
       const newVoucher = new Voucher({
         code: code.toUpperCase(),
         value,
@@ -76,7 +91,16 @@ const VoucherController = {
 
   getAllVouchers: async (req, res) => {
     try {
-      const voucher = await Voucher.find()
+      const today = new Date()
+      console.log(today)
+      const voucher = await Voucher.find({
+        startOn: {
+          $lte: today,
+        },
+        expiredOn: {
+          $gte: today,
+        },
+      })
       res.json({
         success: true,
         result: voucher,
@@ -84,6 +108,24 @@ const VoucherController = {
     } catch (error) {
       console.log(error)
     }
+  },
+  removeVoucher: async (req, res) => {
+    const { id } = req.body
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        passage: 'Missing voucher id',
+      })
+    }
+    try {
+      const voucher = await Voucher.findById(id).exec()
+      voucher.expiredOn = new Date().setDate(new Date(voucher.startOn).getDate() - 1)
+      await voucher.save()
+      return res.json({
+        success: true,
+        passage: 'remove voucher successfully',
+      })
+    } catch (error) {}
   },
 }
 

@@ -508,13 +508,7 @@ function AdminProducts() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get('page')) || 1)
   const searchRef = useRef()
-  const {
-    data: products,
-    isFetching: isFetchingProducts,
-    isSuccess: isSuccessProducts,
-    isError: isErrorProducts,
-    error: errorProducts,
-  } = useGetAllProductsQuery()
+  const { data: products, isFetching: isFetchingProducts, isSuccess: isSuccessProducts } = useGetAllProductsQuery()
   const { data: genres, isSuccess: isSuccessGenres } = useGetAllGenreQuery()
   useEffect(() => {
     setSearchParams({ genre, key: searchParams.get('key') || [], page: searchParams.get('page') || [] })

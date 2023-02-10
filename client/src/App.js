@@ -32,6 +32,8 @@ import AdminSatistics, {
   SalesStatisticChart,
   OrdersStatisticChart,
 } from './pages/admin/AdminSatistics'
+import AdminVoucher from './pages/admin/AdminVoucher'
+import AdminHumanResources from './pages/admin/AdminHumanResources'
 function App() {
   const user = useSelector(selectCurrentUser)
   return (
@@ -56,6 +58,8 @@ function App() {
                 <Route path="/admin/statistics/products" element={<ProductsStatisticChart />} />
                 <Route path="/admin/statistics/orders" element={<OrdersStatisticChart />} />
               </Route>
+              <Route path="/admin/vouchers" element={<AdminVoucher />}></Route>
+              <Route path="/admin/humanResources" element={<AdminHumanResources />}></Route>
             </Routes>
           </div>
         </div>

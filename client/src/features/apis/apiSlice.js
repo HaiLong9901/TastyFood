@@ -146,7 +146,22 @@ export const apiSlice = createApi({
       query: () => '/voucher/get_all',
       providesTags: ['Voucher'],
     }),
-
+    createVoucher: builder.mutation({
+      query: (voucher) => ({
+        url: '/voucher/create_voucher',
+        method: 'POST',
+        body: voucher,
+      }),
+      invalidatesTags: ['Voucher'],
+    }),
+    removeVoucher: builder.mutation({
+      query: (voucher) => ({
+        url: '/voucher/remove_voucher',
+        method: 'PUT',
+        body: voucher,
+      }),
+      invalidatesTags: ['Voucher'],
+    }),
     createGenre: builder.mutation({
       query: (genre) => ({
         url: '/genre/create_genre',
@@ -175,6 +190,10 @@ export const apiSlice = createApi({
       query: () => '/order/monthlyStatistic',
       providesTags: ['User', 'Order'],
     }),
+    getSaleReportExcelByDate: builder.query({
+      query: (date) => `/order/saleReportExcelByDate/${date}`,
+      providesTags: ['User', 'Order'],
+    }),
   }),
 })
 
@@ -198,6 +217,8 @@ export const {
   useGetAllOrderQuery,
   useUpdateOrderStatusMutation,
   useGetAllVoucherQuery,
+  useCreateVoucherMutation,
+  useRemoveVoucherMutation,
   useGetAllOrdersByAdminQuery,
   useGetDetailOrderQuery,
   useCreateGenreMutation,
@@ -206,4 +227,5 @@ export const {
   useGetStatisticOrdersQuery,
   useGetDailyStatisticQuery,
   useGetMonthlyStatisticQuery,
+  useGetSaleReportExcelByDateQuery,
 } = apiSlice

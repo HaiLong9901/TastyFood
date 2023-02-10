@@ -14,5 +14,6 @@ router.get('/get_statistic_sales/:type', verifyAdminRole, OrderController.getSta
 router.get('/get_statistic_orders/:type', verifyAdminRole, OrderController.getStatisticOrders)
 router.get('/get_dailyStatistic', verifyAdminRole, OrderController.getDailySatistic)
 router.get('/monthlyStatistic', verifyAdminRole, OrderController.getMonthlySatistic)
+router.get('/saleReportExcelByDate/:date', verifyAdminRole, OrderController.getSaleReportExcelByDate)
 
 module.exports = router
