@@ -33,6 +33,10 @@ const UserSchema = new Schema(
       type: String,
       default: 'https://www.focusedu.org/wp-content/uploads/2018/12/circled-user-male-skin-type-1-2.png',
     },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true },
 )

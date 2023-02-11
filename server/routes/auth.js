@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/User')
 const UserControler = require('../controllers/UserController')
 const verifyToken = require('../middlewares/auth')
+const verifyAdminRole = require('../middlewares/authAdmin')
 
 // @route api/auth/register
 // @desc register user
@@ -36,5 +37,6 @@ router.put('/update', verifyToken, UserControler.updateInfo)
 router.put('/update_address', verifyToken, UserControler.updateAddress)
 router.put('/change_password', verifyToken, UserControler.changePassword)
 router.put('/delete_address', verifyToken, UserControler.deleteAddress)
+router.get('/getAdminList', verifyAdminRole, UserControler.getAdminList)
 
 module.exports = router

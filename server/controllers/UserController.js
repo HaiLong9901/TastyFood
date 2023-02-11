@@ -252,6 +252,20 @@ const UserControler = {
       console.log(error)
     }
   },
+
+  getAdminList: async (req, res) => {
+    try {
+      const adminList = await User.find({
+        isAdmin: true,
+      })
+      return res.json({
+        success: true,
+        result: adminList,
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  },
 }
 
 module.exports = UserControler
