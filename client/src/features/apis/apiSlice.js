@@ -194,6 +194,38 @@ export const apiSlice = createApi({
       query: (date) => `/order/saleReportExcelByDate/${date}`,
       providesTags: ['User', 'Order'],
     }),
+    getAdminList: builder.query({
+      query: () => '/auth/getAdminList',
+      providesTags: ['User'],
+    }),
+    createAdminAccount: builder.mutation({
+      query: (account) => ({
+        url: '/auth/create_admin_acc',
+        method: 'POST',
+        body: account,
+      }),
+      invalidatesTags: ['User'],
+    }),
+    getAdminAccount: builder.query({
+      query: () => '/auth//get_admin_acc',
+      providesTags: ['User'],
+    }),
+    removeAdminAccount: builder.mutation({
+      query: (acc) => ({
+        url: '/auth/remove_admin_acc',
+        method: 'PUT',
+        body: acc,
+      }),
+      invalidatesTags: ['User'],
+    }),
+    updateAdminAccount: builder.mutation({
+      query: (acc) => ({
+        url: '/auth/update_admin_acc',
+        method: 'PUT',
+        body: acc,
+      }),
+      invalidatesTags: ['User'],
+    }),
   }),
 })
 
@@ -228,4 +260,9 @@ export const {
   useGetDailyStatisticQuery,
   useGetMonthlyStatisticQuery,
   useGetSaleReportExcelByDateQuery,
+  useGetAdminListQuery,
+  useCreateAdminAccountMutation,
+  useGetAdminAccountQuery,
+  useRemoveAdminAccountMutation,
+  useUpdateAdminAccountMutation,
 } = apiSlice

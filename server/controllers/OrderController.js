@@ -416,12 +416,14 @@ const OrderController = {
         createdAt: {
           $gte: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0),
         },
+        isAdmin: false,
       })
       const userYesterday = await User.find({
         createdAt: {
           $gte: new Date(yesterday.getFullYear(), yesterday.getMonth(), yesterday.getDate(), 0, 0, 0),
           $lt: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0),
         },
+        isAdmin: false,
       })
       return res.json({
         success: true,

@@ -4,8 +4,6 @@ import * as Yup from 'yup'
 import Wrapper from '../components/common/Wrapper'
 import { GiTomato } from 'react-icons/gi'
 import { Link, useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
-import { selectCurrentToken, selectCurrentUser } from '../features/auth/authSlice'
 import { useRegisterMutation } from '../features/apis/authApiSlice'
 
 function Register() {
@@ -42,7 +40,7 @@ function Register() {
       }
     },
   })
-  console.log(formik.values)
+  // console.log(formik.values)
   return (
     <div className="bg-orangeColor">
       <Wrapper>

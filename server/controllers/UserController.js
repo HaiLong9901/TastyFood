@@ -257,10 +257,109 @@ const UserControler = {
     try {
       const adminList = await User.find({
         isAdmin: true,
+        isActive: true,
+      }).sort({
+        createdAt: -1,
       })
       return res.json({
         success: true,
         result: adminList,
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  },
+  createAdminAccount: async (req, res) => {
+    const { name, phone, password } = req.body
+    if (!name || !phone || !password)
+      return res.status(400).json({
+        success: false,
+        passage: 'Missing information',
+      })
+    try {
+      const existedAccount = await User.findOne({ phone }).exec()
+      if (existedAccount)
+        return res.status(400).json({
+          success: false,
+          passage: 'Admin account has already existed',
+        })
+      const hashPassword = await argon2.hash(password)
+      const account = new User({
+        name,
+        phone,
+        password: hashPassword,
+        isAdmin: true,
+      })
+      await account.save()
+      return res.json({
+        success: true,
+        passage: 'Create admin account successfully',
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  },
+  deleteAdminAccount: async (req, res) => {
+    const { id } = req.body
+    if (!id)
+      return res.status(400).json({
+        success: false,
+        passage: 'Missing id',
+      })
+    if (id === req.userId)
+      return res.status(400).json({
+        success: false,
+        passage: "You can't delete your account by yourself",
+      })
+    try {
+      const acc = await User.findById(id).exec()
+      if (!acc)
+        return res.status(400).json({
+          success: false,
+          passage: 'Admin account is not found',
+        })
+      acc.isActive = false
+      await acc.save()
+      return res.json({
+        success: true,
+        passage: 'Remove admin account successfully',
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  },
+  updateAdminAccount: async (req, res) => {
+    const { name, password, confirm } = req.body
+    if (!password || !confirm)
+      return res.status(400).json({
+        success: false,
+        passage: 'Missing information',
+      })
+    if (password !== confirm)
+      return res.status(400).json({
+        success: false,
+        passage: 'Confirm password is incorrect',
+      })
+    try {
+      const acc = await User.findById(req.userId).exec()
+      const hashPassword = await argon2.hash(password)
+      acc.password = hashPassword
+      if (name) acc.name = name
+      await acc.save()
+      return res.json({
+        success: true,
+        passage: 'Update password successfully',
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  },
+  getAdminAccount: async (req, res) => {
+    try {
+      const acc = await User.findById(req.userId)
+      return res.json({
+        success: true,
+        result: acc,
       })
     } catch (error) {
       console.log(error)

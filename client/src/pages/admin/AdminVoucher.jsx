@@ -5,9 +5,6 @@ import { useCreateVoucherMutation, useGetAllVoucherQuery, useRemoveVoucherMutati
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
-export const ActiveVoucherList = () => {
-  return <></>
-}
 function VoucherTable() {
   const [removeVoucher] = useRemoveVoucherMutation()
   const [currentPage, setCurrentPage] = useState(1)

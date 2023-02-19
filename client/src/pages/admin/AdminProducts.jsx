@@ -517,7 +517,12 @@ function AdminProducts() {
     else setSearchParams({ genre, page: searchParams.get('page') || [] })
   }, [genre, searchKey])
   let ProductsTableRender
-  if (isFetchingProducts) ProductsTableRender = <div>Loading...</div>
+  if (isFetchingProducts)
+    ProductsTableRender = (
+      <div className="w-full h-[50rem] flex justify-center items-center text-[2rem] text-orangeColor font-bold">
+        Loading...
+      </div>
+    )
   else if (isSuccessProducts) {
     let filterProducts = [...products.results]
     filterProducts = filterProducts.filter((product) => {
