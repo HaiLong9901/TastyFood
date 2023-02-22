@@ -81,7 +81,7 @@ function App() {
                   <Route path="/user/account/password" element={<UserPassword />} />
                   <Route path="/user/review" element={<UserReview />} />
                   <Route path="/user/purchase" element={<UserPurchase />}>
-                    <Route path="/user/purchase/all" element={<UserPurchaseList status="all" />} />
+                    <Route index element={<UserPurchaseList status="all" />} />
                     <Route path="/user/purchase/pending" element={<UserPurchaseList status="pending" />} />
                     <Route path="/user/purchase/shipping" element={<UserPurchaseList status="shipping" />} />
                     <Route path="/user/purchase/success" element={<UserPurchaseList status="success" />} />

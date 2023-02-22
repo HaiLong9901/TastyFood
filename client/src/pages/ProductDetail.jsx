@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useGetProductByIdQuery, useAddToCartMutation } from '../features/apis/apiSlice'
-import img from '../assets/Image/spicy-red-soup-beef-noodle-bowl-wooden-table.jpg'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import Wrapper from '../components/common/Wrapper'
 import { AiOutlineTag } from 'react-icons/ai'
 import ReviewBox from '../components/common/ReviewBox'
@@ -14,15 +15,34 @@ function ProductDetail() {
     isSuccess: isSuccessDetail,
     isFetching: isFetchingDetail,
   } = useGetProductByIdQuery(params.productId)
-  const [addToCart, { isLoading }] = useAddToCartMutation()
-  const handleAddToCart = () => {
+  const [addToCart] = useAddToCartMutation()
+  const handleAddToCart = async () => {
     try {
-      addToCart({
+      await addToCart({
         productId: detail.result._id,
         quantity,
+      }).unwrap()
+      toast.success('Thêm vào giỏ hàng thành công', {
+        position: 'top-center',
+        autoClose: 500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'colored',
       })
     } catch (error) {
-      console.log(error)
+      toast.error(error.data.passage, {
+        position: 'top-center',
+        autoClose: 500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'colored',
+      })
     }
   }
   let Detail
@@ -89,15 +109,7 @@ function ProductDetail() {
     <Wrapper>
       <div className="my-[5rem]">
         <div className="flex flex-col lg:flex-row w-full justify-between">{Detail}</div>
-        <div className="w-full lg:w-[50%]">
-          <h2 className="text-[2.4rem] text-secondaryColor font-bold my-[2rem]">Nhận xét sản phẩm</h2>
-          <ReviewBox
-            imageURL={USER_DEFAULT_AVATAR}
-            rate={3}
-            review="Bún bò là món ăn đặc trưng của người Huế, được lan rộng ra khắp vùng miền với tên bún bò Huế, hãy theo dõi bài viết để biết cách nấu bún bò Huế như thế nào nhé."
-            name="Nguyen Van A"
-          />
-        </div>
+        <ToastContainer />
       </div>
     </Wrapper>
   )

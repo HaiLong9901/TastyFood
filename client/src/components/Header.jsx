@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Wrapper from './common/Wrapper'
 import { GiTomato } from 'react-icons/gi'
 import { FaFacebook, FaInstagram, FaTiktok, FaShoppingCart, FaTimes, FaBars, FaSearch } from 'react-icons/fa'
@@ -12,12 +12,16 @@ function Header() {
   const dispatch = useDispatch()
   const user = useSelector(selectCurrentUser)
   const { data: cart, isSuccess } = useGetCartQuery(user.id)
-  let numberItems
+  let numberItems = 0
   if (user) {
     if (isSuccess) numberItems = cart.cart.products.length
   }
-
   const [openMenu, setOpenMenu] = useState(false)
+  useEffect(() => {
+    window.addEventListener('resize', () => {
+      setOpenMenu(false)
+    })
+  }, [])
   return (
     <div className="w-full relative">
       <div className="w-full bg-primaryColor h-[3rem]">
@@ -55,11 +59,6 @@ function Header() {
               <li className="leading-[5rem]">
                 <Link to="/product" className="text-[1.6rem] text-white">
                   Thực đơn
-                </Link>
-              </li>
-              <li className="leading-[5rem]">
-                <Link to="/" className="text-[1.6rem] text-white">
-                  Giới thiệu
                 </Link>
               </li>
               {user.id ? (
@@ -111,9 +110,6 @@ function Header() {
                   )}
                 </Link>
               </li>
-              <li className="leading-[5rem] flex items-center">
-                <FaSearch className="text-[2rem] text-white" />
-              </li>
             </ul>
             <div className="flex h-[5rem] items-center lg:hidden" onClick={() => setOpenMenu(!openMenu)}>
               {openMenu ? (
@@ -140,14 +136,6 @@ function Header() {
           </div>
           <span className="text-[2.5rem] text-white font-logoFont">d</span>
         </Link>
-        <div className="w-full relative">
-          <input
-            type="text"
-            className="w-full pl-[1.5rem] pr-[3rem] py-[1rem] rounded-[5rem] outline-none text-[1.6rem]"
-            placeholder="Tìm món ngon nào"
-          />
-          <FaSearch className="text-[2rem] text-orangeColor absolute top-[50%] translate-y-[-50%] right-0 translate-x-[-50%]" />
-        </div>
         <ul className="flex flex-col gap-[2rem] w-full">
           <li className="leading-[5rem] border-b-[.1rem] border-b-white border-b-solid text-center">
             <Link to="/" className="text-[1.6rem] text-white">
@@ -160,18 +148,18 @@ function Header() {
             </Link>
           </li>
           <li className="leading-[5rem] border-b-[.1rem] border-b-white border-b-solid text-center">
-            <Link to="/" className="text-[1.6rem] text-white">
-              Giới thiệu
-            </Link>
-          </li>
-          <li className="leading-[5rem] border-b-[.1rem] border-b-white border-b-solid text-center">
             <Link to="/login" className="text-[1.6rem] text-white">
               Đăng nhập
             </Link>
           </li>
-          <li className="leading-[5rem] flex justify-center items-center">
-            <Link to="/" className="text-[1.6rem] text-white">
+          <li className="leading-[5rem] flex justify-center items-center relative">
+            <Link to={user.id ? '/cart' : '/login'} className="text-[1.6rem] text-white">
               <FaShoppingCart className="text-[2rem] text-white" />
+              {numberItems === 0 ? undefined : (
+                <div className="absolute w-[1.5rem] h-[1.5rem] rounded-[50%] text-orangeColor z-50 top-[-0.1rem] right-[42%] bg-white flex justify-center items-center font-bold border-solid border-orangeColor border-[.1rem]">
+                  {numberItems}
+                </div>
+              )}
             </Link>
           </li>
         </ul>

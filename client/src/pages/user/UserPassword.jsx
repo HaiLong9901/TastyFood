@@ -1,10 +1,13 @@
-import React from 'react'
-import { Formik, useFormik } from 'formik'
+import React, { useState } from 'react'
+import { useFormik } from 'formik'
 import { useChangePasswordMutation } from '../../features/apis/apiSlice'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import * as Yup from 'yup'
 
 function UserPassword() {
-  const [changePassword, { isLoading }] = useChangePasswordMutation()
+  const [changePassword] = useChangePasswordMutation()
+  const [error, setError] = useState('')
   const formik = useFormik({
     initialValues: {
       password: '',
@@ -17,13 +20,23 @@ function UserPassword() {
     onSubmit: async (values) => {
       const { password, confirm, oldPass } = values
       try {
-        //   const userData = await login({ phone, password }).unwrap()
-        // //   console.log(userData)
-        //   dispatch(setCredentials({ ...userData, phone }))
-        //   navigate(userData.user.isAdmin ? '/admin' : '/')
-        const changedPassword = await changePassword({ password, confirm, oldPass }).unwrap()
+        await changePassword({ password, confirm, oldPass }).unwrap()
+        toast.success('Đổi mật khẩu thành công', {
+          position: 'top-center',
+          autoClose: 500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'colored',
+        })
+        values.password = ''
+        values.oldPass = ''
+        values.confirm = ''
+        setError('')
       } catch (error) {
-        // setLoginError(error.data.passage)
+        setError(error.data.passage)
       }
       console.log(values)
     },
@@ -38,6 +51,7 @@ function UserPassword() {
         className="w-full py-[5rem] gap-[3rem] flex flex-col justify-center items-center"
         onSubmit={formik.handleSubmit}
       >
+        <span className="text-[1.3rem] italic text-red-500">{error}</span>
         <div className="flex justify-between w-[60%] items-center">
           <label htmlFor="oldPass" className="text-[1.6rem] text-primaryColor w-[20rem] text-right">
             Mật khẩu cũ
@@ -91,6 +105,7 @@ function UserPassword() {
           Xác nhận
         </button>
       </form>
+      <ToastContainer />
     </div>
   )
 }

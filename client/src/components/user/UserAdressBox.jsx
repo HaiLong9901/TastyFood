@@ -3,7 +3,7 @@ import { useDeleteAddressMutation } from '../../features/apis/apiSlice'
 
 function UserAdressBox({ name, phone, address, id }) {
   console.log(id)
-  const [deleteAddress, { isLoading }] = useDeleteAddressMutation()
+  const [deleteAddress] = useDeleteAddressMutation()
   return (
     <div className="py-[2rem] border-b-solid border-b-[.1rem] border-b-grayColor w-full flex justify-between">
       <div>
@@ -19,11 +19,13 @@ function UserAdressBox({ name, phone, address, id }) {
       <div className="flex gap-[2rem]">
         <span
           className="text-[1.6rem] text-orangeColor cursor-pointer"
-          onClick={() =>
-            deleteAddress({
-              index: id,
-            })
-          }
+          onClick={async () => {
+            try {
+              await deleteAddress({
+                index: id,
+              }).unwrap()
+            } catch (error) {}
+          }}
         >
           Xóa
         </span>

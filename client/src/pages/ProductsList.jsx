@@ -1,18 +1,17 @@
 import React, { useState } from 'react'
 import Wrapper from '../components/common/Wrapper'
-import { useGetAllProductsQuery } from '../features/apis/apiSlice'
-import img from '../assets/Image/spicy-red-soup-beef-noodle-bowl-wooden-table.jpg'
+import { useGetAllProductsQuery, useGetAllGenreQuery } from '../features/apis/apiSlice'
 import ProductCard from '../components/product/ProductCard'
 import { FaAngleRight, FaAngleDown } from 'react-icons/fa'
-import SuccessBox from '../components/common/SuccessBox'
 import { useSearchParams } from 'react-router-dom'
 
 function ProductsList() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [openFilterBox, setOpenFilterBox] = useState(false)
   const { data: productsList, isSuccess: isSuccessList, isFetching: isFetchingList } = useGetAllProductsQuery()
+  const { data: genreList, isSuccess: isSuccessGenreList, isFetching: isFetchingGenreList } = useGetAllGenreQuery()
   const sort = parseInt(searchParams.get('sort_by'))
-  console.log('sort: ', typeof sort)
+  const genreId = searchParams.get('genre')
   let ProductsList
   if (isFetchingList) {
     ProductsList = (
@@ -24,22 +23,40 @@ function ProductsList() {
     )
   } else if (isSuccessList) {
     let list = productsList.results
-    let sortList = [...list]
-    if (sort === 0) list = sortList.sort((product1, product2) => product2.sale_price - product1.sale_price)
-    else if (sort === 1) list = sortList.sort((product1, product2) => product1.sale_price - product2.sale_price)
-    else if (sort === 2)
-      list = sortList.sort(
-        (product1, product2) =>
-          product1.sale_price / product1.original_price - product2.sale_price / product2.original_price,
+    console.log('length: ', list.length)
+    if (sort) {
+      let sortList = [...list]
+      if (sort === 0) list = sortList.sort((product1, product2) => product2.sale_price - product1.sale_price)
+      else if (sort === 1) list = sortList.sort((product1, product2) => product1.sale_price - product2.sale_price)
+      else if (sort === 2)
+        list = sortList.sort(
+          (product1, product2) =>
+            product1.sale_price / product1.original_price - product2.sale_price / product2.original_price,
+        )
+    }
+    if (genreId) {
+      let genreSortList = [...list]
+      console.log(genreSortList)
+      list = genreSortList.filter((product) => {
+        return product.genre._id === genreId
+      })
+      console.log('filter: ', list)
+    }
+
+    if (list.length === 0) {
+      ProductsList = (
+        <div className="w-full h-[50vh] flex justify-center items-center text-[2rem] italic text-orangeColor font-bold">
+          Không có sản phẩm nào thuộc bộ lọc
+        </div>
       )
-    console.log('list: ', list)
-    ProductsList = (
-      <>
-        {list?.map((product) => (
-          <ProductCard key={product.key} {...product} />
-        ))}
-      </>
-    )
+    } else
+      ProductsList = (
+        <>
+          {list?.map((product) => (
+            <ProductCard key={product.key} {...product} />
+          ))}
+        </>
+      )
   }
   return (
     <Wrapper>
@@ -82,65 +99,21 @@ function ProductsList() {
                 <div>
                   <h3 className="text-[1.3rem] font-bold text-secondaryColor my-[.5rem]">Loại sản phẩm</h3>
                   <div className="bg-white p-[.5rem] rounded-[.5rem] flex flex-wrap gap-[.5rem] max-h-[20rem] overflow-auto scrollbar">
-                    <span className="text-[1.3rem] text-white bg-secondaryColor py-[.5rem] px-[1rem] cursor-pointer rounded-[.5rem]">
-                      Bánh
-                    </span>
-                    <span className="text-[1.3rem] text-white bg-secondaryColor py-[.5rem] px-[1rem] cursor-pointer rounded-[.5rem]">
-                      Mì
-                    </span>
-                    <span className="text-[1.3rem] text-white bg-secondaryColor py-[.5rem] px-[1rem] cursor-pointer rounded-[.5rem]">
-                      Trà sữa
-                    </span>
-                    <span className="text-[1.3rem] text-white bg-secondaryColor py-[.5rem] px-[1rem] cursor-pointer rounded-[.5rem]">
-                      FastFood
-                    </span>
-                    <span className="text-[1.3rem] text-white bg-secondaryColor py-[.5rem] px-[1rem] cursor-pointer rounded-[.5rem]">
-                      Bánh
-                    </span>
-                    <span className="text-[1.3rem] text-white bg-secondaryColor py-[.5rem] px-[1rem] cursor-pointer rounded-[.5rem]">
-                      Mì
-                    </span>
-                    <span className="text-[1.3rem] text-white bg-secondaryColor py-[.5rem] px-[1rem] cursor-pointer rounded-[.5rem]">
-                      Trà sữa
-                    </span>
-                    <span className="text-[1.3rem] text-white bg-secondaryColor py-[.5rem] px-[1rem] cursor-pointer rounded-[.5rem]">
-                      FastFood
-                    </span>
-                    <span className="text-[1.3rem] text-white bg-secondaryColor py-[.5rem] px-[1rem] cursor-pointer rounded-[.5rem]">
-                      Bánh
-                    </span>
-                    <span className="text-[1.3rem] text-white bg-secondaryColor py-[.5rem] px-[1rem] cursor-pointer rounded-[.5rem]">
-                      Mì
-                    </span>
-                    <span className="text-[1.3rem] text-white bg-secondaryColor py-[.5rem] px-[1rem] cursor-pointer rounded-[.5rem]">
-                      Trà sữa
-                    </span>
-                    <span className="text-[1.3rem] text-white bg-secondaryColor py-[.5rem] px-[1rem] cursor-pointer rounded-[.5rem]">
-                      FastFood
-                    </span>
-                    <span className="text-[1.3rem] text-white bg-secondaryColor py-[.5rem] px-[1rem] cursor-pointer rounded-[.5rem]">
-                      Bánh
-                    </span>
-                    <span className="text-[1.3rem] text-white bg-secondaryColor py-[.5rem] px-[1rem] cursor-pointer rounded-[.5rem]">
-                      Mì
-                    </span>
-                    <span className="text-[1.3rem] text-white bg-secondaryColor py-[.5rem] px-[1rem] cursor-pointer rounded-[.5rem]">
-                      Trà sữa
-                    </span>
-                    <span className="text-[1.3rem] text-white bg-secondaryColor py-[.5rem] px-[1rem] cursor-pointer rounded-[.5rem]">
-                      FastFood
-                    </span>
-                    <span className="text-[1.3rem] text-white bg-secondaryColor py-[.5rem] px-[1rem] cursor-pointer rounded-[.5rem]">
-                      Bánh
-                    </span>
-                    <span className="text-[1.3rem] text-white bg-secondaryColor py-[.5rem] px-[1rem] cursor-pointer rounded-[.5rem]">
-                      Mì
-                    </span>
-                    <span className="text-[1.3rem] text-white bg-secondaryColor py-[.5rem] px-[1rem] cursor-pointer rounded-[.5rem]">
-                      Trà sữa
-                    </span>
-                    <span className="text-[1.3rem] text-white bg-secondaryColor py-[.5rem] px-[1rem] cursor-pointer rounded-[.5rem]">
-                      FastFood
+                    {isSuccessGenreList &&
+                      genreList.result?.map((genre) => (
+                        <span
+                          key={genre._id}
+                          className="text-[1.3rem] text-white bg-secondaryColor py-[.5rem] px-[1rem] cursor-pointer rounded-[.5rem]"
+                          onClick={() => setSearchParams({ genre: genre._id })}
+                        >
+                          {genre.name}
+                        </span>
+                      ))}
+                    <span
+                      className="text-[1.3rem] text-white bg-secondaryColor py-[.5rem] px-[1rem] cursor-pointer rounded-[.5rem]"
+                      onClick={() => setSearchParams({ genre: [] })}
+                    >
+                      Tất cả sản phẩm
                     </span>
                   </div>
                 </div>

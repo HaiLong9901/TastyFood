@@ -1,6 +1,7 @@
 const express = require('express')
 const Order = require('../models/Order')
 const User = require('../models/User')
+const Product = require('../models/Product')
 const _ = require('lodash')
 
 const months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
@@ -27,7 +28,25 @@ const OrderController = {
       console.log(error)
     }
   },
-
+  rejectOrder: async (req, res) => {
+    const { id } = req.body
+    if (!id)
+      return res.status(400).json({
+        success: false,
+        passage: 'Missing order id',
+      })
+    try {
+      const order = await Order.findById(id).exec()
+      order.status = 'rejected'
+      await order.save()
+      return res.json({
+        success: true,
+        passage: 'Reject order successfully',
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  },
   getOrderById: async (req, res) => {
     const { orderId } = req.params.id
     if (!orderId)
@@ -348,44 +367,65 @@ const OrderController = {
 
   getStatisticProducts: async (req, res) => {
     const { type } = req.params
+    const today = new Date()
     if (!type)
       return res.status(400).json({
         success: false,
         passage: 'Missing type of statistic',
       })
     try {
-      let sales = []
+      let result
+      const products = await Product.find()
       if (type === 'day') {
-        const today = new Date(Date.now())
-        const lastDay = new Date()
-        lastDay.setDate(today.getDate() - 6)
-        console.log(new Date(lastDay.setHours(0, 0, 0, 0)))
         const orders = await Order.find({
           createdAt: {
-            $gte: new Date(lastDay.setHours(0, 0, 0, 0)),
+            $gte: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0),
+            $lte: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59),
+          },
+          status: 'success',
+        })
+        result = products.map((product) => {
+          const amount = orders.reduce((total, order) => {
+            order.products.forEach((prd) => {
+              if (product._id.equals(prd.productId)) {
+                console.log('yes')
+                total += prd.quantity
+              }
+            })
+            return total
+          }, 0)
+          return { product, amount }
+        })
+      } else if (type === 'month') {
+        const orders = await Order.find({
+          createdAt: {
+            $gte: new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0),
             $lte: today,
           },
           status: 'success',
         })
-
-        for (let i = 0; i < 7; ++i) {
-          const date = new Date()
-          date.setDate(today.getDate() - i)
-          date.setHours(0, 0, 0, 0)
-          console.log(date)
+        result = products.map((product) => {
           const amount = orders.reduce((total, order) => {
-            if (new Date(order.createdAt).toDateString() === date.toDateString()) return total + order.amount
-            return total + 0
+            order.products.forEach((prd) => {
+              if (product._id.equals(prd.productId)) {
+                total += prd.quantity
+              }
+            })
+            return total
           }, 0)
-          sales.push({
-            date,
-            amount,
-          })
-        }
+          return { product, amount }
+        })
+      } else {
+        return res.status(400).json({
+          success: false,
+          passage: 'type didnot exist',
+        })
       }
+      result = result.sort((product1, product2) => product2.amount - product1.amount)
+      result.length = 7
       res.json({
         success: true,
-        result: type === 'day' ? sales.reverse() : sales,
+        result,
       })
     } catch (error) {
       console.log(error)

@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react'
-import { NavLink, Outlet, useFetcher } from 'react-router-dom'
+import React from 'react'
+import { NavLink, Outlet } from 'react-router-dom'
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from 'chart.js'
 import { Bar, Doughnut } from 'react-chartjs-2'
 import {
   useGetStatisticSalesQuery,
   useGetStatisticOrdersQuery,
+  useGetStatisticProductsQuery,
   useGetDailyStatisticQuery,
   useGetMonthlyStatisticQuery,
   useGetSaleReportExcelByDateQuery,
@@ -13,7 +14,7 @@ import { toISODate } from '../../shared/FormatDate'
 import { useState } from 'react'
 import { FaShoppingBag, FaFileInvoice, FaUserAlt, FaArrowUp } from 'react-icons/fa'
 import { SiMicrosoftexcel } from 'react-icons/si'
-import { CSVLink, CSVDownload } from 'react-csv'
+import { CSVLink } from 'react-csv'
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement)
 
 const testData = [
@@ -22,7 +23,68 @@ const testData = [
   ['hieu', '16', 'a1'],
 ]
 export const ProductsStatisticChart = () => {
-  return <div>HEllo</div>
+  const [type, setType] = useState('day')
+  const { data: dataList, isSuccess, isFetching } = useGetStatisticProductsQuery(type)
+  let Render
+  if (isFetching) {
+    Render = (
+      <div className="w-full h-full flex justify-center items-center text-[2rem] font-bold text-orangeColor">
+        Loading...
+      </div>
+    )
+  } else if (isSuccess) {
+    let dataArr = [...dataList.result]
+    dataArr.length = 5
+    const options = {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
+        },
+        title: {
+          display: true,
+          text: `Top 5 sản phẩm bán chạy trong ${type === 'day' ? 'ngày' : 'tháng'}`,
+        },
+      },
+    }
+    const labels = dataArr.map((product) => {
+      return product.product.name
+    })
+    const data = {
+      labels,
+      datasets: [
+        {
+          label: 'Số sản phẩm bán ra',
+          data: dataArr.map((product) => {
+            return product.amount
+          }),
+          backgroundColor: 'rgba(255, 131, 3, 0.5)',
+        },
+      ],
+    }
+    Render = <Bar options={options} data={data} />
+  }
+  return (
+    <>
+      <div className="flex justify-end">
+        <select
+          name="type"
+          id="type"
+          value={type}
+          onChange={(e) => setType(e.target.value)}
+          className="text-[1.5rem] text-primaryColor outline-none"
+        >
+          <option value="day" className="text-[1.5rem] text-primaryColor ">
+            Ngày
+          </option>
+          <option value="month" className="text-[1.5rem] text-primaryColor ">
+            Tháng
+          </option>
+        </select>
+      </div>
+      <div className="w-[full] h-[40rem]">{Render}</div>
+    </>
+  )
 }
 export const SalesStatisticChart = () => {
   const [type, setType] = useState('day')

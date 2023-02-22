@@ -50,7 +50,7 @@ export const apiSlice = createApi({
       invalidatesTags: ['Product'],
     }),
     getUser: builder.query({
-      query: (userId) => 'auth/get_user',
+      query: () => 'auth/get_user',
       providesTags: ['User'],
     }),
     getAllDistrict: builder.query({
@@ -119,7 +119,14 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ['Order'],
     }),
-
+    rejectOrder: builder.mutation({
+      query: (order) => ({
+        url: '/order/reject_order',
+        method: 'PUT',
+        body: order,
+      }),
+      invalidatesTags: ['Order'],
+    }),
     getAllOrder: builder.query({
       query: (status) => `/order/get_all/${status}`,
       providesTags: ['Order'],
@@ -180,6 +187,10 @@ export const apiSlice = createApi({
     }),
     getStatisticOrders: builder.query({
       query: (type) => `/order/get_statistic_orders/${type}`,
+      providesTags: ['Order'],
+    }),
+    getStatisticProducts: builder.query({
+      query: (type) => `/order/get_statistic_products/${type}`,
       providesTags: ['Order'],
     }),
     getDailyStatistic: builder.query({
@@ -257,6 +268,7 @@ export const {
   useGetAllGenreQuery,
   useGetStatisticSalesQuery,
   useGetStatisticOrdersQuery,
+  useGetStatisticProductsQuery,
   useGetDailyStatisticQuery,
   useGetMonthlyStatisticQuery,
   useGetSaleReportExcelByDateQuery,
@@ -265,4 +277,5 @@ export const {
   useGetAdminAccountQuery,
   useRemoveAdminAccountMutation,
   useUpdateAdminAccountMutation,
+  useRejectOrderMutation,
 } = apiSlice

@@ -3,17 +3,19 @@ import { Outlet, Link, NavLink } from 'react-router-dom'
 import Avatar from '../../components/common/Avatar'
 import Wrapper from '../../components/common/Wrapper'
 import { USER_DEFAULT_AVATAR } from '../../shared/Constants'
-import { FaRegUser, FaFileInvoice, FaRegCommentDots } from 'react-icons/fa'
+import { FaRegUser, FaFileInvoice } from 'react-icons/fa'
+import { useGetUserQuery } from '../../features/apis/apiSlice'
 
 function UserAccount() {
+  const { data: user, isSuccess } = useGetUserQuery()
   return (
     <div className="bg-gray-100 py-[2rem]">
       <Wrapper>
         <div className="flex justify-between">
           <div className="w-[20%]">
             <div className="flex w-full gap-[2rem] items-center p-[1rem] border-b-solid border-b-[.1rem] border-b-secondaryColor box-border">
-              <Avatar src={USER_DEFAULT_AVATAR} alt="avatar" />
-              <h4 className="text-[1.5rem] text-primaryColor font-bold">user name</h4>
+              <Avatar src={isSuccess && user.result.imageURL} alt="avatar" />
+              <h4 className="text-[1.6rem] text-primaryColor font-bold">{isSuccess && user.result.name}</h4>
             </div>
             <div className="flex flex-col gap-[2rem] px-[1rem] py-[2rem]">
               <div className="flex gap-[1rem] items-center">
@@ -60,7 +62,7 @@ function UserAccount() {
                 Đổi mật khẩu
               </NavLink>
               <NavLink
-                to="/user/purchase/all"
+                to="/user/purchase"
                 style={({ isActive }) =>
                   isActive
                     ? {
@@ -72,20 +74,6 @@ function UserAccount() {
               >
                 <FaFileInvoice className="text-[1.6rem] w-[2rem]" />{' '}
                 <span className="text-[1.6rem] font-bold">Đơn hàng</span>
-              </NavLink>
-              <NavLink
-                to="/user/review"
-                style={({ isActive }) =>
-                  isActive
-                    ? {
-                        color: '#FF8303',
-                      }
-                    : undefined
-                }
-                className="flex gap-[1rem] items-center"
-              >
-                <FaRegCommentDots className="text-[1.6rem] w-[2rem]" />{' '}
-                <span className="text-[1.6rem] font-bold">Đánh giá sản phẩm</span>
               </NavLink>
             </div>
           </div>

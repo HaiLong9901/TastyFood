@@ -46,18 +46,6 @@ function UserProfile() {
         <div className="w-full border-b-solid border-b-[.1rem] border-b-primaryColor pb-[1rem]">
           <h2 className="text-[1.6rem] font-bold">Hồ sơ của tôi</h2>
           <h4 className="text-[1.6rem]">Quản lý thông tin hồ sơ để bảo mật tài khoản</h4>
-          <ToastContainer
-            position="top-center"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="light"
-          />
         </div>
         <div className="h-[40vh]">
           <div className="h-full w-full flex items-center">
@@ -103,8 +91,9 @@ function UserProfile() {
             </div>
           </div>
           <button
-            onClick={async () => {
+            onClick={async (e) => {
               try {
+                e.preventDefault()
                 await updateInfo({ id, imageURL: imageURLCloudinary, name }).unwrap()
                 dispatch(updateCredentials({ imageURL: imageURLCloudinary }))
                 toast.success('Cập nhật thông tin thành công', {
@@ -136,6 +125,7 @@ function UserProfile() {
             Lưu
           </button>
         </div>
+        <ToastContainer />
       </div>
     )
   }

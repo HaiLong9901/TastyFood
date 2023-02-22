@@ -1,13 +1,12 @@
 import React from 'react'
-import { NavLink, Outlet, useParams } from 'react-router-dom'
+import { NavLink, Outlet } from 'react-router-dom'
 
 function UserPurchase() {
-  const param = useParams()
   return (
     <div className="px-[2rem] py-[1rem]">
       <div className="flex">
         <NavLink
-          to="/user/purchase/all"
+          to="/user/purchase"
           className="text-[1.6rem] py-[1rem] w-[20%] text-center font-bold"
           style={({ isActive }) =>
             isActive
@@ -17,6 +16,7 @@ function UserPurchase() {
                 }
               : undefined
           }
+          end
         >
           Tất cả đơn hàng
         </NavLink>

@@ -1,16 +1,12 @@
 import React from 'react'
-import { useGetAllOrderQuery, useUpdateOrderStatusMutation } from '../../features/apis/apiSlice'
+import { useGetAllOrderQuery, useRejectOrderMutation } from '../../features/apis/apiSlice'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import { useNavigate } from 'react-router-dom'
 function UserPurchaseList({ status }) {
   const navigate = useNavigate()
-  const [updateOrderStatus, { isLoading }] = useUpdateOrderStatusMutation()
-  const {
-    data: orders,
-    isFetching: isFetchingOrders,
-    isSuccess: isSuccessOrders,
-    isError: isErrorOrders,
-    error: errorOrders,
-  } = useGetAllOrderQuery(status)
+  const [rejectOrder] = useRejectOrderMutation()
+  const { data: orders, isFetching: isFetchingOrders, isSuccess: isSuccessOrders } = useGetAllOrderQuery(status)
   let OrderRender
   if (isFetchingOrders)
     OrderRender = (
@@ -27,7 +23,7 @@ function UserPurchaseList({ status }) {
       )
     else
       OrderRender = (
-        <div>
+        <div className="min-h-[50vh]">
           {orders.result?.map((order) => (
             <div className=" border-dashed border-gray-200 border-b-[.2rem] my-[2rem] shadow-md">
               <div className="flex p-[.5rem] justify-between items-center border-solid border-gray-200 border-b-[.1rem]">
@@ -77,15 +73,23 @@ function UserPurchaseList({ status }) {
                 {order.status === 'pending' ? (
                   <button
                     className="text-white text-[1.6rem] bg-orangeColor py-[1rem] px-[2rem] rounded-[.5rem]"
-                    onClick={() => {
+                    onClick={async () => {
                       try {
-                        updateOrderStatus({
-                          orderId: order._id,
-                          status: 'rejected',
-                        })
+                        await rejectOrder({
+                          id: order._id,
+                        }).unwrap()
                         navigate('/user/purchase/rejected')
                       } catch (error) {
-                        console.log(error)
+                        toast.error(error.data.passage, {
+                          position: 'top-center',
+                          autoClose: 500,
+                          hideProgressBar: false,
+                          closeOnClick: true,
+                          pauseOnHover: true,
+                          draggable: true,
+                          progress: undefined,
+                          theme: 'colored',
+                        })
                       }
                     }}
                   >
@@ -95,6 +99,7 @@ function UserPurchaseList({ status }) {
               </div>
             </div>
           ))}
+          <ToastContainer />
         </div>
       )
   }

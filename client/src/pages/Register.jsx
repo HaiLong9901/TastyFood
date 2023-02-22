@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
-import { Formik, useFormik } from 'formik'
+import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import Wrapper from '../components/common/Wrapper'
 import { GiTomato } from 'react-icons/gi'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useRegisterMutation } from '../features/apis/authApiSlice'
 
 function Register() {
-  const [register, { isLoading }] = useRegisterMutation()
+  const [register] = useRegisterMutation()
   const [errorRegister, setErrorRegister] = useState('')
   const navigate = useNavigate()
   const phoneRegExp =
@@ -32,7 +32,7 @@ function Register() {
           setErrorRegister('ConfirmPass password is not incorrected')
           return
         }
-        await register({ ...values })
+        await register({ ...values }).unwrap()
         navigate('/login')
       } catch (error) {
         console.log(error.data.passage)
@@ -74,7 +74,7 @@ function Register() {
                       id="name"
                       className="text-[1.6rem] text-primaryColor w-full outline-none py-[1rem] px-[1rem] bg-white border-orangeColor border-solid border-[.1rem] rounded-[5rem]"
                     />
-                    <span className="text-blueColor text-[1.3rem] italic">
+                    <span className="text-red-500 text-[1.3rem] italic">
                       {formik.touched.name && formik.errors.name ? formik.errors.name : null}
                     </span>
                   </div>
@@ -91,7 +91,7 @@ function Register() {
                       id="phone"
                       className="text-[1.6rem] text-primaryColor w-full outline-none py-[1rem] px-[1rem] bg-white border-orangeColor border-solid border-[.1rem] rounded-[5rem]"
                     />
-                    <span className="text-blueColor text-[1.3rem] italic">
+                    <span className="text-red-500 text-[1.3rem] italic">
                       {formik.touched.phone && formik.errors.phone ? formik.errors.phone : null}
                     </span>
                   </div>
@@ -107,7 +107,7 @@ function Register() {
                       value={formik.values.password}
                       className="text-[1.6rem] text-primaryColor w-full outline-none py-[1rem] px-[1rem] bg-white border-orangeColor border-solid border-[.1rem] rounded-[5rem]"
                     />
-                    <span className="text-blueColor text-[1.3rem] italic">
+                    <span className="text-red-500 text-[1.3rem] italic">
                       {formik.touched.password && formik.errors.password ? formik.errors.password : null}
                     </span>
                   </div>
@@ -124,11 +124,11 @@ function Register() {
                       value={formik.values.confirmPass}
                       className="text-[1.6rem] text-primaryColor w-full outline-none py-[1rem] px-[1rem] bg-white border-orangeColor border-solid border-[.1rem] rounded-[5rem]"
                     />
-                    <span className="text-blueColor text-[1.3rem] italic">
+                    <span className="text-red-500 text-[1.3rem] italic">
                       {formik.touched.confirmPass && formik.errors.confirmPass ? formik.errors.confirmPass : null}
                     </span>
                   </div>
-                  <span>{errorRegister}</span>
+                  <span className="text-red-500 text-[1.3rem] italic">{errorRegister}</span>
                   <button
                     type="submit"
                     disabled={formik.isSubmitting}

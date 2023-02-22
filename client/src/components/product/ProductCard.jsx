@@ -1,18 +1,38 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAddToCartMutation } from '../../features/apis/apiSlice'
-
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 function ProductCard({ imageURL, name, original_price, sale_price, _id }) {
   const navigate = useNavigate()
   const [addToCart, { isLoading }] = useAddToCartMutation()
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     try {
-      addToCart({
+      await addToCart({
         productId: _id,
         quantity: 1,
+      }).unwrap()
+      toast.success('Thêm vào giỏ hàng thành công', {
+        position: 'top-center',
+        autoClose: 500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'colored',
       })
     } catch (error) {
-      console.log(error)
+      toast.error(error.data.passage, {
+        position: 'top-center',
+        autoClose: 500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'colored',
+      })
     }
   }
   return (
@@ -40,6 +60,7 @@ function ProductCard({ imageURL, name, original_price, sale_price, _id }) {
           Thêm vào giỏ hàng
         </div>
       </div>
+      <ToastContainer />
     </div>
   )
 }

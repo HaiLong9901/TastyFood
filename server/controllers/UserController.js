@@ -43,19 +43,19 @@ const UserControler = {
 
       //return AccessToken
 
-      const accessToken = jwt.sign(
-        {
-          userId: newUser._id,
-        },
-        process.env.ACCESS_TOKEN_SECRET,
-        {
-          expiresIn: '60s',
-        },
-      )
+      // const accessToken = jwt.sign(
+      //   {
+      //     userId: newUser._id,
+      //   },
+      //   process.env.ACCESS_TOKEN_SECRET,
+      //   {
+      //     expiresIn: '60s',
+      //   },
+      // )
       return res.json({
         success: true,
         passage: 'register successfully',
-        accessToken,
+        // accessToken,
       })
     } catch (error) {
       console.log(error)
